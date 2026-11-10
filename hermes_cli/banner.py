@@ -596,6 +596,32 @@ def _active_profile_name() -> Optional[str]:
     return get_active_profile_name()
 
 
+# Columns the right-hand info column (tools / skills) needs to stay readable beside the hero:
+# 60 content + 2 grid gap + 4 panel padding + 2 panel border.
+_BANNER_INFO_MIN_COLS = 68
+
+
+# Rows the banner needs besides the hero itself (panel border, spacing, model/cwd/session, prompt).
+_BANNER_HERO_ROW_OVERHEAD = 10
+# Extra rows needed to also show the wordmark logo above the panel (6 art + 2 blank).
+_BANNER_LOGO_ROWS = 8
+
+
+def _pick_hero(skin, columns: int, rows: int = 0) -> str:
+    """Skin hero art, falling back to ``banner_hero_compact`` when the full hero would squeeze
+    the tools/skills column below ``_BANNER_INFO_MIN_COLS`` or overflow the terminal height
+    (``rows`` of 0 skips the height check). Without a compact variant the full hero is always used."""
+    from rich.text import Text
+    hero = getattr(skin, "banner_hero", None) or HERMES_CADUCEUS
+    compact = getattr(skin, "banner_hero_compact", None)
+    if not compact:
+        return hero
+    hero_w = max((Text.from_markup(line).cell_len for line in hero.splitlines()), default=0)
+    hero_h = len(hero.splitlines())
+    fits = columns >= hero_w + _BANNER_INFO_MIN_COLS and (not rows or rows >= hero_h + _BANNER_HERO_ROW_OVERHEAD)
+    return hero if fits else compact
+
+
 def _banner_left_lines(model: str, cwd: str, session_id, context_length, provider, *, accent: str, dim: str,
                        context_pinned: bool = False, context_marker: str = "") -> list:
     """Model / cwd / session lines under the hero art. ``context_pinned`` marks a
@@ -699,7 +725,9 @@ def build_welcome_banner(
     text = _skin_color("banner_text", "#FFF8DC")
     # Use skin's custom caduceus art if provided
     _bskin = _quiet(_active_skin)
-    left_lines = ["", getattr(_bskin, "banner_hero", None) or HERMES_CADUCEUS, ""]
+    _term = shutil.get_terminal_size()
+    _hero = _pick_hero(_bskin, _term.columns, _term.lines)
+    left_lines = ["", _hero, ""]
     left_lines += _banner_left_lines(model, cwd, session_id, context_length, provider, accent=accent, dim=dim,
                                      context_pinned=context_pinned, context_marker=context_marker)
     right_lines = _banner_tool_lines(
@@ -748,6 +776,21 @@ def build_welcome_banner(
         elif behind is not None and behind != 0:
             right_lines.append(_format_update_notice(behind))
     _quiet(_update_line)  # Never break the banner over an update check
+    # Tall hero: the wordmark has no rows above the panel, but the info column is shorter than the
+    # hero, so seat the logo in that empty space (bottom of the right column) when it fits.
+    _logo = getattr(_bskin, "banner_logo", None)
+    _tall_hero = _hero is getattr(_bskin, "banner_hero", None) and getattr(_bskin, "banner_hero_compact", None)
+    _logo_seated = False
+    if _logo and _tall_hero:
+        from rich.text import Text
+        _hero_w = max((Text.from_markup(l).cell_len for l in _hero.splitlines()), default=0)
+        _logo_lines = _logo.rstrip("\n").splitlines()
+        _logo_w = max((Text.from_markup(l).cell_len for l in _logo_lines), default=0)
+        _spare = (sum(len(str(l).splitlines()) or 1 for l in left_lines)
+                  - sum(len(str(l).splitlines()) or 1 for l in right_lines))
+        if _term.columns >= _hero_w + _logo_w + 12 and _spare >= len(_logo_lines) + 2:
+            right_lines += ["", *_logo_lines]
+            _logo_seated = True
     layout_table = Table.grid(padding=(0, 2))
     layout_table.add_column("left", justify="left")
     layout_table.add_column("right", justify="left")
@@ -760,7 +803,10 @@ def build_welcome_banner(
         layout_table, title=f"[bold {_skin_color('banner_title', '#FFD700')}]{version_label}[/]",
         border_style=_skin_color("banner_border", "#CD7F32"), padding=(0, 2))
     console.print()
-    if shutil.get_terminal_size().columns >= 95:
+    # A tall full-size hero already fills the screen: drop the wordmark unless the rows are there.
+    _tall_hero = _hero is getattr(_bskin, "banner_hero", None) and getattr(_bskin, "banner_hero_compact", None)
+    _logo_fits = not _logo_seated and (not _tall_hero or _term.lines >= len(_hero.splitlines()) + _BANNER_HERO_ROW_OVERHEAD + _BANNER_LOGO_ROWS)
+    if shutil.get_terminal_size().columns >= 95 and _logo_fits:
         console.print(getattr(_bskin, "banner_logo", None) or HERMES_AGENT_LOGO)
         console.print()
     console.print(outer_panel)

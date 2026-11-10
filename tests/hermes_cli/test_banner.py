@@ -81,3 +81,15 @@ def test_baked_banner_uses_live_identity(monkeypatch):
 
     monkeypatch.setattr(version_info, "get_code_identity", lambda: {"short_sha": "a1b2c3d4"})
     assert banner._baked_banner_state() == {"upstream": "a1b2c3d4", "local": "a1b2c3d4", "ahead": 0}
+
+
+def test_pick_hero_falls_back_to_compact_on_narrow_terminal():
+    from types import SimpleNamespace
+
+    skin = SimpleNamespace(banner_hero="\u2800" * 62, banner_hero_compact="small")
+    assert banner._pick_hero(skin, 130) == skin.banner_hero
+    assert banner._pick_hero(skin, 129) == "small"
+    assert banner._pick_hero(SimpleNamespace(banner_hero="big"), 20) == "big"
+    tall = SimpleNamespace(banner_hero="\n".join(["\u2800" * 62] * 38), banner_hero_compact="small")
+    assert banner._pick_hero(tall, 160, 47) == "small"
+    assert banner._pick_hero(tall, 160, 48) == tall.banner_hero
