@@ -268,6 +268,15 @@ def mount_spa(application: FastAPI):
     mount_preview_assets(application)
     application.mount("/assets", serve_assets, name="assets")
 
+    # Kitsune docs wiki: the built docs site (website/, baseUrl /kitsune-agent/) served in-process so the
+    # Docs tab works offline. The directory is produced by scripts/fetch-docs-site.sh and is not in git;
+    # without it every request 404s and the Docs tab falls back to a pointer to the docs source.
+    application.mount(
+        "/kitsune-agent",
+        StaticFiles(directory=Path(__file__).parent / "docs_dist", html=True, check_dir=False),
+        name="kitsune-docs",
+    )
+
     @application.get("/{full_path:path}")
     async def serve_spa(full_path: str, request: Request):
         prefix = _normalise_prefix(request.headers.get("x-forwarded-prefix"))

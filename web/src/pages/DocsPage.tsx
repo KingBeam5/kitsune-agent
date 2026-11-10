@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { useI18n } from "@/i18n";
 import { usePageHeader } from "@/contexts/usePageHeader";
@@ -6,16 +6,20 @@ import { cn } from "@/lib/utils";
 import { PluginSlot } from "@/plugins";
 
 /**
- * Kitsune Agent documentation.
+ * Kitsune Agent documentation wiki.
  *
- * Upstream embedded Nous Research's hosted Hermes docs here. Kitsune's own docs are built from
- * `website/` and will be published as a GitHub Pages site; until that site is live this page links to
- * the docs source in the repository (GitHub refuses to be framed, so there is no iframe).
- * When the Pages site is live, point KITSUNE_DOCS_URL at it and render it in an iframe again.
+ * The docs site is built from `website/` (baseUrl /kitsune-agent/) and served by the dashboard itself
+ * from `hermes_cli/docs_dist` (installed by scripts/fetch-docs-site.sh), so the wiki works offline.
+ * When that directory is not installed this page falls back to a pointer at the docs source on GitHub.
  */
-export const KITSUNE_DOCS_URL =
+export const KITSUNE_DOCS_SOURCE_URL =
   "https://github.com/KingBeam5/kitsune-agent/tree/kitsune/website/docs";
 export const KITSUNE_REPO_URL = "https://github.com/KingBeam5/kitsune-agent";
+
+function docsPath(): string {
+  const base = (window as unknown as { __HERMES_BASE_PATH__?: string }).__HERMES_BASE_PATH__ ?? "";
+  return `${base}/kitsune-agent/`;
+}
 
 const DS_BUTTON_OUTLINED_LINK_CN = cn(
   "group relative inline-grid grid-cols-[auto_1fr_auto] items-center",
@@ -28,11 +32,22 @@ const DS_BUTTON_OUTLINED_LINK_CN = cn(
 export default function DocsPage() {
   const { t } = useI18n();
   const { setEnd } = usePageHeader();
+  const [installed, setInstalled] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    fetch(docsPath(), { method: "HEAD", cache: "no-store" })
+      .then((r) => live && setInstalled(r.ok))
+      .catch(() => live && setInstalled(false));
+    return () => {
+      live = false;
+    };
+  }, []);
 
   useLayoutEffect(() => {
     setEnd(
       <a
-        href={KITSUNE_DOCS_URL}
+        href={installed ? docsPath() : KITSUNE_DOCS_SOURCE_URL}
         target="_blank"
         rel="noopener noreferrer"
         className={DS_BUTTON_OUTLINED_LINK_CN}
@@ -44,7 +59,7 @@ export default function DocsPage() {
     return () => {
       setEnd(null);
     };
-  }, [setEnd, t]);
+  }, [setEnd, t, installed]);
 
   return (
     <div
@@ -54,38 +69,51 @@ export default function DocsPage() {
       )}
     >
       <PluginSlot name="docs:top" />
-      <div
-        className={cn(
-          "max-w-2xl space-y-4 p-6",
-          "rounded-sm border border-current/20",
-        )}
-      >
-        <h2 className="text-lg font-bold tracking-wide text-midground">
-          Kitsune Agent documentation
-        </h2>
-        <p className="text-text-secondary">
-          The Kitsune Agent docs are written in the repository and are being
-          corrected page by page. A hosted docs site is not live yet, so the
-          pages open on GitHub.
-        </p>
-        <p className="text-text-secondary">
-          Start with <strong>Getting Started → Installation</strong> and{" "}
-          <strong>Official Sources &amp; Safety</strong>. Some pages are
-          inherited from upstream Hermes Agent and may describe features or
-          install methods that Kitsune Agent does not ship.
-        </p>
-        <p className="text-sm text-text-secondary">
-          Source:{" "}
-          <a
-            className="underline"
-            href={KITSUNE_REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            github.com/KingBeam5/kitsune-agent
-          </a>
-        </p>
-      </div>
+      {installed === true && (
+        <iframe
+          title={t.app.nav.documentation}
+          src={docsPath()}
+          className={cn(
+            "min-h-0 w-full min-w-0 flex-1",
+            "rounded-sm border border-current/20",
+            // Docusaurus relies on the browser's canvas colour (light by default); force a light
+            // scheme + white background so the docs stay readable under any dashboard theme.
+            "[color-scheme:light] bg-white",
+          )}
+          // allow-same-origin is required: Docusaurus needs its own storage and history access and renders
+          // blank without it. The docs are served from this origin, so only first-party content built from
+          // this repository may be published there (no remote catalogs: see website/scripts/prebuild.mjs).
+          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        />
+      )}
+      {installed === false && (
+        <div
+          className={cn(
+            "max-w-2xl space-y-4 p-6",
+            "rounded-sm border border-current/20",
+          )}
+        >
+          <h2 className="text-lg font-bold tracking-wide text-midground">
+            Kitsune Agent documentation
+          </h2>
+          <p className="text-text-secondary">
+            The documentation site is not installed in this checkout. Run{" "}
+            <code>scripts/fetch-docs-site.sh</code> to install it, or read the
+            pages on GitHub.
+          </p>
+          <p className="text-sm text-text-secondary">
+            Source:{" "}
+            <a
+              className="underline"
+              href={KITSUNE_DOCS_SOURCE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {KITSUNE_REPO_URL.replace("https://", "")}
+            </a>
+          </p>
+        </div>
+      )}
       <PluginSlot name="docs:bottom" />
     </div>
   );
