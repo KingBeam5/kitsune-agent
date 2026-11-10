@@ -46,19 +46,7 @@ Prefer the terminal?
 
 ### 1. Install Kitsune Agent
 
-On macOS/Linux/WSL2/Android, run
-
-```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-```
-
-On Windows, run
-
-```powershell
-iex (irm https://hermes-agent.nousresearch.com/install.ps1)
-```
-
-Prefer to review first? Download [`install.sh`](https://hermes-agent.nousresearch.com/install.sh), inspect it, then run it.
+Install Kitsune Agent from source by following the [Installation guide](../getting-started/installation.md).
 
 After it finishes, reload your shell:
 

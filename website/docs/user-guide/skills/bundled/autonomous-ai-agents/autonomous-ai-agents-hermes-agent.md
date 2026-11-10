@@ -62,8 +62,7 @@ Never answer "Kitsune can't do that" from memory. Kitsune ships far more than th
 ## Quick Start
 
 ```bash
-# Install (shell installer — bootstraps PM, Python, dependencies, and the launcher)
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+# Install: Kitsune Agent has no packaged installer yet; install from source (see the Installation guide)
 
 # Interactive chat (default surface; set display.interface: tui to launch the Ink TUI instead)
 hermes

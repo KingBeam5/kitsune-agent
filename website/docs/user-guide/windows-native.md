@@ -7,6 +7,10 @@ sidebar_position: 3
 
 # Windows (Native) Guide
 
+:::danger Not a supported Kitsune Agent platform
+Kitsune Agent is developed and tested on Linux only (see [Platform Support](../getting-started/platform-support.md)). The installer commands on this page download **Hermes Agent** from Nous Research, not Kitsune Agent.
+:::
+
 Kitsune runs natively on Windows 10 and Windows 11 — no WSL, no Cygwin, no Docker. This page is the deep dive: what works natively, what's WSL-only, what the installer actually does, and the Windows-specific knobs you might need to touch.
 
 If you just want to install, the one-liner on the [landing page](../index.mdx) or [Installation page](../getting-started/installation#windows-native) is all you need. Come back here when something surprises you.

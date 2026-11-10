@@ -7,6 +7,10 @@ sidebar_position: 2
 
 # Windows (WSL2) Guide
 
+:::danger Not a supported Kitsune Agent platform
+Kitsune Agent is developed and tested on Linux only (see [Platform Support](../getting-started/platform-support.md)). The installer commands on this page download **Hermes Agent** from Nous Research, not Kitsune Agent.
+:::
+
 Kitsune Agent now supports **both** native Windows and WSL2.  This page covers the WSL2 path; for the native PowerShell install see the dedicated **[Windows (Native) Guide](./windows-native.md)**.
 
 **When to pick WSL2 over native:**
@@ -66,7 +70,7 @@ Kitsune does not work reliably on WSL1 — WSL1 translates Linux syscalls on the
 
 ### Distro choice
 
-Ubuntu (LTS) is what we test against. Debian works. Arch and NixOS work for people who want them, but the one-line installer assumes a Debian-derived `apt` system — see the [Nix setup guide](../getting-started/nix-setup.md) for that path.
+Ubuntu (LTS) is what we test against. Debian works. Arch and NixOS work for people who want them, but the one-line installer assumes a Debian-derived `apt` system — see the Nix setup guide for that path.
 
 ### Enable systemd (recommended)
 

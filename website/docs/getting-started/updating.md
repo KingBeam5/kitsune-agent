@@ -231,12 +231,8 @@ On Windows, a Desktop reopened during packaging is stopped again immediately bef
 
 `hermes update` stops with "This Kitsune checkout's git data is damaged" when the install's `.git` folder is still there but git no longer accepts it: a lost or empty `HEAD`, or a `.git` file pointing at a folder that is gone. A killed update, a crash mid-write, or a sync or antivirus tool touching `.git` can leave it that way. No update can fetch on such a checkout. Gateways the update paused are started again on the unchanged code, since nothing was written.
 
-Run the installer again to repair it. It moves the damaged checkout aside as `hermes-agent.broken-<timestamp>` (nothing is deleted) and clones fresh; your config, sessions and other data live outside the checkout and are kept. The error prints the exact command for your checkout. For the default location it is:
+Repair it by cloning the repository again (`git clone https://github.com/KingBeam5/kitsune-agent.git`). Your data in `~/.hermes` is separate from the checkout and is not affected.
 
-- Linux / macOS / WSL2: `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
-- Windows (PowerShell): `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
-
-A checkout installed somewhere else needs its directory passed again (`bash -s -- --dir <path>` on Linux/macOS, `-InstallDir <path>` on Windows), as in the printed command; without it the installer repairs the default location instead.
 
 Once Kitsune works again you can delete the `.broken-*` folder.
 
@@ -605,7 +601,7 @@ Published Docker images bake a small read-only marker (`/etc/hermes/image-proven
 
 ### Note for Nix users
 
-Nix is no longer an explicitly supported install path (best-effort only) — see [Nix Setup](./nix-setup.md). If you installed via Nix flake, updates are managed through the Nix package manager:
+Nix is no longer an explicitly supported install path (best-effort only) — see Nix Setup. If you installed via Nix flake, updates are managed through the Nix package manager:
 
 ```bash
 # Update the flake input
@@ -621,7 +617,7 @@ Nix installations are immutable — rollback is handled by Nix's generation syst
 nix profile rollback
 ```
 
-See [Nix Setup](./nix-setup.md) for more details.
+See Nix Setup for more details.
 
 ---
 

@@ -210,8 +210,7 @@ source ~/.bashrc
 # Don't use sudo with the installer — it installs to ~/.local/bin
 # If you previously installed with sudo, clean up:
 sudo rm /usr/local/bin/hermes
-# Then re-run the standard installer
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+# Then reinstall from source (see the Installation guide)
 ```
 
 ---
@@ -800,10 +799,7 @@ Skills with very long descriptions are truncated to 40 characters in the Telegra
 
 **Solution:**
 
-1. Install Kitsune Agent on the new machine:
-   ```bash
-   curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-   ```
+1. Install Kitsune Agent on the new machine from source (see the [Installation guide](../getting-started/installation.md)).
 
 2. On the **source machine**, create a full backup:
    ```bash

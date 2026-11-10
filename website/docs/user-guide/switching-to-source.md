@@ -136,7 +136,7 @@ or the source procedure above where the host supports it.
 
 The Termux distribution is a bionic APT package. The desktop/server source
 bootstrap is not its supported development or repair route. Use the
-[Termux guide](../getting-started/termux.md) for its package and build boundaries.
+Termux guide for its package and build boundaries.
 
 ## Switch back without assuming a downgrade is safe
 

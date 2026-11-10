@@ -97,8 +97,8 @@ use the recorded extra selection as their baseline.
 Termux uses a separate bionic build and a sealed APT package. Docker bakes its
 runtime into the image and disables on-demand dependency installation. Nix
 provides its runtime through derivations. See the
-[Termux](../getting-started/termux.md), [Docker](../user-guide/docker.md), and
-[Nix](../getting-started/nix-setup.md) guides for their limits.
+Termux, [Docker](../user-guide/docker.md), and
+Nix guides for their limits.
 
 ## Writable state
 
@@ -651,7 +651,7 @@ not substitutes for an installed application's update mechanism.
 The Nix flake pins the pnpm store that `pnpm-lock.yaml` resolves to with one
 fixed-output hash, `nix/pnpm-deps-hash`. `pm update --pnpm` does not refresh it:
 after any change to `pnpm-lock.yaml`, run `nix run .#update-pnpm-lockfile`
-([Nix setup](../getting-started/nix-setup.md#updating-the-pnpm-lockfile)) or
+(Nix setup) or
 copy the hash the `nix` workflow's `pnpm-deps-hash` job reports.
 
 The complete desktop builder also builds the JavaScript surfaces, generates

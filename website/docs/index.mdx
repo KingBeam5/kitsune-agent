@@ -82,33 +82,14 @@ The AI agent of Kitsune Linux, forked from [Hermes Agent](https://github.com/Nou
 
 ### Windows or macOS
 
-To easily install the command-line and desktop applications, [download the Kitsune Desktop installer](https://hermes-agent.nousresearch.com/) from our website and run it.
-
-### Without Kitsune Desktop:
-
-For a command-line only install without Kitsune Desktop, run:
-
-For aarch64 Android devices, use the separate [Termux APT guide](./getting-started/termux.md).
-
-#### Linux / macOS / WSL2
+Kitsune Agent has no packaged installer yet. Install it from source:
 
 ```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+git clone https://github.com/KingBeam5/kitsune-agent.git
 ```
 
-#### Windows (native)
+See the full **[Installation Guide](./getting-started/installation.md)** for details.
 
-Run in powershell:
-
-```powershell
-iex (irm https://hermes-agent.nousresearch.com/install.ps1)
-```
-
-See the full **[Installation Guide](./getting-started/installation.md)** for what the installer does, installation ownership and data locations, and Windows-specific notes. For the complete platform support matrix, see **[Platform Support](./getting-started/platform-support.md)**.
-
-:::tip Fastest path to a working agent
-After installing, run `hermes setup --portal` — one OAuth covers a model plus all four Tool Gateway tools (web search, image generation, TTS, browser). See [Nous Portal](./integrations/nous-portal.md).
-:::
 
 ## What is Kitsune Agent?
 

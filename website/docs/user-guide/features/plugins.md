@@ -150,7 +150,7 @@ See [Register slash commands](../../developer-guide/plugins/index.md#register-sl
 | User | `~/.hermes/plugins/` | Personal plugins |
 | Project | `.hermes/plugins/` | Not loaded by the gateway that runs sessions; see [Project-local plugins](#project-local-plugins) |
 | pip | `hermes_agent.plugins` entry_points | Distributed packages |
-| Nix | `services.hermes-agent.extraPlugins` / `extraPythonPackages` | NixOS declarative installs — see [Nix Setup](../../getting-started/nix-setup.md#plugins) |
+| Nix | `services.hermes-agent.extraPlugins` / `extraPythonPackages` | NixOS declarative installs — see Nix Setup |
 
 Later sources override earlier ones on name collision, so a user plugin with the same name as a bundled plugin replaces it.
 
@@ -404,7 +404,7 @@ Not everything is a Python plugin. Some extension surfaces intentionally use **c
 
 ## NixOS declarative plugins
 
-On NixOS, plugins can be installed declaratively via the module options — no `hermes plugins install` needed. See the **[Nix Setup guide](../../getting-started/nix-setup.md#plugins)** for full details.
+On NixOS, plugins can be installed declaratively via the module options — no `hermes plugins install` needed. See the **Nix Setup guide** for full details.
 
 ```nix
 services.hermes-agent = {
