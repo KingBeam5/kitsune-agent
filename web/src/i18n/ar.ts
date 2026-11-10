@@ -51,11 +51,11 @@ export const ar = defineLocale({
 
   app: {
     brand: "Kitsune Agent",
-    brandShort: "HA",
+    brandShort: "KA",
     closeNavigation: "إغلاق التنقل",
     closeModelTools: "إغلاق النموذج والأدوات",
     footer: {
-      org: "Nous Research",
+      org: "Kitsune Linux",
     },
     activeSessionsLabel: "الجلسات النشطة:",
     gatewayStatusLabel: "حالة البوابة:",

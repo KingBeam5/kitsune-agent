@@ -51,11 +51,11 @@ export const tr: Translations = {
 
   app: {
     brand: "Kitsune Agent",
-    brandShort: "HA",
+    brandShort: "KA",
     closeNavigation: "Gezintiyi kapat",
     closeModelTools: "Modeli ve araçları kapat",
     footer: {
-      org: "Nous Research",
+      org: "Kitsune Linux",
     },
     activeSessionsLabel: "Aktif Oturumlar:",
     gatewayStatusLabel: "Ağ Geçidi Durumu:",
