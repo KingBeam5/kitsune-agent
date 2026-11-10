@@ -801,7 +801,7 @@ DEFAULT_CONFIG = {
 
     "display": {
         "compact": False,
-        "personality": "",
+        "personality": "ryu",  # Kitsune Agent default; Tasuki and Nyx join later. "none" = no overlay
         "resume_display": "full",
         # Recap tuning for /resume and startup resume.
         "resume_exchanges": 10,            # max user+assistant pairs to show
@@ -2314,9 +2314,9 @@ DEFAULT_CONFIG = {
             # Requires `enabled` (`send` alone logs an error). A package is sent only if its whole
             # period is inside a recorded consent window.
             "send": False,
-            # Ingest endpoint (override for staging/local). Deliberately NOT env- overridable.
-            # Non-HTTPS refused unless the host is localhost.
-            "endpoint": "https://telemetry.nousresearch.com/v1/telemetry",
+            # Ingest endpoint. Empty (Kitsune Agent ships none): nothing is uploaded and no consent offer
+            # is shown. Deliberately NOT env-overridable. Non-HTTPS refused unless the host is localhost.
+            "endpoint": "",
         },
     },
 

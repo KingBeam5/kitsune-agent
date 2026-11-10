@@ -26,7 +26,7 @@ from hermes_cli.personality import (
     resolve_personality,
 )
 
-KAWAII = BUILTIN_PERSONALITIES["kawaii"]
+KAWAII = BUILTIN_PERSONALITIES["ryu"]
 
 
 # ── module semantics ──────────────────────────────────────────────────────────
@@ -43,9 +43,9 @@ def test_builtins_available_without_any_config():
 
 
 def test_user_entries_overlay_builtins_by_name():
-    cfg = {"agent": {"personalities": {"kawaii": "toned down", "custom": "hi"}}}
+    cfg = {"agent": {"personalities": {"ryu": "toned down", "custom": "hi"}}}
     merged = available_personalities(cfg)
-    assert merged["kawaii"] == "toned down"
+    assert merged["ryu"] == "toned down"
     assert merged["custom"] == "hi"
 
 
@@ -61,14 +61,19 @@ def test_root_level_personalities_are_honoured_below_agent_block():
 
 
 def test_neutral_names_normalize_to_empty():
-    for raw in ("", "none", "None", " DEFAULT ", "neutral", None):
+    for raw in ("", "none", "None", "neutral", None):
         assert normalize_personality_name(raw) == ""
+
+
+def test_default_names_the_ryu_personality():
+    assert normalize_personality_name(" DEFAULT ") == "ryu"
+    assert active_personality_name({}) == "ryu"  # unset display.personality -> Ryu
 
 
 def test_resolve_personality_neutral_and_case_insensitive():
     assert resolve_personality("none", {}) == ("", "")
-    name, prompt = resolve_personality("  KAWAII ", {})
-    assert name == "kawaii"
+    name, prompt = resolve_personality("  RYU ", {})
+    assert name == "ryu"
     assert prompt == KAWAII
 
 
@@ -79,14 +84,14 @@ def test_resolve_personality_unknown_raises():
 
 def test_resolve_overlay_personality_wins_over_manual_prompt():
     cfg = {
-        "display": {"personality": "kawaii"},
+        "display": {"personality": "ryu"},
         "agent": {"system_prompt": "manual forever"},
     }
     assert resolve_ephemeral_system_prompt(cfg) == KAWAII
 
 
 def test_resolve_overlay_falls_back_to_manual_prompt():
-    for neutral in ("", "none", "default", "neutral"):
+    for neutral in ("", "none", "neutral"):
         cfg = {
             "display": {"personality": neutral},
             "agent": {"system_prompt": "manual forever"},
@@ -127,9 +132,9 @@ def test_persist_personality_roundtrip(tmp_path):
     home = tmp_path / ".hermes"
     home.mkdir()
     with patch.dict(os.environ, {"HERMES_HOME": str(home)}):
-        assert persist_personality("KAWAII ") is True
+        assert persist_personality("RYU ") is True
         raw = yaml.safe_load((home / "config.yaml").read_text(encoding="utf-8"))
-        assert raw["display"]["personality"] == "kawaii"
+        assert raw["display"]["personality"] == "ryu"
 
         assert persist_personality("none") is True
         raw = yaml.safe_load((home / "config.yaml").read_text(encoding="utf-8"))
@@ -143,10 +148,10 @@ def test_persist_personality_never_touches_system_prompt(tmp_path):
         yaml.safe_dump({"agent": {"system_prompt": "manual forever"}})
     , encoding="utf-8")
     with patch.dict(os.environ, {"HERMES_HOME": str(home)}):
-        assert persist_personality("kawaii") is True
+        assert persist_personality("ryu") is True
         raw = yaml.safe_load((home / "config.yaml").read_text(encoding="utf-8"))
         assert raw["agent"]["system_prompt"] == "manual forever"
-        assert raw["display"]["personality"] == "kawaii"
+        assert raw["display"]["personality"] == "ryu"
 
 
 # ── v34 migration: one-time reset of stale split-brain state ─────────────────
@@ -168,7 +173,7 @@ def test_migration_resets_stale_personality_name(tmp_path):
     home.mkdir()
     raw, results = _run_migration(
         home,
-        {"_config_version": 33, "display": {"personality": "kawaii"}},
+        {"_config_version": 33, "display": {"personality": "ryu"}},
     )
     assert raw["display"]["personality"] == ""
     assert resolve_ephemeral_system_prompt(raw) == ""
@@ -186,7 +191,8 @@ def test_migration_scrubs_personality_text_from_system_prompt(tmp_path):
         {"_config_version": 33, "agent": {"system_prompt": KAWAII}},
     )
     assert raw["agent"]["system_prompt"] == ""
-    assert resolve_ephemeral_system_prompt(raw) == ""
+    # no manual prompt left over (personality explicitly off so the Ryu default doesn't mask the check)
+    assert resolve_ephemeral_system_prompt({"agent": raw["agent"], "display": {"personality": "none"}}) == ""
 
 
 def test_migration_preserves_manual_system_prompt(tmp_path):
@@ -198,7 +204,7 @@ def test_migration_preserves_manual_system_prompt(tmp_path):
         home,
         {
             "_config_version": 33,
-            "display": {"personality": "pirate"},
+            "display": {"personality": "ryu"},
             "agent": {"system_prompt": "my manual prompt"},
         },
     )
@@ -221,7 +227,7 @@ def test_post_v34_choice_is_never_reset(tmp_path):
     home.mkdir()
     raw, _ = _run_migration(
         home,
-        {"_config_version": 34, "display": {"personality": "kawaii"}},
+        {"_config_version": 34, "display": {"personality": "ryu"}},
     )
-    assert raw["display"]["personality"] == "kawaii"
+    assert raw["display"]["personality"] == "ryu"
     assert resolve_ephemeral_system_prompt(raw) == KAWAII

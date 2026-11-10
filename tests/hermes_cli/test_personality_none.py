@@ -69,8 +69,8 @@ class TestCLIPersonalityNone:
         # Built-ins come from hermes_cli.personality, not from config.
         cli = self._make_cli(personalities={})
         with patch("hermes_cli.personality.persist_personality", return_value=True):
-            cli._handle_personality_command("/personality kawaii")
-        assert "kawaii" in cli.system_prompt.lower()
+            cli._handle_personality_command("/personality ryu")
+        assert "ryu" in cli.system_prompt.lower()
 
 # ── Gateway tests ──────────────────────────────────────────────────────────
 
@@ -102,7 +102,7 @@ class TestGatewayPersonalityNone:
         )
 
     @pytest.mark.asyncio
-    async def test_default_clears_ephemeral_prompt(self, tmp_path):
+    async def test_none_clears_ephemeral_prompt(self, tmp_path):
         runner = self._make_runner()
         config_data = {
             "agent": {
@@ -116,7 +116,7 @@ class TestGatewayPersonalityNone:
 
         p1, p2 = self._gateway_env(tmp_path)
         with p1, p2:
-            event = self._make_event("default")
+            event = self._make_event("none")
             await runner._handle_personality_command(event)
 
         saved = yaml.safe_load(config_file.read_text())

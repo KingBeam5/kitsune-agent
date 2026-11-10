@@ -60,6 +60,10 @@ def consent_state(raw_cfg: Any) -> dict:
     so every surface offers it once more. An opt-in was always a deliberate pick and stays, including
     a collect-only answer from before the offer dropped that choice."""
     section = _section(raw_cfg)
+    from .shared_metrics_send_config import sharing_available
+
+    if not sharing_available(section):  # nowhere to send: never offer, never upload
+        return {"enabled": False, "send": False, "decided": True, "reask": False}
     enabled = section.get("enabled") is True
     answered = "enabled" in section or "send" in section
     reask = answered and not enabled and section.get("offer_version") != OFFER_VERSION

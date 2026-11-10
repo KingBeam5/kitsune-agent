@@ -8,11 +8,11 @@ from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
-#: Production ingest endpoint. Overridable through config only — deliberately NOT by an
-#: environment variable: AGENTS.md reserves HERMES_* for secrets, and an inherited variable
-#: could silently redirect consented metrics to any host with nothing visible in config.
-#: Tests and the staging E2E write this key into a throwaway profile instead.
-DEFAULT_ENDPOINT = "https://telemetry.nousresearch.com/v1/telemetry"
+#: Ingest endpoint. Kitsune Agent has none yet: upstream's endpoint belongs to Nous Research and must not
+#: receive Kitsune users' data. Empty means nothing is ever uploaded and no consent offer is shown. Set
+#: ``telemetry.shared_metrics.endpoint`` (config only — deliberately NOT an environment variable, since an
+#: inherited variable could silently redirect consented metrics to any host) to enable sending.
+DEFAULT_ENDPOINT = ""
 
 _LOCAL_HOSTS = frozenset({"localhost", "127.0.0.1", "::1", "[::1]"})
 
@@ -42,6 +42,12 @@ def _endpoint_is_safe(endpoint: str) -> bool:
     if parsed.scheme == "https":
         return True
     return parsed.scheme == "http" and (parsed.hostname or "") in _LOCAL_HOSTS
+
+
+def sharing_available(shared_section: dict | None) -> bool:
+    """True when an upload target exists (configured endpoint or a non-empty default)."""
+    endpoint = (shared_section or {}).get("endpoint")
+    return bool((endpoint.strip() if isinstance(endpoint, str) else "") or DEFAULT_ENDPOINT)
 
 
 def resolve_send_config(config: dict | None) -> SendConfig:
@@ -77,6 +83,9 @@ def resolve_send_config(config: dict | None) -> SendConfig:
     if not isinstance(endpoint, str) or not endpoint.strip():
         endpoint = DEFAULT_ENDPOINT
     endpoint = endpoint.strip()
+
+    if not endpoint:  # no ingest endpoint: collection may stay local, nothing is uploaded
+        return SendConfig(enabled=enabled, send=False, endpoint="")
 
     if send_requested and not _endpoint_is_safe(endpoint):
         logger.error(

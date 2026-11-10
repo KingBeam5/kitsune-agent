@@ -73,8 +73,12 @@ def runtime():
     return Runtime()
 
 
+# Kitsune ships no default ingest endpoint, so wiring tests that exercise sending configure one.
+TEST_ENDPOINT = "https://telemetry.test/v1"
+
+
 def _config(**shared):
-    return {"telemetry": {"shared_metrics": shared}}
+    return {"telemetry": {"shared_metrics": {"endpoint": TEST_ENDPOINT, **shared}}}
 
 
 @pytest.fixture

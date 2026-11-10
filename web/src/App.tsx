@@ -552,7 +552,7 @@ export default function App() {
           <Menu />
         </Button>
 
-        <img src={`${import.meta.env.BASE_URL}kitsune-logo.png`} alt="" aria-hidden="true" className="size-8 shrink-0 rounded-full" />
+        <img src={`${import.meta.env.BASE_URL}kitsune-logo.png`} alt="" aria-hidden="true" className="size-10 shrink-0 rounded-full" />
 
         <Typography className="font-bold text-[0.95rem] leading-[0.95] tracking-[0.05em] text-midground">
           {t.app.brand}
@@ -619,7 +619,7 @@ export default function App() {
               >
                 <PluginSlot name="header-left" />
 
-                <img src={`${import.meta.env.BASE_URL}kitsune-logo.png`} alt="" aria-hidden="true" className="size-8 shrink-0 rounded-full" />
+                <img src={`${import.meta.env.BASE_URL}kitsune-logo.png`} alt="" aria-hidden="true" className="size-12 shrink-0 rounded-full" />
 
                 <Typography className="font-bold text-[1.125rem] leading-[0.95] tracking-[0.0525rem] text-midground uppercase">
                   Kitsune
