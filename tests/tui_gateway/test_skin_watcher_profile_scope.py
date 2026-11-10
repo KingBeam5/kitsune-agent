@@ -36,6 +36,8 @@ def _write_skin(home, name):
     # Atomic replace, like the real config writers: skin names share lengths (ares/mono), and an
     # in-place same-size rewrite inside one coarse kernel timestamp tick keeps (mtime, size, ino,
     # ctime), so the server's raw-config cache would serve the previous skin.
+    from tests.skin_fixtures import install_skin
+    install_skin(home, name)  # ryu is the only shipped skin; other names need a user file
     tmp = home / "config.yaml.tmp"
     tmp.write_text(f"display:\n  skin: {name}\n", encoding="utf-8")
     os.replace(tmp, home / "config.yaml")
@@ -89,6 +91,9 @@ def test_profile_skin_switch_repaints_only_that_profiles_tui(homes):
     assert _skins(work_peer) == ["mono"]
     assert _skins(default_peer) == []
 
+    from hermes_constants import get_hermes_home
+    from tests.skin_fixtures import install_skin
+    install_skin(get_hermes_home(), "slate")  # default profile resolves skins from the process home
     _write_skin(default, "slate")
     server._broadcast_skin_if_changed()
     assert _skins(default_peer) == ["slate"]

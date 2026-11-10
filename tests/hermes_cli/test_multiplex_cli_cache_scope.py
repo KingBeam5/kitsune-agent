@@ -218,6 +218,9 @@ def test_active_skin_is_per_profile_and_leaves_launch_slot_alone(homes):
     a, b = homes
     from hermes_cli import skin_engine
 
+    from tests.skin_fixtures import install_skin
+    install_skin(a, "ares")  # ryu is the only shipped skin; per-profile names need user files
+    install_skin(b, "mono")
     (a / "config.yaml").write_text("display:\n  skin: ares\n", encoding="utf-8")
     (b / "config.yaml").write_text("display:\n  skin: mono\n", encoding="utf-8")
     skin_engine._active_skin = None

@@ -39,20 +39,20 @@ def test_set_edits_active_user_skin_in_place_preserving_everything_else():
     assert not (_skins() / "oasis-custom.yaml").exists()
 
 
-def test_set_forks_a_builtin_without_inventing_a_background():
-    _activate("default")  # a built-in — no file
+def test_set_forks_a_bundled_skin():
+    _activate("ryu")  # bundled — no user file
 
     assert skin_cmd._skin_set("ui_tool", "#00FFFF", None) == 0
 
-    fork = _skins() / "default-custom.yaml"
+    fork = _skins() / "ryu-custom.yaml"
     assert fork.exists()
     data = yaml.safe_load(fork.read_text())
     assert data["colors"]["ui_tool"] == "#00FFFF"
-    # default has no background, so the fork must not invent one (terminal stays put).
-    assert "background" not in data["colors"]
+    # ryu's background is carried into the fork unchanged.
+    assert data["colors"]["background"] == "#0B0B10"
     # full palette carried over, and it became active.
     assert data["colors"].get("banner_title")
-    assert (get_hermes_home() / "config.yaml").read_text().find("default-custom") != -1
+    assert (get_hermes_home() / "config.yaml").read_text().find("ryu-custom") != -1
 
 
 def test_set_rejects_non_hex():

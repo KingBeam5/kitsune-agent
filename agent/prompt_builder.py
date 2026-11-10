@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from hermes_constants import (
+    os_display_name,
     get_hermes_home, get_scratch_dir, get_skills_dir, is_wsl, reset_hermes_home_override, set_hermes_home_override,
 )
 
@@ -910,7 +911,7 @@ def _local_host_hints() -> list[str]:
         "WSL (Windows Subsystem for Linux)" if is_wsl()
         else f"Windows ({_windows_marketing_version()})" if sys.platform == "win32"
         else f"macOS ({platform.mac_ver()[0] or platform.release()})" if sys.platform == "darwin"
-        else f"{platform.system()} ({platform.release()})"
+        else f"{os_display_name()} ({platform.release()})"
     )
     host_lines = [f"Host: {host}", f"User home directory: {os.path.expanduser('~')}"]
     try:

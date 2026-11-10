@@ -1,8 +1,18 @@
+import pytest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 from cli import HermesCLI, _build_compact_banner, _rich_text_from_ansi
 from hermes_cli.skin_engine import get_active_skin, set_active_skin
+
+
+@pytest.fixture(autouse=True)
+def fixture_skins():
+    """ryu is the only shipped skin; tests that need another install it into the isolated home."""
+    from hermes_constants import get_hermes_home
+    from tests.skin_fixtures import install_skin
+    install_skin(get_hermes_home(), "ares", tool_prefix="╎")
+    install_skin(get_hermes_home(), "daylight")
 
 
 def _make_cli_stub():

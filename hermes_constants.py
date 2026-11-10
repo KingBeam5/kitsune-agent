@@ -1488,3 +1488,14 @@ def normalize_scope(scope: str | Path | None) -> str | None:
     """
     return hermes_home_key(scope) if scope is not None else None
 
+
+
+def os_display_name(system: str | None = None) -> str:
+    """Human-facing host OS name. Kitsune Agent ships on Kitsune Linux, so Linux reports as such.
+
+    Display only: machine-readable fields (API ``os``, platform checks) keep the real
+    ``platform.system()`` value.
+    """
+    import platform
+    system = system or platform.system()
+    return "Kitsune Linux" if system == "Linux" else system

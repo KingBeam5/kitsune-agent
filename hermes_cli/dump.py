@@ -9,7 +9,7 @@ from pathlib import Path
 
 from hermes_cli.config import get_hermes_home, get_env_path, get_project_root, load_config
 from hermes_cli.env_loader import load_hermes_dotenv
-from hermes_constants import display_hermes_home
+from hermes_constants import display_hermes_home, os_display_name
 from agent.skill_utils import is_excluded_skill_path
 from datetime import UTC
 
@@ -320,7 +320,7 @@ def run_dump(args):
     lines = [
         "--- hermes dump ---",
         f"version:          {_version_line(project_root)}",
-        f"os:               {platform.system()} {platform.release()} {platform.machine()}",
+        f"os:               {os_display_name()} {platform.release()} {platform.machine()}",
         f"python:           {sys.version.split()[0]}",
         f"openai_sdk:       {_openai_version()}",
         f"profile:          {profile}",

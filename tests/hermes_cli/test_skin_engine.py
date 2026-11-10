@@ -24,6 +24,14 @@ def reset_skin_state():
 
 
 
+@pytest.fixture(autouse=True)
+def fixture_skins():
+    """ryu is the only shipped skin; tests that need another install it into the isolated home."""
+    from hermes_constants import get_hermes_home
+    from tests.skin_fixtures import install_skin
+    install_skin(get_hermes_home(), "ares", tool_prefix="╎")
+
+
 class TestSkinManagement:
     def test_set_active_skin(self):
         from hermes_cli.skin_engine import set_active_skin, get_active_skin, get_active_skin_name
@@ -251,12 +259,6 @@ class TestCliBrandingHelpers:
         assert overrides["clarify-title"] == f"{skin.get_color('banner_title')} bold"
         assert overrides["sudo-prompt"] == f"{skin.get_color('ui_error')} bold"
         assert overrides["approval-title"] == f"{skin.get_color('ui_warn')} bold"
-
-        set_active_skin("daylight")
-        skin = get_active_skin()
-        overrides = get_prompt_toolkit_style_overrides()
-        assert overrides["status-bar"] == f"bg:{skin.get_color('status_bar_bg')} {skin.get_color('banner_text')}"
-        assert overrides["voice-status"] == f"bg:{skin.get_color('voice_status_bg')} {skin.get_color('ui_label')}"
 
 
 class TestKitsuneDefaultSkin:
