@@ -325,7 +325,7 @@ app never comes to front.
 
 Screenshots taken during computer control are normally internal — they exist
 so the model can see the screen, and the agent replies in text. But every
-image capture also saves a bounded, shareable copy under Kitsune' image cache
+image capture also saves a bounded, shareable copy under Kitsune's image cache
 and reports its path, so on attachment-capable surfaces (Telegram, Discord,
 Desktop, and other gateway platforms) you can simply ask:
 

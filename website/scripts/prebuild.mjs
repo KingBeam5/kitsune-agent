@@ -39,8 +39,9 @@ const outputFile = join(websiteDir, "static", "api", "skills.json");
 const pluginsOutputFile = join(websiteDir, "static", "api", "plugins.json");
 const pluginsMetaOutputFile = join(websiteDir, "static", "api", "plugins-meta.json");
 const unifiedIndexFile = join(websiteDir, "static", "api", "skills-index.json");
-const UNIFIED_INDEX_URL =
-  "https://hermes-agent.nousresearch.com/docs/api/skills-index.json";
+// Kitsune Agent: upstream pulls Nous Research's hosted skills catalog here. Kitsune's site must only
+// contain what is in this repository, so there is no remote catalog until Kitsune hosts its own.
+const UNIFIED_INDEX_URL = "";
 const UNIFIED_INDEX_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24h
 
 function writeEmptyFallback(reason) {
@@ -85,6 +86,8 @@ async function ensureUnifiedIndex() {
       // fall through to re-fetch
     }
   }
+
+  if (!UNIFIED_INDEX_URL) return existsSync(unifiedIndexFile); // Kitsune: no remote catalog
 
   try {
     const resp = await fetch(UNIFIED_INDEX_URL, {

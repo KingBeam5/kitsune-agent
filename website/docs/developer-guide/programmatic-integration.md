@@ -204,7 +204,7 @@ The OpenAI-compatible API intentionally keeps `GET /v1/models` minimal: it is
 the compatibility endpoint frontends expect, not the full Kitsune provider/model
 picker catalog.
 
-If an external control plane needs Kitsune' curated provider rows, per-model
+If an external control plane needs Kitsune's curated provider rows, per-model
 pricing, or capability hints, use one of the authenticated picker surfaces:
 
 - API server REST: `GET /api/model/options` with the API-server bearer key

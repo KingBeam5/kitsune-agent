@@ -5,14 +5,14 @@ import relativeDocLinks from './src/remark/relativeDocLinks';
 
 const config: Config = {
   title: 'Kitsune Agent',
-  tagline: 'The self-improving AI agent',
+  tagline: 'The AI agent of Kitsune Linux',
   favicon: 'img/favicon.ico',
 
-  url: 'https://hermes-agent.nousresearch.com',
-  baseUrl: '/docs/',
+  url: 'https://kingbeam5.github.io',
+  baseUrl: '/kitsune-agent/',
 
-  organizationName: 'NousResearch',
-  projectName: 'hermes-agent',
+  organizationName: 'KingBeam5',
+  projectName: 'kitsune-agent',
 
   onBrokenLinks: 'warn',
 
@@ -25,14 +25,10 @@ const config: Config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-Hans'],
+    locales: ['en'],  // upstream's zh-Hans translation describes Hermes Agent and is not published
     localeConfigs: {
       en: {
         label: 'English',
-      },
-      'zh-Hans': {
-        label: '简体中文',
-        htmlLang: 'zh-Hans',
       },
     },
   },
@@ -97,7 +93,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/hermes-agent-banner.png',
+    image: 'img/kitsune-agent-banner.png',
     // Algolia DocSearch (replaces @easyops-cn/docusaurus-search-local).
     // The local plugin shipped a ~16 MB client-side lunr index that every
     // visitor downloaded and hydrated before their first result; DocSearch
@@ -147,27 +143,8 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://hermes-agent.nousresearch.com/',
-          label: 'Download',
-          position: 'left',
-        },
-        {
-          type: 'localeDropdown',
-          position: 'right',
-        },
-        {
-          href: 'https://hermes-agent.nousresearch.com',
-          label: 'Home',
-          position: 'right',
-        },
-        {
-          href: 'https://github.com/NousResearch/hermes-agent',
+          href: 'https://github.com/KingBeam5/kitsune-agent',
           label: 'GitHub',
-          position: 'right',
-        },
-        {
-          href: 'https://discord.gg/NousResearch',
-          label: 'Discord',
           position: 'right',
         },
       ],
@@ -187,21 +164,19 @@ const config: Config = {
         {
           title: 'Community',
           items: [
-            { label: 'Discord', href: 'https://discord.gg/NousResearch' },
-            { label: 'GitHub Issues', href: 'https://github.com/NousResearch/hermes-agent/issues' },
+            { label: 'GitHub Issues', href: 'https://github.com/KingBeam5/kitsune-agent/issues' },
             { label: 'Skills Hub', href: 'https://agentskills.io' },
           ],
         },
         {
           title: 'More',
           items: [
-            { label: 'Desktop Download', href: 'https://hermes-agent.nousresearch.com/' },
-            { label: 'GitHub', href: 'https://github.com/NousResearch/hermes-agent' },
-            { label: 'Nous Research', href: 'https://nousresearch.com' },
+            { label: 'GitHub', href: 'https://github.com/KingBeam5/kitsune-agent' },
+            { label: 'Hermes Agent (upstream)', href: 'https://github.com/NousResearch/hermes-agent' },
           ],
         },
       ],
-      copyright: `Built by <a href="https://nousresearch.com">Nous Research</a> · MIT License · ${new Date().getFullYear()}`,
+      copyright: `Kitsune Agent · MIT License · a fork of <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> by Nous Research · ${new Date().getFullYear()}`,
     },
     prism: {
       theme: prismThemes.github,

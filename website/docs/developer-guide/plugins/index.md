@@ -115,7 +115,7 @@ literal `${NAME}`, and `NAME` keeps whatever value the server would have without
 that line (usually unset). Optional variables are safe to forward.
 
 The current portable subset supports stdio and Streamable HTTP MCP entries.
-Portable `streamable-http` entries are routed through Kitsune' existing native
+Portable `streamable-http` entries are routed through Kitsune's existing native
 remote MCP client (the same runtime that powers URL-based `mcp_servers`
 config), with the v1 boundary rules enforced: the URL must be absolute
 http(s) with no user information or fragment, plain HTTP is accepted only
@@ -218,7 +218,7 @@ key together with a catalog `requires_hermes` floor. `plugin.json` has no
 catalog name refuses on an older Kitsune, and `hermes plugins update` keeps the
 installed pin until Kitsune is updated.
 
-An explicit per-server MCP call budget also reaches Kitsune' outer tool executor. A call
+An explicit per-server MCP call budget also reaches Kitsune's outer tool executor. A call
 whose budget exceeds the shared concurrent-batch deadline becomes a sequential
 barrier, whether called directly or through tool search. It gets its own budget
 without extending unrelated tools in the same model response. Existing shorter
@@ -620,7 +620,7 @@ this Kitsune understands still loads with a warning.
 | `python_dependencies` | list of str | Declared Python requirements (e.g. `"requests>=2.0,<3"`). Installation requests consent; enabling admits the candidate through PM with the existing core, extras, and enabled-plugin union. Successful preparation publishes the environment and configuration transactionally; failure preserves the previous selection and enabled set. Declining leaves the installed plugin disabled. Pin upper bounds. |
 | `python_runtime` | str | `external` — the plugin manages its own interpreter/venv (sidecar pattern); Kitsune installs nothing and leaves any `pyproject.toml` alone. |
 | `config_schema` | mapping | JSON-schema-ish description of keys under `plugins.entries.<id>.settings`: `api_url: {type: str, default: "", description: "...", required: false}`. Validated at load; mismatches log actionable warnings naming the key and expected type — never load failures. Types: `str`, `int`, `float`, `bool`, `list`, `dict` (plus JSON-schema aliases) and `secret`. Also drives the settings form in the Desktop Plugins tab — see [Settings form in the Desktop](#settings-form-in-the-desktop). |
-| `config_keys` | list | Dotted paths in Kitsune' own config sections that your code reads (e.g. `memory.retaindb`). Each path covers itself and everything below it, so `hermes config get/set` recognizes those keys instead of warning "not a recognized config key", but only while the plugin is active (enabled, or the selected `memory.provider`). A path must be at least two segments deep, and paths Kitsune already defines are ignored, so a declaration never hides a typo elsewhere in the section. Settings for your plugin alone belong in `config_schema`; use this only for a core section your plugin reads. Portable `plugin.json` packages put it under `extensions."com.nousresearch.hermes".config_keys`. |
+| `config_keys` | list | Dotted paths in Kitsune's own config sections that your code reads (e.g. `memory.retaindb`). Each path covers itself and everything below it, so `hermes config get/set` recognizes those keys instead of warning "not a recognized config key", but only while the plugin is active (enabled, or the selected `memory.provider`). A path must be at least two segments deep, and paths Kitsune already defines are ignored, so a declaration never hides a typo elsewhere in the section. Settings for your plugin alone belong in `config_schema`; use this only for a core section your plugin reads. Portable `plugin.json` packages put it under `extensions."com.nousresearch.hermes".config_keys`. |
 | `license` | str | SPDX-style license id (e.g. `MIT`). |
 | `homepage` | str | Project URL. |
 | `tags` | list of str | Free-form discovery tags (e.g. `[gateway, telegram]`). |

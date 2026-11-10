@@ -133,7 +133,7 @@ This is the standalone command. The terminal-auth flow (`hermes acp --setup`) al
 
 What it does:
 
-- Installs Kitsune' pinned Chromium (the `chromium` package) through the package manager; no Node.js or npm involved
+- Installs Kitsune's pinned Chromium (the `chromium` package) through the package manager; no Node.js or npm involved
 - Kitsune launches that Chromium itself when `browser_exec` first needs a browser
 
 The bootstrap is idempotent — re-running it is fast and skips work that's already done.
@@ -286,7 +286,7 @@ older installs. As a manual fallback, configure Buzz's agent command as
 
 #### Model picker
 
-Buzz Desktop (v0.5.1+) renders Kitsune' full model menu in the agent's runtime
+Buzz Desktop (v0.5.1+) renders Kitsune's full model menu in the agent's runtime
 settings. The list comes from Kitsune itself over ACP: it shows every model
 from providers you have authenticated in Kitsune (the same inventory behind
 `hermes model` and the `/model` command), so a model missing from the menu
@@ -303,7 +303,7 @@ Buzz creates every agent with **Who can talk to this agent** set to `Owner only`
 Leave it there when the runtime is Kitsune.
 
 Two behaviors combine on this path. The `hermes-acp` toolset includes `terminal`
-and `execute_code`, and Buzz's ACP bridge answers Kitsune' permission requests
+and `execute_code`, and Buzz's ACP bridge answers Kitsune's permission requests
 itself with `allow_once` rather than surfacing them. A Kitsune agent in Buzz
 therefore runs shell commands on the host without prompting. I asked one to run
 `rm -rf` against a scratch directory and it deleted it, no prompt anywhere.
@@ -331,7 +331,7 @@ ACP mode uses the same Kitsune configuration as the CLI:
 - `~/.hermes/skills/`
 - `~/.hermes/state.db`
 
-Provider resolution uses Kitsune' normal runtime resolver, so ACP inherits the currently configured provider and credentials. Kitsune also advertises a terminal auth method (`--setup`) for first-run ACP clients; this opens Kitsune' interactive model/provider setup.
+Provider resolution uses Kitsune's normal runtime resolver, so ACP inherits the currently configured provider and credentials. Kitsune also advertises a terminal auth method (`--setup`) for first-run ACP clients; this opens Kitsune's interactive model/provider setup.
 
 ### Service-tier picker
 
@@ -380,7 +380,7 @@ Each session stores:
 - current conversation history
 - cancel event
 
-Conversations are persisted to Kitsune' session database and can be listed, loaded,
+Conversations are persisted to Kitsune's session database and can be listed, loaded,
 resumed, or forked after the ACP server restarts. Opening a new session without a
 prompt keeps it in memory only: model-discovery probes do not create empty history
 rows. A nonempty fork is persisted immediately, and existing session metadata can
@@ -425,7 +425,7 @@ ACP exposes a third tier between *allow once* and *allow always*: **Allow for se
 
 `allow_session` is the right default for an editor workflow where you trust an agent for the duration of a task but don't want to grant a long-lived allowlist entry. The safety trade-off is straightforward: the broader the scope, the less the editor will interrupt you, and the more damage a misbehaving agent (or prompt injection) can do before you notice. Start with `allow_once` for unfamiliar commands; promote to `allow_session` once you've seen the agent run the same pattern correctly a few times; reserve `allow_always` for truly idempotent commands you trust forever (e.g. `git status`).
 
-The ACP bridge maps these options onto Kitsune' internal approval semantics — `allow_always` writes a permanent allowlist entry the same way the CLI does, while `allow_session` only affects the in-process approval cache for the current ACP session.
+The ACP bridge maps these options onto Kitsune's internal approval semantics — `allow_always` writes a permanent allowlist entry the same way the CLI does, while `allow_session` only affects the in-process approval cache for the current ACP session.
 
 ## Troubleshooting
 
@@ -450,7 +450,7 @@ hermes status
 
 ### Missing credentials
 
-ACP mode uses Kitsune' existing provider setup. Configure credentials with:
+ACP mode uses Kitsune's existing provider setup. Configure credentials with:
 
 ```bash
 hermes model

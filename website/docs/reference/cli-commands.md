@@ -1553,7 +1553,7 @@ hermes moa configure [name]
 hermes moa delete <name>
 ```
 
-`hermes moa configure` reuses Kitsune' provider → model picker for each reference model and the aggregator. A preset is an execution-mode configuration, not a primary model or provider.
+`hermes moa configure` reuses Kitsune's provider → model picker for each reference model and the aggregator. A preset is an execution-mode configuration, not a primary model or provider.
 
 ## `hermes fallback`
 

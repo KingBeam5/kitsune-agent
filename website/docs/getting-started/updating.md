@@ -6,6 +6,10 @@ description: "How to update Kitsune Agent to the latest version or uninstall it"
 
 # Updating & Uninstalling
 
+:::caution Source checkouts only
+The update channels described on this page (Desktop updater, installer scripts, Docker, Nix, Termux) are upstream's and are not published for Kitsune Agent. The built-in update command has not been verified against Kitsune's repository yet. Update a source checkout with git: `git pull` in your clone of `KingBeam5/kitsune-agent`.
+:::
+
 ## Updating
 
 Choose the update method for the installation that is running:

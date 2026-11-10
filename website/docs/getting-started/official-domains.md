@@ -1,61 +1,34 @@
 ---
-title: Official Domains & Phishing Safety
-description: How to verify you are using genuine Kitsune Agent resources, and how to spot impersonation scams.
+title: Official Sources & Safety
+description: Where Kitsune Agent comes from, and how to avoid installing the wrong software.
 ---
 
-# Official Domains & Phishing Safety
+# Official Sources & Safety
 
-Kitsune Agent's popularity has attracted impersonation campaigns: fake "Kitsune" websites, GitHub accounts that mass-mention contributors with shortlinks, and cold emails offering "credits" on lookalike products. This page lists the official sources so you can check anything that claims to be Kitsune Agent.
+Kitsune Agent is a fork of [Hermes Agent](https://github.com/NousResearch/hermes-agent) by Nous Research (MIT licensed). The two share code and a documentation lineage, so make sure you are installing the one you mean to.
 
-## Official sources
+## Official Kitsune Agent sources
 
-Nous Research operates `nousresearch.com` and its subdomains. The ones Kitsune Agent uses:
-
-| Address | What it is |
+| Source | What it is |
 |---|---|
-| [hermes-agent.nousresearch.com](https://hermes-agent.nousresearch.com/) | Documentation, Desktop downloads, and the `install.sh` / `install.ps1` installers |
-| `hermes-assets.nousresearch.com` | Release artifacts: Desktop packages and updates, the Termux APT repository, installer mirrors |
-| [portal.nousresearch.com](https://portal.nousresearch.com/) | Nous Portal: account sign-in, subscriptions, billing |
-| `inference-api.nousresearch.com` | The Nous inference API Kitsune calls when you use the Nous provider (no web page) |
-| [nousresearch.com](https://nousresearch.com/) | Nous Research website |
+| [github.com/KingBeam5/kitsune-agent](https://github.com/KingBeam5/kitsune-agent) | Source code and issue tracker. The default branch is `kitsune`. |
 
-Outside `nousresearch.com`:
+Kitsune Agent has no other official download location yet: no website installer, no Desktop packages, no container image.
 
-- **GitHub:** the [NousResearch organization](https://github.com/NousResearch) and its [hermes-agent repository](https://github.com/NousResearch/hermes-agent) (source, releases, the Nix flake). Raw files from that repository are served from `raw.githubusercontent.com/NousResearch/hermes-agent/...`; that is the same repository, not a separate source. Any other account or repository is not ours.
-- **Docker Hub:** the [`nousresearch/hermes-agent`](https://hub.docker.com/r/nousresearch/hermes-agent) image, published by the repository's release workflow (see [Docker](../user-guide/docker.md)). Only the `nousresearch` namespace is official; images under other names or registries are not.
-- **X (Twitter):** [@NousResearch](https://x.com/NousResearch)
-- **Discord:** [discord.gg/NousResearch](https://discord.gg/NousResearch)
+## What is not Kitsune Agent
 
-## Installing from an official source
+These belong to upstream Hermes Agent and Nous Research. They install or serve **Hermes Agent**:
 
-The script installers are served from `hermes-agent.nousresearch.com`:
+- `hermes-agent.nousresearch.com`, including its `install.sh` and `install.ps1` scripts
+- `hermes-assets.nousresearch.com` release artifacts
+- the `nousresearch/hermes-agent` Docker image and the Hermes Termux package
+- the Hermes Desktop downloads
 
-```bash
-# Linux / macOS / WSL2
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-```
+**Nous Portal** (`portal.nousresearch.com`) is a Nous Research account and inference service. Kitsune Agent can use it as an optional model provider, but it is not part of Kitsune Agent.
 
-```powershell
-# Windows (native)
-iex (irm https://hermes-agent.nousresearch.com/install.ps1)
-```
+## Staying safe
 
-The other supported routes also stay on official sources: Desktop packages download from the [Kitsune website](https://hermes-agent.nousresearch.com/), Termux uses the signed APT repository on `hermes-assets.nousresearch.com` (see the [Termux guide](./termux.md), not the script above), Nix builds from the GitHub repository (see [Nix & NixOS](./nix-setup.md)), and Docker pulls `nousresearch/hermes-agent` from Docker Hub. Some guides fetch `install.ps1` straight from the repository at `raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1`; it is the same script.
-
-If an installer, download, image, or "portal" is hosted anywhere other than the sources listed on this page, treat it as untrusted.
-
-## Not official
-
-- **Any domain that is not `nousresearch.com` or one of its subdomains** (apart from the accounts listed above), even when it contains "hermes" or "hermes-agent" (`.icu`, `.org`, `.ai` and other variants), copies the branding, or says it "points to official docs". Read the whole host name: `hermes-agent.nousresearch.com.example.net` is not a Nous Research subdomain.
-- **Cryptocurrency tokens.** There is **no Kitsune Agent or Nous Research token**. Any account or site promoting one is a scam.
-- **GitHub accounts that mass-mention users** in discussions or issues with "community notice" posts and URL-shortener links (`goo.su`, `bit.ly`, etc.). Genuine project announcements never arrive as mass @-mentions with shortlinks.
-- **Unsolicited emails** offering credits, hosted "multiplayer Kitsune" products, or partnership deals that name-drop the project to build trust.
-
-## If you receive a suspicious message
-
-1. **Don't click** shortened or off-domain links; don't enter credentials or connect wallets.
-2. **Report the account** to GitHub (`Report abuse` on the profile) or the relevant platform.
-3. **Check the host name** against the rule above: if it is not `nousresearch.com` or a subdomain of it, and not one of the accounts listed here, it isn't ours.
-4. Optionally flag it in the [Nous Research Discord](https://discord.gg/NousResearch) or an issue so others see it, but note that impersonation campaigns are external abuse: they're handled by platform reports, not code changes.
-
-Kitsune Agent is MIT-licensed and free to self-host. Nobody legitimate will ever ask you to pay for the open-source agent itself, claim "your account has credits waiting", or DM you an alternate download link.
+- Check the owner and repository name before you clone or run anything.
+- Do not pipe a remote script into a shell unless you have read it and trust the host.
+- Keep API keys in `~/.hermes/.env`. Do not paste them into issues, chats, or screenshots.
+- Treat unsolicited messages offering "official" downloads, support, or airdrops as scams.

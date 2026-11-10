@@ -1627,7 +1627,7 @@ computer running Desktop. A plugin reaches exactly two kinds of folder:
 Every call names a folder handle and a path **relative to that folder**. The
 app's main process checks each call: `..`, absolute paths, drive letters and
 symlinks that resolve outside the folder are refused, never normalized, and
-nothing inside Kitsune' own data (the Kitsune home with `config.yaml`, `.env`,
+nothing inside Kitsune's own data (the Kitsune home with `config.yaml`, `.env`,
 auth and profiles; the app data folder with every plugin's data and the grants
 record) is reachable. A folder that holds or sits inside Kitsune data (however
 it is spelled: a bind mount, a macOS firmlink, a WSL share or a

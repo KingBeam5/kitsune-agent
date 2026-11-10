@@ -17,38 +17,27 @@ Conversational style and visual style are separate concepts:
 
 ```bash
 /skin                # show the current skin and list available skins
-/skin ares           # switch to a built-in skin
 /skin mytheme        # switch to a custom skin from ~/.hermes/skins/mytheme.yaml
 ```
 
-Or set the default skin in `~/.hermes/config.yaml`:
+Or set the skin in `~/.hermes/config.yaml`:
 
 ```yaml
 display:
-  skin: default
+  skin: ryu
 ```
 
-## Built-in skins
+If `display.skin` is unset, or names a skin that does not exist, Kitsune Agent uses **Ryu**.
+
+## Built-in skin
+
+Kitsune Agent ships one skin. Tasuki and Nyx are planned.
 
 | Skin | Description | Agent branding | Visual character |
 |------|-------------|----------------|------------------|
-| `default` | Classic Kitsune — gold and kawaii | `Kitsune Agent` | Warm gold borders, cornsilk text, kawaii faces in spinners. The familiar caduceus banner. Clean and inviting. |
-| `ares` | War-god theme — crimson and bronze | `Ares Agent` | Deep crimson borders with bronze accents. Aggressive spinner verbs ("forging", "marching", "tempering steel"). Custom sword-and-shield ASCII art banner. |
-| `mono` | Monochrome — clean grayscale | `Kitsune Agent` | All grays — no color. Borders are `#555555`, text is `#c9d1d9`. Ideal for minimal terminal setups or screen recordings. |
-| `slate` | Cool blue — developer-focused | `Kitsune Agent` | Royal blue borders (`#4169e1`), soft blue text. Calm and professional. No custom spinner — uses default faces. |
-| `daylight` | Light theme for bright terminals with dark text and cool blue accents | `Kitsune Agent` | Designed for white or bright terminals. Dark slate text with blue borders, pale status surfaces, and a light completion menu that stays readable in light terminal profiles. |
-| `warm-lightmode` | Warm brown/gold text for light terminal backgrounds | `Kitsune Agent` | Warm parchment tones for light terminals. Dark brown text with saddle-brown accents, cream-colored status surfaces. An earthy alternative to the cooler daylight theme. |
-| `poseidon` | Ocean-god theme — deep blue and seafoam | `Poseidon Agent` | Deep blue to seafoam gradient. Ocean-themed spinners ("charting currents", "sounding the depth"). Trident ASCII art banner. |
-| `sisyphus` | Sisyphean theme — austere grayscale with persistence | `Sisyphus Agent` | Light grays with stark contrast. Boulder-themed spinners ("pushing uphill", "resetting the boulder", "enduring the loop"). Boulder-and-hill ASCII art banner. |
-| `charizard` | Volcanic theme — burnt orange and ember | `Charizard Agent` | Warm burnt orange to ember gradient. Fire-themed spinners ("banking into the draft", "measuring burn"). Dragon-silhouette ASCII art banner. |
+| `ryu` (default) | Dark orchid and electric blue on near-black | `Ryu` | Near-black background (`#0B0B10`), Dark Orchid (`#9932CC`) borders and rules, lifted orchid text accents, electric blue (`#398BFF`) for tool and status indicators. The banner shows the Kitsune mask, with a compact version for narrow terminals. |
 
-### On the Desktop app
-
-The Desktop app lists your CLI skins next to its own themes in **Settings → Appearance**, with a few differences:
-
-- `default` (and `/skin default`) means the Desktop default theme, **Nous**. A stock `display.skin: default` therefore never repaints Desktop, and a runtime switch to `default` from the CLI/TUI or `config.yaml` moves a Desktop pick back to Nous.
-- The classic gold look is a separate Desktop theme named `classic` (**Classic Kitsune**). Pick it in Appearance, or run `/skin classic`, `/skin gold` or `/skin hermes` in a Desktop chat. It follows the light/dark toggle: gold on navy in dark mode, the CLI's light-terminal goldenrod palette in light mode.
-- `classic` is a reserved Desktop theme name, like the other Desktop built-ins (`mono`, `slate`, …). A user skin file with one of those names keeps the Desktop palette there; its `customCSS` still applies.
+Ryu is bundled with the program. To change it, copy it to `~/.hermes/skins/ryu.yaml` and edit the copy: a skin file in your skins directory takes precedence over the bundled one.
 
 ## Complete list of configurable keys
 

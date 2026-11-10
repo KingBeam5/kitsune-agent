@@ -1299,7 +1299,7 @@ When you run `hermes update`, the web frontend is automatically rebuilt with the
 
 ## Themes & plugins
 
-The dashboard ships with eight built-in themes and can be extended with user-defined themes, plugin tabs, and backend API routes — all drop-in, no repo clone needed.
+The dashboard ships with one look, Ryu, in two sizes and can be extended with user-defined themes, plugin tabs, and backend API routes — all drop-in, no repo clone needed.
 
 **Switch themes live** from the header bar — click the palette icon next to the language switcher. Selection persists to `config.yaml` under `dashboard.theme` and is restored on page load.
 
@@ -1309,14 +1309,8 @@ Built-in themes:
 
 | Theme | Character |
 |-------|-----------|
-| **Kitsune Teal** (`default`) | Dark teal + cream, system fonts, comfortable spacing |
-| **Kitsune Teal (Large)** (`default-large`) | Same as default with 18px text and roomier spacing |
-| **Nous Blue** (`nous-blue`) | Nous-branded blue accents with airy spacing |
-| **Midnight** (`midnight`) | Deep blue-violet, Inter + JetBrains Mono |
-| **Ember** (`ember`) | Warm crimson + bronze, Spectral serif + IBM Plex Mono |
-| **Mono** (`mono`) | Grayscale, IBM Plex, compact |
-| **Cyberpunk** (`cyberpunk`) | Neon green on black, Share Tech Mono |
-| **Rosé** (`rose`) | Pink + ivory, Fraunces serif, spacious |
+| **Ryu** (`default`) | Dark orchid and electric blue on near-black, system fonts, comfortable spacing |
+| **Ryu (Large)** (`default-large`) | Same as Ryu with 18px text and roomier spacing |
 
 To build your own theme, add a plugin tab, inject into shell slots, or expose plugin-specific REST endpoints, see **[Extending the Dashboard](./extending-the-dashboard)** — the complete guide covers:
 

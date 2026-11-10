@@ -47,7 +47,7 @@ This keeps personality predictable.
 If Kitsune loaded `SOUL.md` from whatever directory you happened to launch it in, your personality could change unexpectedly between projects. By loading only from `HERMES_HOME`, the personality belongs to the Kitsune instance itself.
 
 That also makes it easier to teach users:
-- "Edit `~/.hermes/SOUL.md` to change Kitsune' default personality."
+- "Edit `~/.hermes/SOUL.md` to change Kitsune's default personality."
 
 ## Where to edit it
 
@@ -167,29 +167,18 @@ So:
 - `/personality` = temporary mode switch
 
 Examples:
-- keep a pragmatic default SOUL, then use `/personality teacher` for a tutoring conversation
-- keep a concise SOUL, then use `/personality creative` for brainstorming
+- keep a pragmatic default SOUL, then switch to a custom `teacher` personality (see [Custom personalities](#custom-personalities-in-config)) for a tutoring conversation
+- keep a concise SOUL, then switch to a custom `brainstorm` personality for open-ended ideas
 
 ## Built-in personalities
 
-Kitsune ships with built-in personalities you can switch to with `/personality`.
+Kitsune Agent ships one built-in personality, **Ryu**, and it is active by default. Tasuki and Nyx are planned.
 
-| Name | Description |
-|------|-------------|
-| **helpful** | Friendly, general-purpose assistant |
-| **concise** | Brief, to-the-point responses |
-| **technical** | Detailed, accurate technical expert |
-| **creative** | Innovative, outside-the-box thinking |
-| **teacher** | Patient educator with clear examples |
-| **kawaii** | Cute expressions, sparkles, and enthusiasm ★ |
-| **catgirl** | Neko-chan with cat-like expressions, nya~ |
-| **pirate** | Captain Kitsune, tech-savvy buccaneer |
-| **shakespeare** | Bardic prose with dramatic flair |
-| **surfer** | Totally chill bro vibes |
-| **noir** | Hard-boiled detective narration |
-| **uwu** | Maximum cute with uwu-speak |
-| **philosopher** | Deep contemplation on every query |
-| **hype** | MAXIMUM ENERGY AND ENTHUSIASM!!! |
+| Personality | Character |
+|---|---|
+| **ryu** (default) | Calm, precise, slightly dry. Direct and technical, with no hype or filler. Says plainly when something is wrong or incomplete, sticks to what was asked, and never overrides your security choices. |
+
+Ryu is active whenever `display.personality` is unset. `/personality none` turns the overlay off.
 
 ## Switching personalities with commands
 
@@ -197,14 +186,14 @@ Kitsune ships with built-in personalities you can switch to with `/personality`.
 
 ```text
 /personality
-/personality concise
-/personality technical
+/personality ryu
+/personality none
 ```
 
 ### Messaging platforms
 
 ```text
-/personality teacher
+/personality ryu
 ```
 
 These are convenient overlays, but your global `SOUL.md` still gives Kitsune its persistent default personality unless the overlay meaningfully changes it.
@@ -233,13 +222,14 @@ Your selection is stored as a name in `display.personality`. Personalities never
 
 To cancel the active personality overlay and return to base behavior (your `SOUL.md` persona, plus `agent.system_prompt` if you set one), use any of:
 
+To return to the default personality (Ryu), use `/personality default`.
+
 ```text
 /personality none
-/personality default
 /personality neutral
 ```
 
-All three clear the selection (`display.personality`) and the change takes effect on your next message. Running `/personality` with no arguments also lists `none` alongside the available presets and marks the active one.
+Both of these clear the selection (`display.personality`) and the change takes effect on your next message. Running `/personality` with no arguments also lists `none` alongside the available presets and marks the active one.
 
 :::note One-time reset on upgrade
 Older Kitsune versions saved personality state inconsistently across surfaces, which could re-enable a personality you had previously turned off. On your first run after upgrading, any saved personality selection is reset to `none` once (the migration prints which personality was cleared). Re-enable it with `/personality <name>` if you still want it. Manual `agent.system_prompt` text is never touched.

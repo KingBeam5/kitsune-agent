@@ -388,13 +388,13 @@ An agent CLI driven over stdio is not an HTTP endpoint. Set `auth_type="external
 | `process_command_env_vars` | Env vars that override the binary, checked in order |
 | `process_args_env_var` | Env var that overrides argv (shlex-split) |
 
-The `process_command_env_vars` and `process_args_env_var` names are executable authority: Kitsune' generic env writers (dashboard, MCP and connector installs, `save_env_value`) refuse them, so set them in `.env` or the shell.
+The `process_command_env_vars` and `process_args_env_var` names are executable authority: Kitsune's generic env writers (dashboard, MCP and connector installs, `save_env_value`) refuse them, so set them in `.env` or the shell.
 
 The client your `create_client` returns receives `command` and `args` in `client_kwargs`. If it is already complete and async-safe, declare `HERMES_SKIP_TRANSPORT_WRAP = True` / `HERMES_SKIP_ASYNC_WRAP = True` as class attributes so the auxiliary client does not re-dispatch it through an HTTP wire adapter.
 
 #### The public ACP client: `agent.acp_client.ACPClient`
 
-For an agent CLI that speaks the [Agent Client Protocol](https://agentclientprotocol.com) on stdio, return an `ACPClient` (or a subclass) from `create_client` instead of writing your own shim. It is an OpenAI-client facade (`client.chat.completions.create(...)`, streaming included) that starts one short-lived ACP session per request, applies the requested model over ACP (`session/set_config_option`, else `session/set_model`), forwards Kitsune' tools as a prompt-level bridge, answers `fs/read_text_file` / `fs/write_text_file` inside the session cwd with Kitsune' file-safety rules, cancels permission requests, and lists the session's models with `list_models(timeout_seconds=...)`. It already declares both `HERMES_SKIP_*` attributes.
+For an agent CLI that speaks the [Agent Client Protocol](https://agentclientprotocol.com) on stdio, return an `ACPClient` (or a subclass) from `create_client` instead of writing your own shim. It is an OpenAI-client facade (`client.chat.completions.create(...)`, streaming included) that starts one short-lived ACP session per request, applies the requested model over ACP (`session/set_config_option`, else `session/set_model`), forwards Kitsune's tools as a prompt-level bridge, answers `fs/read_text_file` / `fs/write_text_file` inside the session cwd with Kitsune's file-safety rules, cancels permission requests, and lists the session's models with `list_models(timeout_seconds=...)`. It already declares both `HERMES_SKIP_*` attributes.
 
 ```python
 from agent.acp_client import ACPClient
@@ -538,7 +538,7 @@ Every `api_mode` gate (`determine_api_mode`, runtime resolution, agent construct
 | `aws_sdk` | AWS SDK credential chain (IAM role, profile, env) | `bedrock` plugin only |
 | `external_process` | Auth handled by a subprocess the agent spawns (see [External-process providers](#external-process-acp-providers)) | out-of-tree ACP plugins (e.g. `copilot-acp` in the `github-copilot` labs plugin) |
 
-Every profile is mirrored into Kitsune' auth registry under the `auth_type` it declares (two exclusions: an `api_key` profile with empty `env_vars`, and the aggregator/user-supplied slugs `openrouter`/`custom` plus the bespoke-refresh built-ins `kimi-coding`/`kimi-coding-cn`/`zai`), so `hermes auth`,
+Every profile is mirrored into Kitsune's auth registry under the `auth_type` it declares (two exclusions: an `api_key` profile with empty `env_vars`, and the aggregator/user-supplied slugs `openrouter`/`custom` plus the bespoke-refresh built-ins `kimi-coding`/`kimi-coding-cn`/`zai`), so `hermes auth`,
 `--provider <name>` and runtime resolution accept it whatever its shape. What differs is who performs the
 login: `api_key` profiles get the built-in key prompt / env-var resolution; every other `auth_type` is
 **provider-owned** — the plugin ships the two hooks below, and a non-api-key profile without an

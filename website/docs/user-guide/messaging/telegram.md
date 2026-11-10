@@ -210,7 +210,7 @@ platforms:
           - excalidraw       # skill commands work here too
 ```
 
-`priority_mode` controls how your list combines with Kitsune' built-in priority list:
+`priority_mode` controls how your list combines with Kitsune's built-in priority list:
 
 - `prepend`: put your commands first, then Kitsune defaults
 - `append`: keep Kitsune defaults first, then your commands
