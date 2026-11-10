@@ -3,6 +3,7 @@
 import sys
 
 __release_date__ = "2026.9.24"
+__product_name__ = "Kitsune Agent"  # user-visible name; the package/module stays hermes_cli
 # Declared for type checkers and the old-updater surface audit; served lazily by __getattr__.
 __version__: str
 
