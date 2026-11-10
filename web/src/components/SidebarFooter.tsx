@@ -21,7 +21,7 @@ export function SidebarFooter({ status }: SidebarFooterProps) {
       </Typography>
 
       <a
-        href="https://nousresearch.com"
+        href="https://github.com/KingBeam5/kitsune-agent"
         target="_blank"
         rel="noopener noreferrer"
         className={cn(

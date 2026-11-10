@@ -5,7 +5,17 @@ import { usePageHeader } from "@/contexts/usePageHeader";
 import { cn } from "@/lib/utils";
 import { PluginSlot } from "@/plugins";
 
-export const HERMES_DOCS_URL = "https://hermes-agent.nousresearch.com/docs/";
+/**
+ * Kitsune Agent documentation.
+ *
+ * Upstream embedded Nous Research's hosted Hermes docs here. Kitsune's own docs are built from
+ * `website/` and will be published as a GitHub Pages site; until that site is live this page links to
+ * the docs source in the repository (GitHub refuses to be framed, so there is no iframe).
+ * When the Pages site is live, point KITSUNE_DOCS_URL at it and render it in an iframe again.
+ */
+export const KITSUNE_DOCS_URL =
+  "https://github.com/KingBeam5/kitsune-agent/tree/kitsune/website/docs";
+export const KITSUNE_REPO_URL = "https://github.com/KingBeam5/kitsune-agent";
 
 const DS_BUTTON_OUTLINED_LINK_CN = cn(
   "group relative inline-grid grid-cols-[auto_1fr_auto] items-center",
@@ -22,7 +32,7 @@ export default function DocsPage() {
   useLayoutEffect(() => {
     setEnd(
       <a
-        href={HERMES_DOCS_URL}
+        href={KITSUNE_DOCS_URL}
         target="_blank"
         rel="noopener noreferrer"
         className={DS_BUTTON_OUTLINED_LINK_CN}
@@ -39,30 +49,43 @@ export default function DocsPage() {
   return (
     <div
       className={cn(
-        "flex min-h-0 w-full min-w-0 flex-1 flex-col",
+        "flex min-h-0 w-full min-w-0 flex-1 flex-col gap-4",
         "pt-1 sm:pt-2",
       )}
     >
       <PluginSlot name="docs:top" />
-      <iframe
-        title={t.app.nav.documentation}
-        src={HERMES_DOCS_URL}
+      <div
         className={cn(
-          "min-h-0 w-full min-w-0 flex-1",
+          "max-w-2xl space-y-4 p-6",
           "rounded-sm border border-current/20",
-          // Docusaurus paints over a transparent <html> / <body> and
-          // relies on the browser's canvas color (light by default) to
-          // fill the viewport. Inheriting the dashboard's dark color
-          // scheme makes that canvas dark, so the docs body text — which
-          // is tuned for a light canvas — becomes near-invisible. Force a
-          // light color scheme + white background on the iframe element so
-          // the docs render cleanly regardless of the active dashboard
-          // theme or the user's prefers-color-scheme.
-          "[color-scheme:light] bg-white",
         )}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-        referrerPolicy="no-referrer-when-downgrade"
-      />
+      >
+        <h2 className="text-lg font-bold tracking-wide text-midground">
+          Kitsune Agent documentation
+        </h2>
+        <p className="text-text-secondary">
+          The Kitsune Agent docs are written in the repository and are being
+          corrected page by page. A hosted docs site is not live yet, so the
+          pages open on GitHub.
+        </p>
+        <p className="text-text-secondary">
+          Start with <strong>Getting Started → Installation</strong> and{" "}
+          <strong>Official Sources &amp; Safety</strong>. Some pages are
+          inherited from upstream Hermes Agent and may describe features or
+          install methods that Kitsune Agent does not ship.
+        </p>
+        <p className="text-sm text-text-secondary">
+          Source:{" "}
+          <a
+            className="underline"
+            href={KITSUNE_REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/KingBeam5/kitsune-agent
+          </a>
+        </p>
+      </div>
       <PluginSlot name="docs:bottom" />
     </div>
   );
