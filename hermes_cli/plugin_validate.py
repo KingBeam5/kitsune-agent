@@ -361,7 +361,7 @@ def _run_capability_probe(
         try:
             result = subprocess.run(
                 [
-                    # -P: ``-c`` would put the user's cwd ahead of Hermes and the plugin's imports.
+                    # -P: ``-c`` would put the user's cwd ahead of Kitsune and the plugin's imports.
                     python, "-P", *options,
                     "-c",
                     _PROBE_SCRIPT,
@@ -579,7 +579,7 @@ _LOADABLE_ENTRYPOINTS = ("__init__.py", "desktop/plugin.js", "plugin.json")
 
 
 def _check_loadable(report: ValidationReport, plugin_dir: Path, manifest: Optional[dict] = None) -> None:
-    """A plugin.yaml with nothing beside it that Hermes can load (no ``register()`` module, no
+    """A plugin.yaml with nothing beside it that Kitsune can load (no ``register()`` module, no
     desktop bundle, no portable manifest, no declared language pack) installs "successfully" and does
     nothing — a pip-layout repo whose code lives under ``src/`` behind an entry point is the usual shape."""
     present = [rel for rel in _LOADABLE_ENTRYPOINTS if (plugin_dir / rel).is_file()]
@@ -671,7 +671,7 @@ def _validate_portable_plugin(report: ValidationReport, plugin_dir: Path) -> Val
     for server_name, config in package.mcp_servers.items():
         if config.get("trust") == "untrusted":
             report.add(f"server trust: {server_name}", True,
-                       "untrusted (Hermes asks before every write-capable tool call)")
+                       "untrusted (Kitsune asks before every write-capable tool call)")
         if config.get("tool_costs"):
             limit = config.get("spend_limit") or 0
             report.add(f"server costs: {server_name}", True,

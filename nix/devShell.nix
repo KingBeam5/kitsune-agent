@@ -57,8 +57,8 @@
           export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
           export NIX_SSL_CERT_FILE="$SSL_CERT_FILE"
 
-          echo "Hermes Agent dev shell in $HERMES_PYTHON_SRC_ROOT"
-          echo "Ready. 'hermes-checkout' runs this checkout; 'hermes' stays your installed Hermes."
+          echo "Kitsune Agent dev shell in $HERMES_PYTHON_SRC_ROOT"
+          echo "Ready. 'hermes-checkout' runs this checkout; 'hermes' stays your installed Kitsune."
         '';
       };
     };

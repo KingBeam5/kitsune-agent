@@ -11,8 +11,8 @@ platforms: [linux]
 docs_url: https://github.com/cryptobredda/hermes-opencode-free-acp#readme
 readme: true
 description: >-
-  Real OpenCode CLI over ACP as a Hermes model provider, with curated free-model
-  selection and Hermes-owned tool execution and approvals. Independent stdlib
+  Real OpenCode CLI over ACP as a Kitsune model provider, with curated free-model
+  selection and Kitsune-owned tool execution and approvals. Independent stdlib
   transport using only the documented provider API, not an HTTP compatibility
   client or a handoff to OpenCode's autonomous tools. Disclosure — starts the
   separately installed opencode acp executable for discovery/inference in the
@@ -31,8 +31,8 @@ description: >-
 known_issues:
   - Requires a separately installed OpenCode v2 CLI; live-tested with OpenCode 2.1.2 on Linux.
   - Requires plugins.isolation=in_process; isolated plugin-host execution is not supported.
-  - Text and Hermes tools only; output is buffered, and token/cost usage is unknown.
-  - Existing Hermes auxiliary and fallback overrides keep their configured billing behavior.
+  - Text and Kitsune tools only; output is buffered, and token/cost usage is unknown.
+  - Existing Kitsune auxiliary and fallback overrides keep their configured billing behavior.
   - Offline CI passes on Linux, macOS and Windows, but live CLI/model verification is Linux-only.
 capabilities:
   provides_tools: []

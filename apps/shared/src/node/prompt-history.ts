@@ -1,4 +1,4 @@
-// The Hermes prompt history file (`<HERMES_HOME>/.hermes_history`, the classic CLI's format), with
+// The Kitsune prompt history file (`<HERMES_HOME>/.hermes_history`, the classic CLI's format), with
 // HERMES_HOME read once at import.
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'

@@ -245,7 +245,7 @@ def ensure_import(extra: str) -> None:
         app_running = True
     if not app_running and sys.stdin.isatty() and sys.stdout.isatty():
         try:
-            answer = input(f"\nThis needs Hermes' optional {extra!r} feature, which isn't installed yet.\n"
+            answer = input(f"\nThis needs Kitsune' optional {extra!r} feature, which isn't installed yet.\n"
                            "Install it now? [Y/n] ").strip().lower()
         except (EOFError, KeyboardInterrupt):
             answer = "n"
@@ -270,7 +270,7 @@ def ensure_import(extra: str) -> None:
         if selected not in {Path(entry).resolve() for entry in sys.path}:
             reason = restart_needed(root) or "this process does not run from the install's dependency environment"
             note_restart_pending(f"{extra} installed ({reason})")
-            raise InstallError("venv", f"{extra} installed; restart Hermes to activate it ({reason})")
+            raise InstallError("venv", f"{extra} installed; restart Kitsune to activate it ({reason})")
 
 
 def ensure_and_bind(extra, importer, target_globals) -> bool:
@@ -414,9 +414,9 @@ def droppable_extras(project_root: Path) -> list[str]:
 def _pre_pm_site_packages(root: Path) -> list[Path]:
     """The site-packages of the checkout's own main-era ``venv/`` or ``.venv/`` (POSIX or Windows layout).
 
-    A venv counts when Hermes is installed in it and PM did not build it. What Hermes was installed
+    A venv counts when Kitsune is installed in it and PM did not build it. What Kitsune was installed
     from says nothing: a pre-PM updater reinstalls the checkout into the old venv from the tree it
-    just pulled, PM included. A bare ``uv venv`` holds no Hermes, and an environment PM built
+    just pulled, PM included. A bare ``uv venv`` holds no Kitsune, and an environment PM built
     (``pm.build_env --out .venv``) is no install's old state: reading either would union its
     contents into every sync of a data root with no recorded selection.
     """

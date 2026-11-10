@@ -1,4 +1,4 @@
-"""Long-lived agent/plugin subprocess clients die with the Hermes process that started them.
+"""Long-lived agent/plugin subprocess clients die with the Kitsune process that started them.
 
 Each kill -9 case drives the REAL production spawn path in two disposable owner processes, SIGKILLs
 one (no atexit, no finally: nothing of ours runs) and requires that owner's child tree to be gone

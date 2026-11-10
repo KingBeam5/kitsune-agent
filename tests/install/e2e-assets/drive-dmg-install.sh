@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Drive the Hermes-Setup dmg bootstrap through its first-run GUI.
+# Drive the Kitsune-Setup dmg bootstrap through its first-run GUI.
 #
 # The Setup app is Tauri (Rust + system webview), so Playwright/Electron
 # attach never works. Launch the binary bare in the background (it inherits
-# the redirect env), click "Install Hermes ->" with native input, then watch
+# the redirect env), click "Install Kitsune ->" with native input, then watch
 # the install land on disk: checkout + installed source launcher + app.
 #
 # Usage:
@@ -60,7 +60,7 @@ command -v cliclick >/dev/null 2>&1 || brew install --quiet cliclick
 window_geometry() {
   osascript <<'OSA' 2>/dev/null
 tell application "System Events"
-  set procs to (every process whose name contains "Hermes")
+  set procs to (every process whose name contains "Kitsune")
   if (count of procs) = 0 then return "no-process"
   set p to item 1 of procs
   if (count of windows of p) = 0 then return "no-window"
@@ -154,7 +154,7 @@ FIRST_SHOT=0
 CLICKS=0
 while :; do
   if install_complete; then
-    log "install landed: checkout + source launcher + Hermes.app present"
+    log "install landed: checkout + source launcher + Kitsune.app present"
     shot "02-install-landed"
     break
   fi
@@ -164,7 +164,7 @@ while :; do
     sleep 5
     install_complete && continue
     shot "ERROR-setup-exited"
-    log "Hermes-Setup exited (pid $SETUP_PID) before the install landed"
+    log "Kitsune-Setup exited (pid $SETUP_PID) before the install landed"
     exit 1
   fi
   err="$(bootstrap_error)"

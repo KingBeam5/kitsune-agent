@@ -26,8 +26,8 @@ _DEPLETED_LINE = "Status: access depleted — top up to restore"
 # Usage-window plans: allowances are shown as percent used.
 _WINDOW_TOP_TIER_USED_UP = "Monthly large-model usage is used up."
 _WINDOW_PAUSED_LINE = ("Status: included usage paused. Your subscription payment failed. Update your card to restore it. "
-                       "Until then, Hermes uses your credits.")
-_WINDOW_PAUSED_OTHER_LINE = "Status: included usage paused. See Billing in the Portal. Until then, Hermes uses your credits."
+                       "Until then, Kitsune uses your credits.")
+_WINDOW_PAUSED_OTHER_LINE = "Status: included usage paused. See Billing in the Portal. Until then, Kitsune uses your credits."
 
 
 def _utc_now() -> datetime:
@@ -61,7 +61,7 @@ class AccountUsageSnapshot:
     # fetcher cannot tell accounts apart, so the snapshot belongs to the provider's legacy slot.
     identity: Optional[str] = None
     # Exact decoded provider response body (no headers/credentials) for integrations that need
-    # fields Hermes does not normalize yet. Only populated by providers that fetch a JSON body.
+    # fields Kitsune does not normalize yet. Only populated by providers that fetch a JSON body.
     raw: Optional[dict] = None
     # Usage-window plans only: the stacked bar layout. Every other snapshot
     # renders exactly as before.
@@ -224,7 +224,7 @@ def _window_top_tier_line(reset_at: Optional[datetime], keep_going_on_credits: A
     return f"{_WINDOW_TOP_TIER_USED_UP}{resets}{tail}"
 
 
-_WINDOW_KEEP_GOING_OFF_LINE = "Keep going on credits: off. Hermes waits for the reset (turn on in /topup)."
+_WINDOW_KEEP_GOING_OFF_LINE = "Keep going on credits: off. Kitsune waits for the reset (turn on in /topup)."
 _WINDOW_KEEP_GOING_ON_LINE = "Keep going on credits: on. Uses your credits when included usage runs out."
 
 

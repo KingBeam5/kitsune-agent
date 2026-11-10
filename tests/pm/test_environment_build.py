@@ -209,7 +209,7 @@ def test_a_checkout_venv_built_on_an_external_python_is_not_a_pre_pm_install(ins
                                    out=source / ".venv", cache=tmp_path / "cache", env=env, offline=True)
     venv = executable.parent.parent
     assert f"home = {external}" in (venv / "pyvenv.cfg").read_text(encoding="utf-8")
-    # Hermes installed into it, as a contributor's checkout `.venv` holds it.
+    # Kitsune installed into it, as a contributor's checkout `.venv` holds it.
     (site_packages(venv) / "hermes_agent-0.0.0.dist-info").mkdir()
 
     assert pre_pm_baseline(source) == []

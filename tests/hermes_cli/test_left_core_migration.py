@@ -370,7 +370,7 @@ def test_repeated_startup_failures_back_off_exponentially(tmp_path, monkeypatch)
     assert len(attempts) == 3
     start_after(24 * 7.1)
     assert len(attempts) == 4
-    stamp.write_text("", encoding="utf-8")               # an older Hermes's empty stamp counts once
+    stamp.write_text("", encoding="utf-8")               # an older Kitsune's empty stamp counts once
     start_after(1.5)
     assert len(attempts) == 5
 
@@ -426,7 +426,7 @@ def test_old_mcp_serve_spelling_names_the_plugin_command(tmp_path, monkeypatch, 
 
 
 def test_mcp_serve_is_never_installed_automatically(tmp_path):
-    """MCP clients live outside Hermes, so no home shows the feature in use: hint only, no install."""
+    """MCP clients live outside Kitsune, so no home shows the feature in use: hint only, no install."""
     installs = []
     home = _home(tmp_path, config="mcp_servers:\n  hermes:\n    command: hermes\n    args: [mcp, serve]\n")
     assert lcm.migrate_home(home, install=lambda name: installs.append(name) or {"ok": True},

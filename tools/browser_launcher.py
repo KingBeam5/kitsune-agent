@@ -4,10 +4,10 @@ One browser per launcher key (the session layer's cache key, or ``profile:<dir>`
 profile shared by every key). Chromium picks its own DevTools port (``--remote-debugging-port=0``)
 and writes it to ``<user-data-dir>/DevToolsActivePort``; the CDP URL comes from that file, so there
 is no port race. Every owned launch leaves a record in a private (0700) launcher state dir so a later
-Hermes process can reap the Chromium of an owner that crashed, after proving the pid is still that browser:
+Kitsune process can reap the Chromium of an owner that crashed, after proving the pid is still that browser:
 a throwaway profile's in its home (``<HERMES_HOME>/cache/browser/chromium-records``), a persistent profile's
 in that profile's own dir under :func:`_shared_profiles_root` (per OS user: every home pinning the dir shares
-it). A shared-profile Chromium other Hermes processes attached to is stopped only by its last holder
+it). A shared-profile Chromium other Kitsune processes attached to is stopped only by its last holder
 (``tools/browser_launcher_holders.py``).
 
 Stop is always parent-first (``ProcessRegistry._terminate_host_pid``): Chromium reaps its own
@@ -67,7 +67,7 @@ _STDERR_TAIL_CHARS = 1500
 @dataclass
 class LaunchedBrowser:
     """A Chromium this process launched (``owned``) or attached to (a running instance on a shared
-    profile, never killed by Hermes)."""
+    profile, never killed by Kitsune)."""
 
     key: str
     pid: Optional[int]
@@ -188,7 +188,7 @@ def chromium_ready() -> tuple[bool, str]:
 # ── Launch ───────────────────────────────────────────────────────────────────────────────────────────
 
 def _default_user_data_dir(key: str, home_key: str) -> str:
-    """Per process too: two Hermes processes on one profile use the same keys (``browser-exec-default``,
+    """Per process too: two Kitsune processes on one profile use the same keys (``browser-exec-default``,
     named sessions), and each launch wipes its throwaway dir first. The name carries the owner's pid and
     start time: a process that dies before its launch record exists leaves the dir to the reaper
     (:func:`_reclaim_throwaway_dirs`)."""
@@ -254,7 +254,7 @@ def _spawn_kwargs() -> dict[str, Any]:
     if os.name == "nt":
         from hermes_cli._subprocess_compat import windows_hide_flags
         return {"creationflags": windows_hide_flags() | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)}
-    # detached-spawn: ok — a shared-profile Chromium outlives its launcher for its other holders (browser_launcher_holders); a crashed owner's throwaway one is reaped from its launch record by the next Hermes
+    # detached-spawn: ok — a shared-profile Chromium outlives its launcher for its other holders (browser_launcher_holders); a crashed owner's throwaway one is reaped from its launch record by the next Kitsune
     return {"start_new_session": True}
 
 
@@ -510,7 +510,7 @@ def _attach_local(key: str, user_data_dir: str, home_key: str,
         if time.monotonic() >= deadline:
             return None, (f"The browser profile {user_data_dir} is in use by Chromium pid {pid}, which is not "
                           "responding on its DevTools endpoint (paused, hung, or started without remote debugging). "
-                          "Hermes will not start a second browser on it; try again once it responds, or stop it.")
+                          "Kitsune will not start a second browser on it; try again once it responds, or stop it.")
         time.sleep(min(delay, max(0.0, deadline - time.monotonic())))
         delay *= 2
         attached = _attach_running(key, user_data_dir, home_key)
@@ -519,7 +519,7 @@ def _attach_local(key: str, user_data_dir: str, home_key: str,
 
 def _foreign_unreachable(user_data_dir: str) -> str:
     return (f"The browser profile {user_data_dir} is in use by a Chromium in another environment (a container or "
-            "the host) that this process can neither reach nor verify, so Hermes will not start a second browser "
+            "the host) that this process can neither reach nor verify, so Kitsune will not start a second browser "
             "on it. Stop that browser, or set browser.user_data_dir to another directory for this environment; if "
             f"no browser runs there any more, delete {os.path.join(user_data_dir, 'SingletonLock')}.")
 
@@ -758,7 +758,7 @@ def _terminate(pid: Optional[int], start_time: Optional[int], proc: Optional[sub
 
 def stop_browser(key: str) -> None:
     """Let go of ``key``'s browser. A throwaway one this process launched is stopped. A shared-profile one is
-    stopped only by its LAST holder across Hermes processes (:func:`_last_holder_out`); one a human started is
+    stopped only by its LAST holder across Kitsune processes (:func:`_last_holder_out`); one a human started is
     never stopped. Holds ``key``'s launch lock: a relaunch of ``key`` waits for this stop instead of
     registering a replacement on the dir it is about to delete."""
     with _key_lock(key):
@@ -789,7 +789,7 @@ def _stop_locked(key: str) -> None:
 
 def _last_holder_out(record: Path, browser: LaunchedBrowser) -> bool:
     """Drop this process's hold on shared-profile ``browser`` (caller holds the records lock). True when it
-    must stop it now: no other live Hermes process holds it, and Hermes launched it (a launch record names
+    must stop it now: no other live Kitsune process holds it, and Kitsune launched it (a launch record names
     it). Otherwise a record this process holds, or whose owner is gone, goes to a live holder."""
     from tools import browser_launcher_holders as holders
     holders.drop_lease(record)
@@ -825,7 +825,7 @@ def _ephemeral_root(home: str) -> Path:
 
 def _records_dir(home: str) -> Path:
     """``home``'s throwaway-profile records (not the process's home): a crashed owner's Chromium is reaped by the
-    next Hermes process serving that profile. Read only after ``_private_dir`` vouches for it."""
+    next Kitsune process serving that profile. Read only after ``_private_dir`` vouches for it."""
     return Path(home) / "cache" / "browser" / "chromium-records"
 
 
@@ -1036,7 +1036,7 @@ def _reap_record(path: Path, home: Optional[str]) -> bool:
     if record.get("owner_pid") != os.getpid() and _owner_alive(record):
         return False
     others = holders.other_live_holders(path, record.get("start_time"))
-    if others:  # another live Hermes process still drives it
+    if others:  # another live Kitsune process still drives it
         heir = holders.successor(others)
         if heir is not None:
             holders.hand_over(path, record, heir)
@@ -1121,7 +1121,7 @@ def _reclaim_throwaway_dirs(home: str) -> None:
             logger.debug("browser: keeping the throwaway profile %s: a Chromium still runs on it", entry)
             continue
         shutil.rmtree(entry, ignore_errors=True)  # a symlink is refused, never followed
-        logger.info("browser: removed the throwaway profile %s of a Hermes process that is gone", entry)
+        logger.info("browser: removed the throwaway profile %s of a Kitsune process that is gone", entry)
 
 
 def _served_home_keys(homes) -> set[str]:
@@ -1135,7 +1135,7 @@ def _served_home_keys(homes) -> set[str]:
 
 
 def reap_orphaned_browsers(homes=()) -> int:
-    """Stop Chromium processes whose owning Hermes process is gone, in every profile this process serves
+    """Stop Chromium processes whose owning Kitsune process is gone, in every profile this process serves
     (``_served_home_keys``; the janitor and atexit run outside any profile scope, so each home's records
     are read by path); returns the count. A pid is signalled only after its start time AND its
     ``--user-data-dir`` argv token match the record. Throwaway profiles of owners that are gone go too."""

@@ -96,12 +96,12 @@ def _state_dir() -> Path:
 
 
 def _http_cache_dir() -> Path:
-    """Filesystem HTTP cache shared by every Lightpanda this Hermes spawns.
+    """Filesystem HTTP cache shared by every Lightpanda this Kitsune spawns.
 
     Shared rather than per-session so a cached asset survives session churn.
     Lightpanda holds it in sqlite (WAL) with a best-effort write path, and
     ``--http-cache-entry-limit`` (upstream default 1000, not passed here)
-    bounds it without Hermes managing eviction.
+    bounds it without Kitsune managing eviction.
     """
     path = _state_dir() / "http-cache"
     path.mkdir(parents=True, exist_ok=True)
@@ -191,7 +191,7 @@ def _write_record(server: LightpandaServer) -> None:
     record = {"pid": server.proc.pid, "port": server.port, "owner_pid": os.getpid(),
               "start_time": server.start_time, "started_at": time.time()}
     try:
-        # Temp + rename: an orphan sweep (another Hermes, or a cleanup thread) unlinks a record it
+        # Temp + rename: an orphan sweep (another Kitsune, or a cleanup thread) unlinks a record it
         # cannot parse, so a torn in-place write would drop a live server's record.
         atomic_json_write(_state_dir() / f"{server.session_name}.json", record, indent=None)
     except OSError as e:
@@ -205,7 +205,7 @@ def launch_lightpanda(session_name: str, *, block_private_networks: bool = False
     if not binary:
         if os.name == "nt":
             return None, ("browser.engine is 'lightpanda' but Lightpanda has no Windows "
-                          "build. Set browser.engine to auto (or run Hermes under WSL2).")
+                          "build. Set browser.engine to auto (or run Kitsune under WSL2).")
         return None, ("browser.engine is 'lightpanda' but no lightpanda binary was found on PATH, ~/.lightpanda "
                       f"or ~/.local/bin. {LIGHTPANDA_INSTALL_HINT}, or set browser.engine to auto.")
 
@@ -219,7 +219,7 @@ def launch_lightpanda(session_name: str, *, block_private_networks: bool = False
     try:
         with open(log_path, "wb") as log_file:
             proc = subprocess.Popen(argv, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                                    # detached-spawn: ok — a crashed owner's server is reaped from its state record by the next Hermes (reap_orphaned_lightpanda); owning it is a follow-up with the launcher's Chromium
+                                    # detached-spawn: ok — a crashed owner's server is reaped from its state record by the next Kitsune (reap_orphaned_lightpanda); owning it is a follow-up with the launcher's Chromium
                                     stderr=log_file, env=_browser_env(), start_new_session=True)
     except (OSError, subprocess.SubprocessError) as e:
         return None, f"Failed to launch lightpanda serve ({binary}): {e}"
@@ -305,7 +305,7 @@ def _is_lightpanda_process(pid: int, port, start_time) -> bool:
 
 
 def reap_orphaned_lightpanda() -> int:
-    """Kill ``lightpanda serve`` processes whose owning Hermes is gone; return the count. A live owner is
+    """Kill ``lightpanda serve`` processes whose owning Kitsune is gone; return the count. A live owner is
     never touched; a PID is only signalled after psutil confirms it is still ``lightpanda serve`` on the recorded port."""
     try:
         state_dir = _state_dir()
@@ -377,4 +377,4 @@ def lightpanda_engine_status() -> tuple[bool, str]:
     from tools.browser_use_cli import _read_browser_cfg, is_legacy_browser_use_cloud_config
     if is_legacy_browser_use_cloud_config(_read_browser_cfg()):
         return False, "Browser Use cloud (BROWSER_USE_API_KEY) is selected"
-    return True, "Hermes spawns `lightpanda serve` per browser session"
+    return True, "Kitsune spawns `lightpanda serve` per browser session"

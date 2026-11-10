@@ -1,14 +1,14 @@
 name: hermes-browser-extension
-title: Hermes Browser Extension
+title: Kitsune Browser Extension
 repo: https://github.com/abundantbeing/hermes-browser-extension
 sha: 34e99b9a3c71a7d437f6593a222d55f74116ef61
 subdir: companion-plugin
 version: "0.4.0"
 description: >-
-  Connects Hermes to the separately installed Hermes Browser Extension for
+  Connects Kitsune to the separately installed Kitsune Browser Extension for
   user-shared page context and opt-in control of explicitly attached browser
   tabs. Browser control requires Chromium; Firefox supports chat and page
-  context. Serves authenticated routes on the Hermes API server and stores
+  context. Serves authenticated routes on the Kitsune API server and stores
   bounded redacted receipts and screenshots in profile-scoped plugin data.
 maintainer: abundantbeing
 tier: community
@@ -21,7 +21,7 @@ screenshots:
 readme: true
 platforms: []
 known_issues:
-  - Install the browser extension separately; this entry installs only the Hermes-side plugin. The API server must be enabled, and gateway routes load at startup.
+  - Install the browser extension separately; this entry installs only the Kitsune-side plugin. The API server must be enabled, and gateway routes load at startup.
   - Remove the older hermes-browser-companion plugin before installing this renamed plugin to avoid duplicate context-tool registrations.
   - On a multiplexed gateway, named-profile control needs per-profile plugin-route dispatch. Without it, use the default profile. Host-isolated plugins cannot register the API-server routes.
 capabilities:

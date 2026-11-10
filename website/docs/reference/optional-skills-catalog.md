@@ -99,9 +99,9 @@ hermes skills uninstall <skill-name>
 
 | Skill | Description |
 |-------|-------------|
-| [**actual-setup**](../user-guide/skills/optional/devops/devops-actual-setup.md) | Set up Actual Computer (actual.inc) inference in Hermes. |
+| [**actual-setup**](../user-guide/skills/optional/devops/devops-actual-setup.md) | Set up Actual Computer (actual.inc) inference in Kitsune. |
 | [**docker-management**](../user-guide/skills/optional/devops/devops-docker-management.md) | Manage Docker containers, images, volumes, and Compose. |
-| [**hermes-s6-container-supervision**](../user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md) | Modify or debug s6 services in the Hermes Docker image. |
+| [**hermes-s6-container-supervision**](../user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md) | Modify or debug s6 services in the Kitsune Docker image. |
 | [**inference-sh-cli**](../user-guide/skills/optional/devops/devops-inference-sh-cli.md) | Run 150+ AI apps (image, video, LLM) via inference.sh CLI. |
 | [**pinggy-tunnel**](../user-guide/skills/optional/devops/devops-pinggy-tunnel.md) | Zero-install localhost tunnels over SSH via Pinggy. |
 | [**setup-wizard-generator**](../user-guide/skills/optional/devops/devops-setup-wizard-generator.md) | Generate a bash wizard guiding a human through manual setup. |
@@ -261,7 +261,7 @@ hermes skills uninstall <skill-name>
 | [**code-wiki**](../user-guide/skills/optional/software-development/software-development-code-wiki.md) | Generate wiki docs + Mermaid diagrams for any codebase. |
 | [**grill-me**](../user-guide/skills/optional/software-development/software-development-grill-me.md) | Adversarial plan interview before implementation. |
 | [**hermes-agent-skill-authoring**](../user-guide/skills/optional/software-development/software-development-hermes-agent-skill-authoring.md) | Author in-repo SKILL.md files: frontmatter and structure. |
-| [**inspecting-hermes-desktop-dom**](../user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom.md) | Read the live Hermes desktop DOM/CSS over CDP. |
+| [**inspecting-hermes-desktop-dom**](../user-guide/skills/optional/software-development/software-development-inspecting-hermes-desktop-dom.md) | Read the live Kitsune desktop DOM/CSS over CDP. |
 | [**node-inspect-debugger**](../user-guide/skills/optional/software-development/software-development-node-inspect-debugger.md) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI. |
 | [**pr-lens**](../user-guide/skills/optional/software-development/software-development-pr-lens.md) | Draw code changes as animated architecture/data-flow SVGs. |
 | [**python-debugpy**](../user-guide/skills/optional/software-development/software-development-python-debugpy.md) | Debug Python: pdb REPL + debugpy remote (DAP). |

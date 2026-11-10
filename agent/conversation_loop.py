@@ -416,7 +416,7 @@ def _ollama_context_limit_error(agent: Any, request_tokens: int) -> Optional[str
 
     model = getattr(agent, "model", "") or "the selected model"
     logger.warning(
-        "Ollama runtime context too small for Hermes tool use: model=%s provider=%s base_url=%s "
+        "Ollama runtime context too small for Kitsune tool use: model=%s provider=%s base_url=%s "
         "runtime_context=%d minimum_context=%d estimated_request_tokens=%d tool_count=%d session=%s",
         model, getattr(agent, "provider", "") or "unknown",
         getattr(agent, "base_url", "") or "unknown base URL", runtime_ctx, MINIMUM_CONTEXT_LENGTH,
@@ -424,10 +424,10 @@ def _ollama_context_limit_error(agent: Any, request_tokens: int) -> Optional[str
         getattr(agent, "session_id", None) or "none",
     )
     return (
-        f"Ollama loaded `{model}` with only {runtime_ctx:,} tokens of runtime context, but Hermes "
+        f"Ollama loaded `{model}` with only {runtime_ctx:,} tokens of runtime context, but Kitsune "
         f"needs at least {MINIMUM_CONTEXT_LENGTH:,} tokens for reliable tool use.\n\n"
         "Increase the Ollama context for this model and restart/reload the model before trying "
-        "again. A known-good starting point is 65,536 tokens. In Hermes config, set "
+        "again. A known-good starting point is 65,536 tokens. In Kitsune config, set "
         "`model.ollama_num_ctx: 65536` (and `model.context_length: 65536` if you also override the "
         "displayed model context). If you manage the model through an Ollama Modelfile, set "
         "`PARAMETER num_ctx 65536` there instead."
@@ -613,7 +613,7 @@ def _usage_window_refusal(agent, classified, api_messages=None) -> tuple[str, Op
         top_tier = current_model_is_top_tier(agent)
         stop = _window_hard_stop(state, model_is_free=False, model_is_top_tier=top_tier) if state is not None else None
         # The server may word the refusal itself (``display_message`` on the 402): shown verbatim, so a
-        # reword ships with the API. Without it, the stop line Hermes builds from the gauges.
+        # reword ships with the API. Without it, the stop line Kitsune builds from the gauges.
         display = context.get("display_message")
         server_message = str(getattr(classified, "message", "") or "").strip()
         if isinstance(display, str) and display.strip():
@@ -1912,7 +1912,7 @@ def _redact_display_metadata(metadata: dict) -> dict:
 
 
 def _close_durable_failed_turn(agent, result: Any) -> None:
-    """Append a Hermes-authored assistant boundary when a failed turn left its durable tail open
+    """Append a Kitsune-authored assistant boundary when a failed turn left its durable tail open
     (``OPEN_TURN_TAIL_ROLES``: the accepted ``user`` row, or a ``tool`` row when a call ran before
     the failure), in place on ``result["messages"]`` and in SessionDB.
 

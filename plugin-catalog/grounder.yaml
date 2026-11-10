@@ -12,7 +12,7 @@ title: Grounder
 known_issues:
   - "Installing does not switch web_search over: run hermes config set web.search_backend grounder. The backend is search-only, so web_extract stays with another backend"
   - "Signing in needs the public client id first: hermes config set GROUNDER_OAUTH_CLIENT_ID https://api.grounder.net/oauth/clients/hermes-agent. A search key needs no client id"
-  - "After a sign-in with no search key, hermes tools still shows Grounder as not set up, because a plugin cannot see Hermes's grant. Searches work once web.search_backend is grounder"
+  - "After a sign-in with no search key, hermes tools still shows Grounder as not set up, because a plugin cannot see Kitsune's grant. Searches work once web.search_backend is grounder"
   - "An account gets 50 free searches a day. Past that, searches use credit bought on the account"
 capabilities:
   provides_tools: []

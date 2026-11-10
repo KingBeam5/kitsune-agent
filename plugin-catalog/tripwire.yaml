@@ -12,7 +12,7 @@ docs_url: https://github.com/percyhendrux123-prog/hermes-tripwire/blob/5a8b5bab0
 readme: true
 platforms: [macos, linux]
 known_issues:
-  - "A tool call the model makes outside its toolset is rejected by Hermes before any plugin hook runs, so Tripwire does not see it."
+  - "A tool call the model makes outside its toolset is rejected by Kitsune before any plugin hook runs, so Tripwire does not see it."
   - "The optional notifier (scripts/tripwire_notify.py) is fetched at the pinned commit and scheduled with `hermes cron create ... --no-agent`; it is not part of the plugin directory. See README."
 capabilities:
   provides_tools: []

@@ -1,16 +1,16 @@
 ---
 sidebar_position: 16
 title: "Yuanbao"
-description: "Yuanbao moved out of Hermes core into the yuanbao Hermes Labs plugin"
+description: "Yuanbao moved out of Kitsune core into the yuanbao Kitsune Labs plugin"
 ---
 
 # Yuanbao
 
-:::warning Hermes Labs plugin
-Yuanbao is now a Hermes Labs plugin: built by Nous Research, not supported, and likely not maintained going forward. Fixes from the community are welcome.
+:::warning Kitsune Labs plugin
+Yuanbao is now a Kitsune Labs plugin: built by Nous Research, not supported, and likely not maintained going forward. Fixes from the community are welcome.
 :::
 
-The [Yuanbao](https://yuanbao.tencent.com/) gateway platform and its `yb_*` tools (`yb_query_group_info`, `yb_query_group_members`, `yb_send_dm`, `yb_search_sticker`, `yb_send_sticker`) are no longer part of Hermes core. They ship as the `yuanbao` plugin in [NousResearch/hermes-labs-plugins](https://github.com/NousResearch/hermes-labs-plugins/tree/main/yuanbao), which carries the full setup guide.
+The [Yuanbao](https://yuanbao.tencent.com/) gateway platform and its `yb_*` tools (`yb_query_group_info`, `yb_query_group_members`, `yb_send_dm`, `yb_search_sticker`, `yb_send_sticker`) are no longer part of Kitsune core. They ship as the `yuanbao` plugin in [NousResearch/hermes-labs-plugins](https://github.com/NousResearch/hermes-labs-plugins/tree/main/yuanbao), which carries the full setup guide.
 
 ## Install
 

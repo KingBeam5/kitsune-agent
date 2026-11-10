@@ -87,23 +87,23 @@ def test_rename_cannot_overwrite_a_protected_destination(protected_home, tmp_pat
 def test_installed_desktop_app_can_be_read_but_never_changed(tmp_path, monkeypatch):
     from tests import conftest
 
-    app = tmp_path / "Applications" / "Hermes.app"
+    app = tmp_path / "Applications" / "Kitsune.app"
     (app / "Contents").mkdir(parents=True)
     plist = app / "Contents" / "Info.plist"
     plist.write_text("unchanged", encoding="utf-8")
-    replacement = tmp_path / "Hermes.app.new"
+    replacement = tmp_path / "Kitsune.app.new"
     replacement.mkdir()
     changes = [lambda: shutil.rmtree(app), plist.unlink, lambda: replacement.replace(app),
                lambda: plist.write_text("clobbered", encoding="utf-8")]
     try:  # Windows without Developer Mode cannot create symlinks
         (tmp_path / "linked").symlink_to(app.parent, target_is_directory=True)
-        changes.append(lambda: shutil.rmtree(tmp_path / "linked" / "Hermes.app"))
+        changes.append(lambda: shutil.rmtree(tmp_path / "linked" / "Kitsune.app"))
     except OSError:
         pass
     monkeypatch.setattr(conftest, "_REAL_INSTALLED_GUI_APPS", [os.path.normcase(os.path.realpath(app))])
     assert plist.read_text(encoding="utf-8") == "unchanged"
     for change in changes:
-        with pytest.raises(pytest.fail.Exception, match="REAL installed Hermes desktop app"):
+        with pytest.raises(pytest.fail.Exception, match="REAL installed Kitsune desktop app"):
             change()
     assert plist.read_text(encoding="utf-8") == "unchanged"
 
@@ -188,7 +188,7 @@ def test_relative_path_metadata_exemption_tracks_working_directory(protected_hom
 
 def test_resolving_a_path_entry_under_the_home_is_command_lookup(protected_home, monkeypatch):
     """Command resolution realpath()s a PATH entry under the home (``~/.hermes/tools/<tool>``)
-    to tell Hermes-managed bin dirs apart; that lstats the entry and each of its ancestors."""
+    to tell Kitsune-managed bin dirs apart; that lstats the entry and each of its ancestors."""
     from tests.home_io_guard import HomeIOGuard
 
     entry = protected_home / "tools" / "npm" / "bin"
@@ -232,10 +232,10 @@ def test_pm_generation_dir_around_the_running_venv_is_the_interpreter(tmp_path, 
 
 
 def test_hermes_exported_scratch_tmp_is_not_the_test_temp_root(tmp_path):
-    """A Hermes-launched shell hands pytest TMPDIR=<home>/cache/scratch (tagged by
+    """A Kitsune-launched shell hands pytest TMPDIR=<home>/cache/scratch (tagged by
     HERMES_SCRATCH_DIR). With that home guarded, honoring it would put the session
     sandbox, basetemp and every tempfile default inside the guarded root; the
-    conftest must drop Hermes' own export before anything allocates temp space."""
+    conftest must drop Kitsune' own export before anything allocates temp space."""
     home = tmp_path / "home"
     scratch = home / "cache" / "scratch"
     scratch.mkdir(parents=True)

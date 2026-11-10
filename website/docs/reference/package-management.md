@@ -5,9 +5,9 @@ description: "PM tool pins, Python environments, optional dependencies, and inst
 
 # Package management
 
-`hermes pm` manages Hermes tool binaries and Python dependency environments.
+`hermes pm` manages Kitsune tool binaries and Python dependency environments.
 It is not the application updater. Use the installation's
-[update method](../getting-started/updating.md) to update Hermes itself.
+[update method](../getting-started/updating.md) to update Kitsune itself.
 
 ## Pins, installed state, and runtime selection
 
@@ -85,7 +85,7 @@ the network. See the
 [desktop build guide](https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/BUILDING.md)
 for native compiler requirements and release verification limits.
 
-A packaged application's base payload is immutable. Hermes runs its backend
+A packaged application's base payload is immutable. Kitsune runs its backend
 from that payload, rather than copying a source checkout on first launch.
 The bundle builder checks its files and writes the launch paths into the desktop
 build stamp. Electron uses those paths without probing or repairing the payload.
@@ -108,7 +108,7 @@ which data root a process uses.
 
 | State | Default location |
 |---|---|
-| Shared writable tool entries | `tools/` under the resolved default Hermes root. |
+| Shared writable tool entries | `tools/` under the resolved default Kitsune root. |
 | Resumable downloads | `cache/partials/` under that root, not inside a signed payload. |
 | Per-install selection and journal | `installs/INSTALL_KEY/` under the dependency-state root. |
 | Python generations | `installs/INSTALL_KEY/environments/`. |
@@ -153,17 +153,17 @@ them, because PM never installs them yet uv would still
 resolve them against core's pins. The original plugin metadata and core development
 pins are unchanged; genuine runtime conflicts still refuse admission. A plugin with no
 build backend gets a unique `hermes-plugin-…` name in its snapshot, and its references to
-its own extras (`myplugin[runtime]`) are renamed with it. Hermes itself always comes from
+its own extras (`myplugin[runtime]`) are renamed with it. Kitsune itself always comes from
 the checkout: a plugin requirement naming `hermes-agent` (a runtime dependency in
 `pyproject.toml` or `plugin.yaml`, or an extra this install selects, such as
 `hermes-agent[web]>=0.20`) is satisfied by it, whatever its version specifier says. PM
-therefore checks that specifier itself against the running Hermes version (the one
+therefore checks that specifier itself against the running Kitsune version (the one
 `requires_hermes` reads), with standard PEP 440 comparison and the requirement's environment
 marker; a requirement in an unselected extra or one whose marker is false on this machine is
 not checked, and with no known version (`unknown`) nothing is. A plugin that excludes the
 running version is treated like one whose `requires_hermes` does: enabling or installing it is
 refused, and one already enabled is left out of the environment and skipped at load, with its
-config untouched, until Hermes reaches a version it accepts. The two checks compare differently:
+config untouched, until Kitsune reaches a version it accepts. The two checks compare differently:
 `requires_hermes` compares only `major.minor.patch` (pre/post-release suffixes are dropped, and a
 clause it cannot parse passes), while a `hermes-agent` requirement is compared as any Python
 requirement would be (`>=0.27.0.post1` excludes 0.27.0). Either one can keep a plugin out.
@@ -184,10 +184,10 @@ including code-only updates that do not require a new environment.
 Plugin selection changes, including pack enables, use the same admission
 transaction. PM reads the latest selection under its shared lock before applying
 each change. A failed candidate does not replace the selected environment or
-silently disable other plugins. If preparation succeeds, a running Hermes process
+silently disable other plugins. If preparation succeeds, a running Kitsune process
 can still require a restart to activate the new environment.
 
-Ordinary Hermes application updates preserve user plugin directories. Explicit
+Ordinary Kitsune application updates preserve user plugin directories. Explicit
 plugin updates can change the selected plugin's files. A wrapper with no Python
 dependency declaration does not join the shared environment. Its external
 sidecar remains separately owned. See the
@@ -204,11 +204,11 @@ once the build is fixed. A carried extra that fails only for the moment (a
 download or a missing tool) is never dropped: the update fails before it
 publishes anything, so the next update scans the old venv again and retries
 it. An extra you request yourself still fails the install when it cannot build.
-Only a venv that holds Hermes and that PM did not build counts as the old
+Only a venv that holds Kitsune and that PM did not build counts as the old
 install. Every environment PM builds carries `hermes-pm-built = true` in its
 `pyvenv.cfg`, on any interpreter (`pm.build_env --python` included); one built
 before that key existed runs PM's own Python (its `pyvenv.cfg` `home` is in
-PM's tool store). Neither is ever carried, and neither is an empty `uv venv`. Any other in-tree `venv/` or `.venv/` with Hermes
+PM's tool store). Neither is ever carried, and neither is an empty `uv venv`. Any other in-tree `venv/` or `.venv/` with Kitsune
 installed is read, a developer venv built by hand with `uv` included.
 
 ### Lazy-install policy
@@ -256,7 +256,7 @@ interpreter or redirect an installed desktop app to this checkout.
 
 ### Prepare a checkout
 
-Use an ordinary terminal outside the packaged Hermes app. Leave any existing
+Use an ordinary terminal outside the packaged Kitsune app. Leave any existing
 Python virtual environment first. On Windows, use native PowerShell with Git.
 On ARM64, PM prepares Visual Studio C++ tools, Clang, native Rust, and static
 OpenSSL development libraries before every dependency build from a checkout:
@@ -330,7 +330,7 @@ dependency must not prevent the dependency manager from starting.
 
 uv is a private PM implementation detail. Application code, setup flows, and
 build callers request Python operations, not uv executables or command arguments.
-Do not mutate a Hermes environment with raw pip or uv commands.
+Do not mutate a Kitsune environment with raw pip or uv commands.
 
 PM's runtime contains `ruamel.yaml`, `packaging`, `tomli-w`, and `truststore`, not the application
 dependency tree. CLI commands and application-requested installs and repairs run
@@ -602,7 +602,7 @@ re-homes that venv onto the interpreter `pm/lock.json` pins (uv2nix cannot build
 against a tarball interpreter). The shell's uv, node, npm, ripgrep and ffmpeg are
 the lock's builds too.
 Package-manager commands for unrelated projects or agent
-sandboxes do not manage Hermes itself.
+sandboxes do not manage Kitsune itself.
 
 ## Commands
 
@@ -616,11 +616,11 @@ hermes pm install chromium
 
 | Command | Effect |
 |---|---|
-| `pm install [names...]` | Install named packages. With no names, provision required tools plus Python, put those tools on PATH, and then sync the `all` extra. A bare install also installs the default optional tools (`chromium`, the browser Hermes launches, and `cua-driver`); a failed download of these prints a warning and does not fail the install. Naming a package you declined earlier undoes that choice. |
+| `pm install [names...]` | Install named packages. With no names, provision required tools plus Python, put those tools on PATH, and then sync the `all` extra. A bare install also installs the default optional tools (`chromium`, the browser Kitsune launches, and `cua-driver`); a failed download of these prints a warning and does not fail the install. Naming a package you declined earlier undoes that choice. |
 | `pm install --without NAME` | Do a bare install without the default optional package `NAME` (`chromium` or `cua-driver`), and record that choice. Later bare installs and `hermes update` also leave it out. The installers' `--skip-browser` / `-SkipBrowser` and `--skip-computer-use` / `-SkipComputerUse` (`--without cua-driver`) use this. The browser opt-out passes the legacy name `--without agent-browser`, which every PM release accepts and this one reads as `chromium`; a choice recorded under that name still skips `chromium`. |
 | `pm install --without EXTRA` | Drop a recorded Python extra that `[all]` does not include (for example `matrix`, which a migration from a pre-PM venv carries forward when that venv held its packages). The bare install's sync builds a generation without it, and the choice is recorded beside the install's dependency state: `hermes update`, the pre-PM venv scan, the update's install of configured platforms' extras, and a lazy install at first use never add it back. Packages another recorded extra also pulls in (a recorded `messaging` includes Slack, Telegram and Discord) stay until that extra goes too. `pm install --extra EXTRA` opts back in. Extras inside `[all]` (`web`, `mcp`, ...) are refused, since every sync selects them. |
 | `pm install --tools-only` | Install that tool closure and put it on PATH, then stop. The venv sync does not run. |
-| `pm env [names...]` | Print installed packages' PM-contributed environment values as JSON. It does not install missing packages, though a cold Hermes launch may prepare its own Python runtime first. |
+| `pm env [names...]` | Print installed packages' PM-contributed environment values as JSON. It does not install missing packages, though a cold Kitsune launch may prepare its own Python runtime first. |
 | `pm doctor` | Check installed tool identities, files, and digests against the lock, and look for corrupt entries in PM's uv cache. `--repair` removes those entries so they are fetched again. |
 | `pm repair` | Rebuild the recorded Python dependency set in a new generation, validate it, then select it. Does not update pins, features, or plugin configuration. |
 | `pm environment NAME --extra EXTRA` / `--requirement REQ` | Make the isolated side environment `HERMES_HOME/environments/NAME` current and print only its Python path on stdout (progress goes to stderr), for shell callers such as skills: `PY="$(hermes pm environment documents --extra documents --extra documents-pdf)"`. `--extra` installs the pinned requirements of extras declared in `pyproject.toml`; `--requirement` takes bounded ad hoc requirements. The environment records its own lock, and only a changed requirement set or Python pin builds a new generation. Concurrent calls serialize on the environment's lock, and a rebuild lands in a new generation, so a caller already using the previous one keeps its files. An explicit install: it runs even where lazy installs are off. Never `pip install` into the result. |
@@ -684,14 +684,14 @@ requests remain under uv and pnpm's own retry policies.
 
 ## Release age and package mirrors
 
-Every Python package Hermes itself depends on must be at least three days old
-when Hermes locks it (uv's `exclude-newer`, enforced by CI's lock check), so a
+Every Python package Kitsune itself depends on must be at least three days old
+when Kitsune locks it (uv's `exclude-newer`, enforced by CI's lock check), so a
 freshly published, possibly compromised release cannot reach `uv.lock`. Users
 install from that lock, and installing or enabling a plugin never re-checks
 dates, so package mirrors that publish no upload times work. The one exemption
 is CA trust stores (`certifi`): a release that distrusts a compromised CA is
 locked the day it ships, since waiting keeps the bad root trusted. Set a mirror with `index-url` in `pip.conf`,
-which Hermes passes to uv, or with `UV_INDEX_URL`.
+which Kitsune passes to uv, or with `UV_INDEX_URL`.
 
 `hermes pm lock` is the one step that applies the check. Run against a mirror
 without upload times, it stops with `has no publish time`; use
@@ -726,9 +726,9 @@ download stays HTTPS-only.
 
 - **Slow Python dependency builds:** PM's streamed uv commands enable verbose output. Bundle and build logs show package activity and build-backend stdout/stderr while the build runs, not only after failure.
 - **Missing or outdated tool:** read `hermes pm doctor`, then use an explicit PM install on a writable installation.
-- **New environment requires restart:** restart the affected Hermes process. Do not add a second site-packages tree to its live imports.
+- **New environment requires restart:** restart the affected Kitsune process. Do not add a second site-packages tree to its live imports.
 - **Dependency conflict:** read `hermes pm status`. Correct the plugin requirements before retrying admission.
-- **Damaged Python dependencies:** run `hermes pm repair`, then restart Hermes. Repair replays the selected generation's saved workspace and lock without parsing plugin configuration. An unreadable record or missing saved lock fails without selecting a reduced dependency set. Before a generation exists, repair uses the shipped or committed lock and recorded feature set.
+- **Damaged Python dependencies:** run `hermes pm repair`, then restart Kitsune. Repair replays the selected generation's saved workspace and lock without parsing plugin configuration. An unreadable record or missing saved lock fails without selecting a reduced dependency set. Before a generation exists, repair uses the shipped or committed lock and recorded feature set.
 - **Corrupt cached package** (`The wheel is invalid`, `RECORD file is invalid`): a machine stop during an install can leave a uv cache entry whose files are empty or NUL-filled. Installs remove the damaged package from PM's uv cache and retry on their own; `hermes pm doctor` reports such entries and `hermes pm doctor --repair` removes them. If the same package is still invalid after a fresh download, the package source is serving a broken wheel.
 - **Interrupted dependency install:** startup requests the same PM repair before dependency activation. Automatic attempts are bounded; `pm repair` retries explicitly. A failed repair preserves the previous selection and its retry marker.
 - **Damaged Python executable or application source:** repair or reinstall through the package owner. PM cannot run without those files. Signed payload files are never modified by dependency repair.

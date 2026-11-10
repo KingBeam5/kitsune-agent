@@ -1,4 +1,4 @@
-"""Tests for ``browser_exec`` (tools/browser_use_cli.py), Hermes' only core browser tool.
+"""Tests for ``browser_exec`` (tools/browser_use_cli.py), Kitsune' only core browser tool.
 
 Covers the seams the integration relies on:
 

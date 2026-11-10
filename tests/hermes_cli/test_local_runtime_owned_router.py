@@ -1,6 +1,6 @@
 """POSIX owned-router containment: the llama-server tree dies with its owner, however the owner dies.
 
-All processes and homes are disposable; the owner is a real Hermes process importing the real
+All processes and homes are disposable; the owner is a real Kitsune process importing the real
 ``spawn_server(owned=True)`` path, and it is SIGKILLed so no Python cleanup of ours can run.
 """
 

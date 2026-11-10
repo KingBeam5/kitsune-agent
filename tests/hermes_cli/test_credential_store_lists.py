@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-# Where earlier releases kept the same stores; Hermes deletes a copy there unread.
+# Where earlier releases kept the same stores; Kitsune deletes a copy there unread.
 PREVIOUS_LOCATIONS = (
     "cache/bws_cache.json", "cache/bws_cache.enc.json", "cache/op_cache.json", "runtime/photon-sidecar.json",
 )

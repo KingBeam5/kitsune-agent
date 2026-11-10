@@ -216,7 +216,7 @@ def test_a_plugin_importing_its_new_dependency_at_load_still_asks_for_a_restart(
 def test_restart_follows_what_pm_installs_for_the_plugin(home, shape, restart):
     """The probe reads the declaration the way PM admission does: an authored pyproject.toml, the
     legacy ``pip_dependencies`` alias, and nothing for a ``python_runtime: external`` sidecar (its
-    dependencies never enter Hermes's environment, so no restart or repair can load them)."""
+    dependencies never enter Kitsune's environment, so no restart or repair can load them)."""
     from hermes_cli import plugins
 
     _select_generation(home, with_dist=True)

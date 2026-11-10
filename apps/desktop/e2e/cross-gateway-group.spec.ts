@@ -509,8 +509,8 @@ test.describe('every new group chat runs on a gateway (real model turns)', () =>
     await expect(page.getByText(REMOTE_LABEL).first()).toBeVisible({ timeout: 90_000 })
     const rows = page.locator('[data-roster-key]')
     const texts = await rows.evaluateAll(nodes => nodes.map(node => (node as HTMLElement).innerText.replace(/\s+/g, ' ').trim()))
-    // Roster rows show no connection label: this device's default Bot is the one named Hermes.
-    const index = texts.findIndex(text => /^Hermes\b/.test(text))
+    // Roster rows show no connection label: this device's default Bot is the one named Kitsune.
+    const index = texts.findIndex(text => /^Kitsune\b/.test(text))
     console.log('PROBE_RESULT leg6 roster rows', JSON.stringify(texts), 'chosen', index)
     expect(index).toBeGreaterThanOrEqual(0)
     await rows.nth(index).click({ button: 'right' })
@@ -556,7 +556,7 @@ test.describe('every new group chat runs on a gateway (real model turns)', () =>
 
     // An older build's cross-machine room: Desktop-driven, members on both computers, some history.
     const members = [
-      { name: 'default', handle: 'default-this-device', display_name: 'Hermes', connectionId: 'local', connectionKind: 'local',
+      { name: 'default', handle: 'default-this-device', display_name: 'Kitsune', connectionId: 'local', connectionKind: 'local',
         connectionLabel: 'This device', targetProfile: 'default', route: { connectionId: 'local', mode: 'local', profile: 'default', targetProfile: 'default' } },
       { name: LENT_PROFILE, handle: LENT_PROFILE, display_name: 'Coder', connectionId: REMOTE_ID, connectionKind: 'remote', connectionLabel: REMOTE_LABEL,
         remoteSource: true, sourceScoped: true, targetProfile: LENT_PROFILE,

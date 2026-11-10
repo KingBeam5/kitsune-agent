@@ -316,9 +316,9 @@ jobs:
         with:
           scandir: ./docker
 
-      # ── Always: icon assets freshness (needs a Hermes runtime interpreter) ────────────────
+      # ── Always: icon assets freshness (needs a Kitsune runtime interpreter) ────────────────
 
-      # The generator runs on a Hermes runtime interpreter; [] exports one as HERMES_PYTHON.
+      # The generator runs on a Kitsune runtime interpreter; [] exports one as HERMES_PYTHON.
       # Its dependency phase also runs the frozen-lock check, so a stale uv.lock fails this step;
       # the uv.lock step below still runs and says why.
       - uses: ./.github/actions/setup-pm
@@ -361,7 +361,7 @@ jobs:
       # The committed icon outputs must match what scripts/generate_icons.py renders from
       # assets/nous-girl-*.svg + assets/backgrounds/*.svg. Regular builds and user installs consume
       # the committed files and never render, so this is what keeps them honest. Fix a red run
-      # with `node scripts/generate-icons.mjs` on a Hermes runtime interpreter and commit.
+      # with `node scripts/generate-icons.mjs` on a Kitsune runtime interpreter and commit.
       #
       # Byte-determinism note: resvg renders the same SVG to identical bytes on any host for
       # pure-shape artwork. If the master ever contains <text>, font rendering can differ across

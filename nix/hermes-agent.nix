@@ -1,4 +1,4 @@
-# nix/hermes-agent.nix — Overridable Hermes Agent package
+# nix/hermes-agent.nix — Overridable Kitsune Agent package
 #
 # callPackage auto-wires nixpkgs args; flake inputs are passed explicitly.
 # Users override via:
@@ -352,7 +352,7 @@ stdenv.mkDerivation (finalAttrs: {
       # load and nothing depends on the caller's PYTHONPATH. Console scripts
       # are re-shebanged onto it so `pytest` and `python -m pytest` agree.
       # The project's own commands (`hermes`, ...) go to libexec, off PATH, so
-      # the dev shell never hides the installed Hermes; `hermes-checkout` runs them.
+      # the dev shell never hides the installed Kitsune; `hermes-checkout` runs them.
       projectCommands = builtins.attrNames (lib.importTOML ../pyproject.toml).project.scripts;
       devVenv = runCommand "hermes-agent-dev-venv" { } ''
         mkdir -p $out/bin $out/libexec/hermes-checkout $out/lib/python${python.pythonVersion}

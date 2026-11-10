@@ -2,7 +2,7 @@ name: hermes-roam
 repo: https://github.com/vcruz305/hermes-roam
 sha: 8b9fba41fea77f2fe2d6d572cffd43039d2da11f
 description: >-
-  Encrypted, host-scoped sync of the Hermes Agent home between your own machines:
+  Encrypted, host-scoped sync of the Kitsune Agent home between your own machines:
   an AES-256-GCM sealed bundle of the shared home (config.yaml minus host-scoped
   keys, SOUL.md, memories, skills) is pushed to storage you own — an S3 or
   Cloudflare R2 bucket, a private git repository, or a local directory — and
@@ -24,12 +24,12 @@ description: >-
   local subprocesses with an allowlisted environment, the opt-in session
   archive runs hermes sessions export once per profile, and hermes roam auto
   runs hermes config set, all as bounded local subprocesses; the shared ROAM_ARCHIVE_KEY and S3 credentials come only
-  through Hermes's secret scope, never from files; session hooks run bounded
+  through Kitsune's secret scope, never from files; session hooks run bounded
   daemon threads; no telemetry, no self-update.
 maintainer: Victor Cruz
 tier: community
 category: tools
-title: "Hermes Roam"
+title: "Kitsune Roam"
 docs_url: https://github.com/vcruz305/hermes-roam#readme
 readme: true
 requires_hermes: ">=0.22.0"

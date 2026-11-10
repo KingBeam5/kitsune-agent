@@ -1,12 +1,12 @@
 """Read the real-profile browser's saved logins for the vault's read-only ``browser:`` backend.
 
 NO decryption happens here. Two decryption-free reads, both from the already-running real-profile
-browser Hermes owns (``tools.browser_session_real_profile.real_profile_cdp``), the same mechanism
+browser Kitsune owns (``tools.browser_session_real_profile.real_profile_cdp``), the same mechanism
 PR #150283 used for cookies:
 
 - **list metadata** — ``origin_url`` and ``username_value`` are PLAINTEXT columns in the profile's
   ``Login Data`` SQLite (only ``password_value`` is encrypted); reading them is not decryption, the
-  same category as reading a cookie's name/domain. They come from the Hermes-owned snapshot copy the
+  same category as reading a cookie's name/domain. They come from the Kitsune-owned snapshot copy the
   real-profile consent already makes (``real_profile_copy_dir``), opened read-only.
 - **resolve a password** — Chrome's DevTools protocol exposes NO command that reads a saved password
   (``Autofill.trigger`` is cards/addresses only). The reachable mechanism is the browser's own

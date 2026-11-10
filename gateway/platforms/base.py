@@ -42,7 +42,7 @@ def _consume_detached_handler_exception(task: asyncio.Task) -> None:
 
 
 # Audio exts for native audio delivery; Telegram's narrower sets stay separate (.m2a is audio to
-# Hermes but not to sendAudio).
+# Kitsune but not to sendAudio).
 _AUDIO_MIME_TYPES = {
     ".ogg": "audio/ogg", ".opus": "audio/opus", ".mp3": "audio/mpeg", ".m2a": "audio/mpeg",
     ".wav": "audio/wav", ".m4a": "audio/m4a", ".flac": "audio/flac"}
@@ -348,7 +348,7 @@ def resolve_proxy_url(
     process env another profile's ``TELEGRAM_PROXY``/``DISCORD_PROXY``/etc. may hold; the YAML
     value is the same profile's, so a secondary keeps its configured route without any env
     bridge (#108440). The generic ``HTTPS_PROXY``/``HTTP_PROXY``/``ALL_PROXY`` fallback stays a raw
-    process-env read — those are OS/system-level network settings, not a per-profile Hermes concept."""
+    process-env read — those are OS/system-level network settings, not a per-profile Kitsune concept."""
     from gateway.platforms._shared import get_scoped_secret as _get_scoped_proxy_var
     value = (_get_scoped_proxy_var(platform_env_var, "") or "").strip() if platform_env_var else ""
     if not value:
@@ -806,7 +806,7 @@ def _profile_dirs() -> list[Path]:
 
 
 def _credential_home_roots() -> list[Path]:
-    """Every Hermes home whose credential stores the denylist must cover: the ACTIVE home
+    """Every Kitsune home whose credential stores the denylist must cover: the ACTIVE home
     (the per-turn HERMES_HOME override under ``gateway.multiplex_profiles``), the shared root
     and every ``<root>/profiles/*``. Enumerated at check time like ``_profile_cache_roots`` on
     the allow side — a denylist frozen at import covers only the launch profile, so a
@@ -968,7 +968,7 @@ def _docker_persistent_active() -> bool:
 
 
 def _cache_dir_container_mounts() -> list[tuple[Path, Path]]:
-    """(host, container) pairs for the auto-mounted Hermes cache dirs (``/root/.hermes/...`` in
+    """(host, container) pairs for the auto-mounted Kitsune cache dirs (``/root/.hermes/...`` in
     MEDIA tags); longer prefixes than the ``/root`` home mount, so longest-prefix match wins."""
     if not _docker_env_active():
         return []
@@ -1052,7 +1052,7 @@ def validate_media_delivery_path(path: str, session_key: str = "") -> Optional[s
     """Safe absolute file path for native media delivery, else None. Default: any existing
     regular file outside the credential / system denylist (symmetric with inbound). Strict
     (``HERMES_MEDIA_DELIVERY_STRICT=1``, public bots where prompt injection must not exfiltrate
-    host secrets): MUST be under a Hermes cache, an operator root (``HERMES_MEDIA_ALLOW_DIRS``),
+    host secrets): MUST be under a Kitsune cache, an operator root (``HERMES_MEDIA_ALLOW_DIRS``),
     or freshly produced within the recency window. Symlinks are resolved before any check."""
     candidate = _normalize_media_tag_path(path)
     if not candidate:
@@ -1075,7 +1075,7 @@ def validate_media_delivery_path(path: str, session_key: str = "") -> Optional[s
         resolved_root = _resolve_path(root, expand=True)
         if resolved_root is not None and _path_is_within(resolved, resolved_root):
             return str(resolved)
-    # Non-strict (default): anything not denylisted (/etc, /proc, ~/.ssh, Hermes-root secrets).
+    # Non-strict (default): anything not denylisted (/etc, /proc, ~/.ssh, Kitsune-root secrets).
     from gateway.media_policy import media_delivery_strict
     if not media_delivery_strict():
         return None if _path_under_denied_prefix(resolved) else str(resolved)
@@ -1824,7 +1824,7 @@ class BasePlatformAdapter(ABC):
     supports_async_delivery: bool = True
     # ``send()`` chunks natively via ``truncate_message()`` -> the router skips its truncation.
     splits_long_messages: bool = False
-    # Prefix users can always TYPE for Hermes commands ("!" where the client eats a leading "/").
+    # Prefix users can always TYPE for Kitsune commands ("!" where the client eats a leading "/").
     typed_command_prefix: str = "/"
     # ``in_channel`` continuable-cron surface: job delivered FLAT, plain replies continue it via
     # the whole-channel bucket ``(platform, chat_id, None)``; needs a flat-reply outbound gate too
@@ -2153,7 +2153,7 @@ class BasePlatformAdapter(ABC):
             self._set_fatal_error(
                 "lock_dir_unusable",
                 f"{resource_desc} lock cannot be taken: the gateway lock directory {exc.filename} is not "
-                f"usable by this user (likely created by an elevated Hermes). To repair, "
+                f"usable by this user (likely created by an elevated Kitsune). To repair, "
                 f"{unusable_dir_remedy(exc.filename)}; the gateway retries on its own.",
                 retryable=True)
             return False

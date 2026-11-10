@@ -290,7 +290,7 @@ test('a redial whose re-ensure comes back without a gateway endpoint names that,
   expect(mint).toHaveBeenCalledTimes(1)
 })
 
-test('a ready owner running other code than this Hermes is restarted once, then re-ensured', async () => {
+test('a ready owner running other code than this Kitsune is restarted once, then re-ensured', async () => {
   // After `hermes update` the live gateway still serves the old code and answers model calls
   // 503 "Restart required"; attaching to it on every dial pinned the user to it forever.
   const { createStaleGatewayRestarter } = await import('./local-gateway')
@@ -631,7 +631,7 @@ test('a session write that names its owner only in the body gets a grant for tha
 
 test('an ensure refusal names its remedy instead of only a status pointer', async () => {
   // A gateway another install owns is refused, not replaced; ensure says what to do in `detail`.
-  const detail = "another Hermes install's gateway owns this profile; stop it there: hermes gateway stop"
+  const detail = "another Kitsune install's gateway owns this profile; stop it there: hermes gateway stop"
 
   await expect(ensureLocalGateway(async () => ({
     code: 3, stdout: JSON.stringify({ state: 'incompatible', reason_code: 'runtime_protocol', detail, endpoint: null })
@@ -640,7 +640,7 @@ test('an ensure refusal names its remedy instead of only a status pointer', asyn
 
 test('an elevated or other-session gateway is named with its remedy, not as authorization (#139845, #140252)', async () => {
   const cases = [
-    ['gateway_elevated', 'The running gateway (PID 23460) was started as administrator, so this non-elevated app cannot reach it. Stop it from an administrator prompt (hermes gateway stop), then start Hermes without elevation'],
+    ['gateway_elevated', 'The running gateway (PID 23460) was started as administrator, so this non-elevated app cannot reach it. Stop it from an administrator prompt (hermes gateway stop), then start Kitsune without elevation'],
     ['gateway_other_session', 'The running gateway (PID 23460) runs in another Windows logon session (session 0, e.g. a boot-time scheduled task), so this app cannot reach it. Stop it (hermes gateway stop from an administrator prompt) and let only one auto-start task launch the gateway']
   ]
 

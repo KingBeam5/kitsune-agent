@@ -47,7 +47,7 @@ def _masked_envelopes(node):
 
 
 def _mask_secret_envelopes(text: str) -> str:
-    """Hermes stores secrets as ``{"encoding": "plain", "value": ...}`` envelopes, whose key names
+    """Kitsune stores secrets as ``{"encoding": "plain", "value": ...}`` envelopes, whose key names
     no secret: the text redactor cannot see them, so JSON documents are masked structurally."""
     try:
         doc = json.loads(text)

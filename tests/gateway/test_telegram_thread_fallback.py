@@ -1,6 +1,6 @@
 """Tests for Telegram topic/thread routing fallbacks.
 
-Supergroup forum topics route with ``message_thread_id``. Hermes-created
+Supergroup forum topics route with ``message_thread_id``. Kitsune-created
 private DM topic lanes are different: live Telegram testing showed they only
 stay in the expected lane when sends include the private topic
 ``message_thread_id``. If a reply anchor is rejected, retries must retain that
@@ -1103,7 +1103,7 @@ async def test_forum_topic_deleted_wording_is_not_a_dead_topic_fallback():
 
 @pytest.mark.asyncio
 async def test_private_topic_thread_not_found_flake_retries_same_thread_first():
-    """A one-off "thread not found" in a Hermes private topic lane retries the same thread_id; it never moves the
+    """A one-off "thread not found" in a Kitsune private topic lane retries the same thread_id; it never moves the
     message to the native DM-topic id (#87051) when the lane is alive."""
     adapter = _make_adapter()
     call_log = []
@@ -1145,7 +1145,7 @@ async def test_text_reply_with_reply_message_not_found_wording_drops_only_the_an
 
 @pytest.mark.asyncio
 async def test_private_topic_media_flake_retries_same_thread_first(tmp_path):
-    """Media follows the text rule: a one-off "thread not found" retries the same thread_id, so a live Hermes lane
+    """Media follows the text rule: a one-off "thread not found" retries the same thread_id, so a live Kitsune lane
     neither moves to the native DM-topic id (#87051) nor loses its binding."""
     db = _topic_db(tmp_path)
     adapter = _make_adapter()

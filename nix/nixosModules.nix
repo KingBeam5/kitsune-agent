@@ -565,7 +565,7 @@
           # ══════════════════════════════════════════════════════════════════
           (lib.mkIf (!cfg.container.enable) {
             systemd.services.hermes-agent = {
-              description = "Hermes Agent Gateway";
+              description = "Kitsune Agent Gateway";
               wantedBy = [ "multi-user.target" ];
               # linger-users.service is the unit that runs `loginctl
               # enable-linger` for a declared `users.users.<name>.linger`.
@@ -639,7 +639,7 @@
             virtualisation.docker.enable = lib.mkDefault (cfg.container.backend == "docker");
 
             systemd.services.hermes-agent = {
-              description = "Hermes Agent Gateway (container)";
+              description = "Kitsune Agent Gateway (container)";
               wantedBy = [ "multi-user.target" ];
               after = [
                 "network-online.target"

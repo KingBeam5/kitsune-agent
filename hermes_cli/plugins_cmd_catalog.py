@@ -48,7 +48,7 @@ def raise_if_removed(*candidates: str) -> None:
             if removed.date:
                 detail += f" (removed {removed.date})"
             raise PluginOperationError(
-                f"Plugin '{removed.name}' was removed from the Hermes plugin catalog and is blocked from "
+                f"Plugin '{removed.name}' was removed from the Kitsune plugin catalog and is blocked from "
                 f"installation: {detail}", failure_class="removed_from_catalog")
 
 
@@ -58,7 +58,7 @@ def resolve_catalog_name(identifier: str, console) -> PluginCatalogEntry:
     entry = get_live_catalog_entry(identifier)
     if entry is None:
         _fail(console, (
-            f"[red]Error:[/red] '{identifier}' is not in the Hermes plugin catalog and is not a Git URL or "
+            f"[red]Error:[/red] '{identifier}' is not in the Kitsune plugin catalog and is not a Git URL or "
             "owner/repo shorthand. Browse entries with `hermes plugins search`."))
         raise SystemExit(1)  # _fail exits; keeps type-checkers honest
     return entry
@@ -204,14 +204,14 @@ def catalog_install_record(plugin_dir) -> Optional[dict]:
 
 
 LOGIN_BACKEND_TIERS = frozenset({"official", "verified"})
-LOGIN_BACKEND_RULE = ("password-manager login backends are accepted only from plugins bundled with Hermes or "
-                      "installed from the Hermes plugin catalog at tier verified or official (published by the "
+LOGIN_BACKEND_RULE = ("password-manager login backends are accepted only from plugins bundled with Kitsune or "
+                      "installed from the Kitsune plugin catalog at tier verified or official (published by the "
                       "password-manager vendor itself or by Nous)")
 _NON_CATALOG_SOURCES = {"project": "a project .hermes/plugins directory", "entrypoint": "a pip entry point"}
 
 
 BROWSER_PAGE_BACKEND_RULE = ("browser page backends (which carry browser_vault fill scripts) are accepted only from "
-                             "plugins bundled with Hermes or installed from the Hermes plugin catalog at tier "
+                             "plugins bundled with Kitsune or installed from the Kitsune plugin catalog at tier "
                              "verified or official")
 
 
@@ -226,7 +226,7 @@ def login_backend_provenance_error(manifest, rule: str = LOGIN_BACKEND_RULE) -> 
 
     Read from the installer-owned ``.install-metadata.json`` record of the CURRENT home's plugins dir, never
     from the tree (a repo can commit a ``.hermes-catalog.json``). No config key relaxes it. This decides
-    which plugins Hermes offers the seam to; code already running in-process is not sandboxed by it."""
+    which plugins Kitsune offers the seam to; code already running in-process is not sandboxed by it."""
     if manifest.source == "bundled":
         return ""
     if manifest.source in _NON_CATALOG_SOURCES:
@@ -234,7 +234,7 @@ def login_backend_provenance_error(manifest, rule: str = LOGIN_BACKEND_RULE) -> 
     record = _install_record(Path(manifest.path)) if manifest.source == "user" and manifest.path else None
     block = (record or {}).get("catalog")
     if not isinstance(block, dict) or not block.get("name"):
-        return (f"{rule}; this plugin was not installed from the Hermes plugin catalog "
+        return (f"{rule}; this plugin was not installed from the Kitsune plugin catalog "
                 "(a local directory or Git URL install)")
     if record.get("allow_removed"):
         return f"{rule}; this plugin was installed with --allow-removed"
@@ -294,14 +294,14 @@ def _refuse_unsupported_catalog_platform(entry: PluginCatalogEntry) -> None:
 
 
 def catalog_hermes_error(entry: PluginCatalogEntry) -> Optional[str]:
-    """``<name> needs Hermes <spec>; this is <version>.`` when the entry's ``requires_hermes`` rejects the
-    running Hermes, else ``None``. The verdict IS the plugin.yaml gate's
+    """``<name> needs Kitsune <spec>; this is <version>.`` when the entry's ``requires_hermes`` rejects the
+    running Kitsune, else ``None``. The verdict IS the plugin.yaml gate's
     (:func:`~hermes_cli.plugins_manifest.requires_hermes_error`): same version source, same comparison, so
     a dev checkout or canary build is judged the same by both, and an unknown version never blocks."""
     from hermes_cli.plugins_manifest import requires_hermes_error, running_hermes_version
     if not requires_hermes_error({"requires_hermes": entry.requires_hermes}):
         return None
-    return f"{entry.name} needs Hermes {entry.requires_hermes}; this is {running_hermes_version()}."
+    return f"{entry.name} needs Kitsune {entry.requires_hermes}; this is {running_hermes_version()}."
 
 
 def refuse_incompatible_catalog_entry(entry: PluginCatalogEntry) -> None:
@@ -312,7 +312,7 @@ def refuse_incompatible_catalog_entry(entry: PluginCatalogEntry) -> None:
     _refuse_unsupported_catalog_platform(entry)
     reason = catalog_hermes_error(entry)
     if reason:
-        raise PluginOperationError(f"{reason} Update Hermes (`{recommended_update_command()}`) and install again.",
+        raise PluginOperationError(f"{reason} Update Kitsune (`{recommended_update_command()}`) and install again.",
                                    failure_class="incompatible")
 
 
@@ -364,7 +364,7 @@ def refuse_if_installed_removed(name: str, plugin_dir) -> None:
     removed = installed_plugin_removal(name, plugin_dir)
     if removed is not None:
         raise PluginOperationError(
-            f"Plugin '{name}' was removed from the Hermes plugin catalog: "
+            f"Plugin '{name}' was removed from the Kitsune plugin catalog: "
             f"{removed.reason or 'no reason recorded'}. Remove it with `hermes plugins remove {name}`, "
             "or reinstall with `hermes plugins install <source> --force --allow-removed` if you trust it.")
 
@@ -670,12 +670,12 @@ def repin_catalog_plugin(
         return RepinResult(entry.sha, False, target.name, [])
     held = catalog_hermes_error(entry)
     if held:
-        # The pin moved past what this Hermes can run: keep the installed tree, name the way forward.
+        # The pin moved past what this Kitsune can run: keep the installed tree, name the way forward.
         from hermes_cli.config import recommended_update_command
         raise PluginOperationError(
             f"Update of {catalog_name} to {entry.sha[:8]} not applied: {held} {catalog_name} stays at "
             f"{str(sidecar.get('sha') or '')[:8] or 'its installed version'}; the update is available after "
-            f"you update Hermes (`{recommended_update_command()}`).", failure_class="incompatible")
+            f"you update Kitsune (`{recommended_update_command()}`).", failure_class="incompatible")
 
     local, modified = _local_changes(target)
     old_sha8 = str(sidecar.get("sha") or "old")[:8]
@@ -807,13 +807,13 @@ def pin_label(entry: PluginCatalogEntry) -> str:
 def _render_entries(entries: list[PluginCatalogEntry], console) -> None:
     from hermes_cli.plugins_cmd import _table
     table = _table(((("Name", "bold")), ("Category", None), ("Tier", None), ("Description", None),
-                    ("Pinned", "dim"), ("Capabilities", "dim")), title="Hermes Plugin Catalog (curated)")
+                    ("Pinned", "dim"), ("Capabilities", "dim")), title="Kitsune Plugin Catalog (curated)")
     rank = {name: i for i, name in enumerate(CATALOG_TIERS)}
     style = {"official": "cyan", "verified": "green", "community": "magenta"}
     for e in sorted(entries, key=lambda e: (e.category, rank.get(e.tier, len(rank)), e.name)):
         tier = f"[{style.get(e.tier, 'magenta')}]{e.tier}[/{style.get(e.tier, 'magenta')}]"
         desc = e.description if len(e.description) <= 60 else e.description[:57] + "..."
-        name = e.name + (f"\n[yellow]needs Hermes {e.requires_hermes}[/yellow]" if catalog_hermes_error(e) else "")
+        name = e.name + (f"\n[yellow]needs Kitsune {e.requires_hermes}[/yellow]" if catalog_hermes_error(e) else "")
         table.add_row(name, e.category, tier, desc, pin_label(e), _capability_counts(e))
     console.print()
     console.print(table)
@@ -871,7 +871,7 @@ def cmd_info(name: str) -> None:
     held = catalog_hermes_error(entry)
     if held:
         from hermes_cli.config import recommended_update_command
-        console.print(f"[yellow]⚠ {held} Update Hermes (`{recommended_update_command()}`) to install it.[/yellow]")
+        console.print(f"[yellow]⚠ {held} Update Kitsune (`{recommended_update_command()}`) to install it.[/yellow]")
         console.print()
     console.print(f"[dim]Install:[/dim]     hermes plugins install {entry.name}")
     console.print()

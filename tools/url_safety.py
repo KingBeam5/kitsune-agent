@@ -5,7 +5,7 @@ names to private ranges); cloud metadata hostnames/IPs are **always** blocked. A
 that answers DNS with a fake-ip block (Mihomo/Clash fake-ip, Surge enhanced) declares that block
 in ``security.fake_ip_ranges`` so its sentinel answers are dialable instead of looking private;
 the list is empty by default, so the sentinel stays blocked for everyone else. DNS rebinding
-(TOCTOU) is closed for Hermes-owned httpx paths by ``create_ssrf_safe_[async_]client()``, which
+(TOCTOU) is closed for Kitsune-owned httpx paths by ``create_ssrf_safe_[async_]client()``, which
 re-apply the policy at TCP connect and dial the validated IP while preserving Host/SNI. Redirect
 bypass is mitigated by response hooks re-validating each target (``redirect_target_from_response``).
 """
@@ -36,7 +36,7 @@ def _proxy_is_configured() -> bool:
 
 
 def normalize_url_for_request(url: str) -> str:
-    """ASCII-safe HTTP URL for Hermes-owned URL tools (IRI -> URI, e.g. ``https://wttr.in/Köln``).
+    """ASCII-safe HTTP URL for Kitsune-owned URL tools (IRI -> URI, e.g. ``https://wttr.in/Köln``).
     Preserves URL syntax and existing percent escapes while IDNA-encoding the host and
     percent-encoding non-ASCII path/query/fragment text. URL tool inputs only — never shell commands."""
     if not isinstance(url, str):
@@ -593,7 +593,7 @@ def _install_ssrf_guard_on_client(client: Any, *, is_async: bool = False) -> Non
         getattr(client, "__dict__", {}).get("_transport"), contextvars.ContextVar(var_name), is_async=is_async)
 
 
-# Identifying UA for Hermes-owned direct downloads: CDNs with basic bot detection
+# Identifying UA for Kitsune-owned direct downloads: CDNs with basic bot detection
 # (upload.wikimedia.org, #89260) 403 the bare ``python-httpx/x`` default. Names the agent
 # rather than spoofing a browser (Wikimedia's User-Agent policy asks clients to identify).
 DEFAULT_USER_AGENT = "Mozilla/5.0 (compatible; HermesAgent/1.0)"

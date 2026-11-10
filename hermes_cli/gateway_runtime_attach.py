@@ -70,7 +70,7 @@ def attach_gateway(home: str | Path, *, start: bool, recover: bool = False, time
 
     ``start`` ensures the owner (a client's first launch); otherwise this only discovers it, except
     ``recover``, which re-ensures whenever the owner is not ready: crashed, ended by its idle exit,
-    stopped with ``hermes gateway stop``, or an older Hermes's gateway (ensure replaces that one). A
+    stopped with ``hermes gateway stop``, or an older Kitsune's gateway (ensure replaces that one). A
     restart's after-turn wait is attachable as it is (#139041). ``timeout`` bounds an ensure; a
     discovery waits at most ``DISCOVER_TIMEOUT`` of it. A daemon this starts ends itself once idle.
     A failed mint (control socket I/O, a refused or changed grant) raises ``TicketUnavailable``.

@@ -360,7 +360,7 @@ def _read_runtime_verdict(repository: str, sha: str) -> Optional[bool]:
                  if isinstance(e, dict) and e.get("type") == "blob" and isinstance(e.get("path"), str)]
         paths = [path for path in paths if any(fnmatchcase(path, p) for p in STATE_MODULES)]
         if not paths:
-            return None  # not a recognised Hermes tree: no claim either way
+            return None  # not a recognised Kitsune tree: no claim either way
         urls = iter(f"https://raw.githubusercontent.com/{repository}/{sha}/{quote(path)}" for path in paths)
         pending = 0
         for url in islice(urls, 4):

@@ -85,7 +85,7 @@ class TestClassifyFetchFailure:
     def test_only_a_checkout_git_rejects_gets_the_installer_repair(self, tmp_path, capsys):
         # The updater fetches only when .git exists; git rejecting the checkout itself (here an
         # empty .git) cannot be retried away. A remote with a dangling `.git` file makes git print
-        # the same "fatal: not a git repository" line, and reinstalling Hermes cannot fix that.
+        # the same "fatal: not a git repository" line, and reinstalling Kitsune cannot fix that.
         def fetch(cwd: Path, *source: str) -> str:
             return subprocess.run(["git", "fetch", *source], cwd=cwd, capture_output=True, check=False,
                                   text=True, encoding="utf-8", errors="replace",

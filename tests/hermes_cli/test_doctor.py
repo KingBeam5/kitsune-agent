@@ -1519,7 +1519,7 @@ def test_run_doctor_warns_when_lightpanda_binary_missing(monkeypatch, tmp_path):
 
     monkeypatch.setattr("tools.browser_lightpanda.using_lightpanda_engine", lambda: True, raising=False)
     monkeypatch.setattr("tools.browser_lightpanda.lightpanda_engine_status",
-                        lambda: (True, "Hermes spawns `lightpanda serve`"), raising=False)
+                        lambda: (True, "Kitsune spawns `lightpanda serve`"), raising=False)
     monkeypatch.setattr("tools.browser_lightpanda.find_lightpanda_binary", lambda: None)
     out = helper._run_doctor_and_capture(monkeypatch, tmp_path)
     assert "Lightpanda selected but binary not found" in out
@@ -1566,7 +1566,7 @@ class TestMacOSTCCGrants:
 
     @staticmethod
     def _darwin_bundle(monkeypatch, tmp_path, dr):
-        monkeypatch.setattr(doctor_platform, "_desktop_app_bundle", lambda: tmp_path / "Hermes.app")
+        monkeypatch.setattr(doctor_platform, "_desktop_app_bundle", lambda: tmp_path / "Kitsune.app")
         if dr is not ...:
             monkeypatch.setattr(doctor_platform, "_macos_desktop_dr", lambda app: dr)
 

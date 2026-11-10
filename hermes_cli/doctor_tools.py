@@ -60,7 +60,7 @@ def _pm_package_for_command(command: str) -> str | None:
 
 
 def _doctor_tool(name: str) -> tuple[str | None, str]:
-    """Resolve the tool Hermes would actually run: the pm store first
+    """Resolve the tool Kitsune would actually run: the pm store first
     (pinned installs run tools out of the store, which nothing puts on
     PATH), then PATH. *name* is the command ("rg"); its pm package
     ("ripgrep") is resolved from pm's own definitions. Returns
@@ -83,7 +83,7 @@ def _run_ok(cmd: list[str], timeout: int, **kw) -> bool:
 
 
 _TERMUX_INSTALL_ALL_FALLBACK_NOTES = (
-    "Termux uses the Hermes APT package: pkg install hermes-agent.",
+    "Termux uses the Kitsune APT package: pkg install hermes-agent.",
     "Matrix E2EE extra is excluded on Termux (python-olm currently fails to build).",
     "Local faster-whisper extra is excluded on Termux (ctranslate2/av build path unavailable).",
     "STT fallback: use Groq Whisper (set GROQ_API_KEY) or OpenAI Whisper (set VOICE_TOOLS_OPENAI_KEY).",
@@ -243,7 +243,7 @@ def _check_daytona_backend(issues: list[str]) -> None:
         from daytona import Daytona
         check_ok("daytona SDK", "(installed)")
     except ImportError:
-        _fail_and_issue("daytona SDK not installed", "(run hermes setup terminal)", "Run hermes setup terminal and select Daytona, then restart Hermes", issues)
+        _fail_and_issue("daytona SDK not installed", "(run hermes setup terminal)", "Run hermes setup terminal and select Daytona, then restart Kitsune", issues)
 
 
 def _check_vercel_backend(issues: list[str]) -> None:
@@ -257,7 +257,7 @@ def _check_vercel_backend(issues: list[str]) -> None:
              "Vercel Sandbox does not support custom container_disk; use the shared default 51200", issues)
     _require(importlib.util.find_spec("vercel") is not None, ("vercel SDK", "(installed)"),
              ("vercel SDK not installed", "(run hermes setup terminal)"),
-             "Run hermes setup terminal and select Vercel Sandbox, then restart Hermes", issues)
+             "Run hermes setup terminal and select Vercel Sandbox, then restart Kitsune", issues)
     auth_status = describe_vercel_auth()
     if auth_status.ok:
         check_ok("Vercel auth", f"({auth_status.label})")
@@ -402,7 +402,7 @@ def _audit_one(tool: str, cwd, label: str, audit_extra: list[str], manual_issues
     from hermes_constants import with_hermes_node_path
     from pm.packages import pnpm_env
     env = with_hermes_node_path()
-    if audit_extra:  # pnpm rows: its state and metadata cache stay Hermes-owned, not in the user's XDG dirs
+    if audit_extra:  # pnpm rows: its state and metadata cache stay Kitsune-owned, not in the user's XDG dirs
         env = pnpm_env(env)
     try:
         # Resolved absolute path so Windows can execute npm.cmd (CreateProcessW can't run bare .cmd names).

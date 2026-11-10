@@ -17,10 +17,10 @@ screenshots:
 readme: true
 platforms: [linux, macos]
 known_issues:
-  - "Needs Docker or Podman reachable by the Hermes gateway (a docker CLI on PATH with a working default context, or HERMES_DOCKER_BINARY)."
+  - "Needs Docker or Podman reachable by the Kitsune gateway (a docker CLI on PATH with a working default context, or HERMES_DOCKER_BINARY)."
   - "In codex_app_server mode only quarantines set for every model apply."
-  - "Appeals import Hermes' skill frontmatter parser and skills_guard scan, which are not in the published plugin API yet (issue #150975); without them an appeal refuses to draft or apply."
-  - "Rapid replay-profile create/delete can trigger a Hermes core race that leaks a hosted-room poller (repeating 'state.db was replaced' log lines until a gateway restart); fix proposed in #150937."
+  - "Appeals import Kitsune' skill frontmatter parser and skills_guard scan, which are not in the published plugin API yet (issue #150975); without them an appeal refuses to draft or apply."
+  - "Rapid replay-profile create/delete can trigger a Kitsune core race that leaks a hosted-room poller (repeating 'state.db was replaced' log lines until a gateway restart); fix proposed in #150937."
 capabilities:
   provides_tools: []
   provides_hooks:

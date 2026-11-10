@@ -40,7 +40,7 @@ and survives a restart. `session.info` returns it as `client` (absent when none 
 plugins read it through `hermes_cli.plugin_session.session_client()` and the `client` /
 `client_version` keys of prompt-section session info. It is attribution only: `source` still
 picks the session policy (send `source: "tui"` for terminal-client behaviour), and no toolset,
-approval, permission, prompt text or telemetry reads `client`. Hermes does not verify the name,
+approval, permission, prompt text or telemetry reads `client`. Kitsune does not verify the name,
 so any client can claim any name: never grant anything based on it.
 
 Attach another authenticated viewer with `session.resume({session_id})`, and submit

@@ -1,6 +1,6 @@
 ---
 title: Browser Automation
-description: Drive a real browser with browser_exec — Hermes-launched Chromium, cloud browsers, Lightpanda, or your own Chrome via CDP — for web interaction, form filling, scraping, and more.
+description: Drive a real browser with browser_exec — Kitsune-launched Chromium, cloud browsers, Lightpanda, or your own Chrome via CDP — for web interaction, form filling, scraping, and more.
 sidebar_label: Browser
 sidebar_position: 5
 ---
@@ -22,7 +22,7 @@ browser over the Chrome DevTools Protocol (CDP) — with three companion tools
 
 Where the browser comes from is a separate choice:
 
-- **Local Chromium (default)** — Hermes launches its own packaged Chromium, headless, one browser per session. No API key, no setup.
+- **Local Chromium (default)** — Kitsune launches its own packaged Chromium, headless, one browser per session. No API key, no setup.
 - **Cloud browsers** — the [Nous subscription](tool-gateway.md), [Browserbase](https://browserbase.com), [Browser Use](https://browser-use.com) cloud, [Firecrawl](https://firecrawl.dev), or a browser-provider plugin.
 - **[Lightpanda](https://lightpanda.io)** — a lightweight headless engine for text-first browsing on small machines.
 - **Your own browser** — attach to a running Chrome, Brave, Chromium or Edge with `/browser connect`.
@@ -90,13 +90,13 @@ surface) gets no browser.
 :::
 
 The driver is [browser-harness](https://github.com/browser-use/browser-use), the
-engine of the Browser Use CLI. It is a regular Python dependency of Hermes, so
+engine of the Browser Use CLI. It is a regular Python dependency of Kitsune, so
 every install — the Desktop app included — ships it with no separate download.
 
 ## Local Chromium (default)
 
 With no cloud provider, `/browser connect` endpoint or real-profile toggle
-configured, Hermes starts a Chromium for the session itself and points
+configured, Kitsune starts a Chromium for the session itself and points
 `browser_exec` at it. Your installed Chrome is never touched — there is no
 `chrome://inspect` toggle to enable and no "Allow remote debugging?" popup —
 and it works on headless servers with no desktop browser at all.
@@ -106,7 +106,7 @@ and it works on headless servers with no desktop browser at all.
 - **Headless by default.** Set `browser.headed: true` for a visible window (see
   [below](#headed-mode-visible-browser-window)).
 - **Automatic cleanup.** The browser is closed after `browser.inactivity_timeout`
-  seconds idle (default 120), when Hermes exits, and by an orphan sweep if a
+  seconds idle (default 120), when Kitsune exits, and by an orphan sweep if a
   process crashed.
 - **Private hosts are reachable.** With a local terminal backend, the local
   Chromium can open `localhost` and LAN addresses whatever
@@ -116,10 +116,10 @@ and it works on headless servers with no desktop browser at all.
   Docker/SSH/Modal terminal backend). Cloud-metadata URLs the agent writes are
   always refused.
 
-**Which Chromium.** Hermes picks the first that exists:
+**Which Chromium.** Kitsune picks the first that exists:
 
 1. `browser.executable_path`, when set.
-2. The Chromium (Chrome for Testing) installed by Hermes's package manager — the
+2. The Chromium (Chrome for Testing) installed by Kitsune's package manager — the
    installers and `hermes update` install it by default.
 3. `/etc/hermes/chromium-executable-path` in the official Docker image.
 4. A system `chromium` / `chromium-browser` on `PATH` (Android/Termux, and
@@ -227,7 +227,7 @@ Browserbase stealth features:
 | Advanced Stealth | Off | Custom Chromium build, requires Scale Plan |
 | Keep Alive | On | Session reconnection after network hiccups |
 
-If paid features aren't available on your plan, Hermes automatically falls back — first disabling `keepAlive`, then proxies — so browsing still works on free plans.
+If paid features aren't available on your plan, Kitsune automatically falls back — first disabling `keepAlive`, then proxies — so browsing still works on free plans.
 
 ### Firecrawl
 
@@ -248,12 +248,12 @@ Get your API key at [firecrawl.dev](https://firecrawl.dev), then select **Firecr
 The `.env` keys above supply **credentials only**. The active browser is chosen by the `browser.cloud_provider` selection written by `hermes tools` → Browser Automation (`local`, `browserbase`, `browser-use`, `firecrawl`, or `nous` for the Nous Subscription; provider plugins add their own names). Once a selection exists, adding or removing a key does not switch providers — and a selected provider with a missing key errors with guidance to run `hermes tools` instead of silently rerouting. Never-configured setups still autodetect from available credentials.
 :::
 
-Cloud sessions consume provider credits. Hermes releases them when the
+Cloud sessions consume provider credits. Kitsune releases them when the
 conversation ends, after `browser.inactivity_timeout`, and on process exit.
 
 ### Hybrid routing: cloud for public URLs, local for LAN/localhost
 
-When a cloud provider is configured, Hermes auto-spawns a **local Chromium sidecar**
+When a cloud provider is configured, Kitsune auto-spawns a **local Chromium sidecar**
 for URLs that resolve to a private/loopback/LAN address (`localhost`, `127.0.0.1`,
 `192.168.x.x`, `10.x.x.x`, `172.16-31.x.x`, `*.local`, `*.lan`, `*.internal`,
 IPv6 loopback `::1`, link-local `169.254.x.x`). Public URLs continue to use the
@@ -266,9 +266,9 @@ The cloud provider never sees the private URL.
 
 The feature is **on by default**, and it is not governed by
 `security.allow_private_urls`: that setting guards the cloud browser and the web
-tools, but the sidecar runs on the Hermes host and opens private hosts with it
+tools, but the sidecar runs on the Kitsune host and opens private hosts with it
 off, the same way a `curl http://localhost` from the terminal would. A hosted
-Hermes (Docker, a VPS) therefore lets the agent browse that host's own
+Kitsune (Docker, a VPS) therefore lets the agent browse that host's own
 loopback services and its LAN through the sidecar. To refuse private URLs
 instead (all URLs go to the configured cloud provider):
 
@@ -305,7 +305,7 @@ browser:
   use_real_profile: true
 ```
 
-When enabled, Hermes copies your default browser's **active** profile — the one
+When enabled, Kitsune copies your default browser's **active** profile — the one
 you actually browse (`Local State → profile.last_used`), with its cookies, saved
 logins, and preferences — into a managed snapshot under
 `~/.hermes/browser-profile/<browser>/`, then launches your **real browser
@@ -346,12 +346,12 @@ A pin naming a profile directory that doesn't exist never silently falls back to
 the last-used profile: the agent gets a fresh browser without your logins and a
 message naming the bad pin.
 
-When you turn the toggle back off, Hermes deletes the snapshot store
+When you turn the toggle back off, Kitsune deletes the snapshot store
 (`~/.hermes/browser-profile/`) on the next browser use, so the copied
 credentials don't linger after you revoke consent.
 
 :::note When your profile can't be copied, the browser still works
-Real-profile browsing never takes the browser away. If Hermes can't copy your
+Real-profile browsing never takes the browser away. If Kitsune can't copy your
 profile, the agent gets a fresh browser **without your logins** for that session,
 and its first browser result says why (`real_profile_unavailable`), so it can tell
 you instead of acting as if it were signed in. That happens when:
@@ -362,7 +362,7 @@ you instead of acting as if it were signed in. That happens when:
   running background apps when closed" keeps a `chrome.exe` alive after you close
   the window). After one successful copy, a later launch with the browser open
   reuses that copy instead: your logins are as of the last copy, and they refresh
-  the next time Hermes starts its browser while yours is closed.
+  the next time Kitsune starts its browser while yours is closed.
 - **Your default browser isn't a supported Chromium** (Firefox, a Beta/Dev/Canary
   channel), or the pinned profile doesn't exist.
 - **The cookie database is unreadable or corrupt**: the message names it and the
@@ -370,14 +370,14 @@ you instead of acting as if it were signed in. That happens when:
 
 On macOS and Linux a running Chrome holds `Login Data`, `Login Data For Account`
 and `Web Data` (saved passwords and autofill) with a write lock, but `Cookies`
-still copies, and cookies are what keep you signed in to sites. Hermes copies the
+still copies, and cookies are what keep you signed in to sites. Kitsune copies the
 cookies and skips the locked password/autofill files, so you can keep your browser
 open. Each database is copied through SQLite's online backup (never a raw file
 copy, which could lose recent logins).
 
-Set `browser.real_profile_autoclose: true` to let Hermes **offer to close the
+Set `browser.real_profile_autoclose: true` to let Kitsune **offer to close the
 browser for you** when it's holding the profile lock (the Windows case). Even with
-this on, Hermes never closes it automatically: the agent asks you first, and only on
+this on, Kitsune never closes it automatically: the agent asks you first, and only on
 your approval runs `hermes browser close-profile` (terminates the browser process
 tree bound to that profile, losing unsaved tabs). A new browser session then picks
 up your profile.
@@ -424,7 +424,7 @@ Three things to set up before scheduling one:
 
 **Windows prerequisite:** the browser has to be fully quit for the first snapshot.
 After that, a tick that runs while it is open reuses the last snapshot (logins as of
-that copy); with no snapshot yet, the tick runs on a fresh, signed-out browser. Hermes never closes it without asking you first
+that copy); with no snapshot yet, the tick runs on a fresh, signed-out browser. Kitsune never closes it without asking you first
 (see the note above).
 
 The bundled `product-price-monitor` skill is a worked example of the recurring
@@ -445,7 +445,7 @@ browser:
   engine: lightpanda   # auto (default, Chromium) | lightpanda
 ```
 
-Hermes launches `lightpanda serve --host 127.0.0.1 --port <free>` itself — one process per `browser_exec` session name (or per task) — and points `browser_exec` at it. No Chromium or Node.js is needed. The process is reaped after `browser.inactivity_timeout`, on exit, and by the orphan sweep if Hermes crashes. All of these processes share one on-disk HTTP cache at `$HERMES_HOME/cache/browser-use/lightpanda/http-cache`, so repeat visits skip re-downloading assets. Hermes passes the cache flag only when the installed Lightpanda supports it (0.3.x+); older binaries simply run without a cache. To clear it, stop your Lightpanda sessions first, then delete that directory.
+Kitsune launches `lightpanda serve --host 127.0.0.1 --port <free>` itself — one process per `browser_exec` session name (or per task) — and points `browser_exec` at it. No Chromium or Node.js is needed. The process is reaped after `browser.inactivity_timeout`, on exit, and by the orphan sweep if Kitsune crashes. All of these processes share one on-disk HTTP cache at `$HERMES_HOME/cache/browser-use/lightpanda/http-cache`, so repeat visits skip re-downloading assets. Kitsune passes the cache flag only when the installed Lightpanda supports it (0.3.x+); older binaries simply run without a cache. To clear it, stop your Lightpanda sessions first, then delete that directory.
 
 Lightpanda has no graphical renderer, so `capture_screenshot()` is unavailable and the tool description tells the model to work text-first; it also holds one page per session, so the model is told to call `new_tab()` once and `goto_url()` afterwards (tracked upstream in [lightpanda-io/browser#1962](https://github.com/lightpanda-io/browser/issues/1962)).
 
@@ -453,10 +453,10 @@ Lightpanda has no graphical renderer, so `capture_screenshot()` is unavailable a
 
 ## Your own browser via CDP (`/browser connect`)
 
-Instead of the Chromium Hermes launches or a cloud provider, you can attach the browser tools to your own running Chrome, Brave, Chromium, or Edge instance via the Chrome DevTools Protocol (CDP). This is useful when you want to see what the agent is doing in real-time, interact with pages that require your own cookies/sessions, or avoid cloud browser costs.
+Instead of the Chromium Kitsune launches or a cloud provider, you can attach the browser tools to your own running Chrome, Brave, Chromium, or Edge instance via the Chrome DevTools Protocol (CDP). This is useful when you want to see what the agent is doing in real-time, interact with pages that require your own cookies/sessions, or avoid cloud browser costs.
 
 :::note
-`/browser connect` is an **interactive-CLI slash command** — it is not dispatched by the gateway. If you try to run it inside a WebUI, Telegram, Discord, or other gateway chat, the message will be sent to the agent as plain text and the command will not execute. Start Hermes from the terminal (`hermes` or `hermes chat`) and issue `/browser connect` there.
+`/browser connect` is an **interactive-CLI slash command** — it is not dispatched by the gateway. If you try to run it inside a WebUI, Telegram, Discord, or other gateway chat, the message will be sent to the agent as plain text and the command will not execute. Start Kitsune from the terminal (`hermes` or `hermes chat`) and issue `/browser connect` there.
 :::
 
 In the CLI, use:
@@ -468,7 +468,7 @@ In the CLI, use:
 /browser disconnect              # Detach and return to cloud/local mode
 ```
 
-If a browser isn't already running with remote debugging, Hermes will attempt to auto-launch a supported Chromium-family browser with `--remote-debugging-port=9222`. Detection includes Brave, Brave Origin/Nightly, Google Chrome, Chromium, and Microsoft Edge, with common Linux install paths and binary names such as `brave-origin`, `brave-origin-nightly`, `/opt/brave.com/brave-origin/brave-origin`, `/opt/brave.com/brave-origin-nightly/brave-origin`, `/opt/brave-bin/brave`, and `/snap/bin/brave`.
+If a browser isn't already running with remote debugging, Kitsune will attempt to auto-launch a supported Chromium-family browser with `--remote-debugging-port=9222`. Detection includes Brave, Brave Origin/Nightly, Google Chrome, Chromium, and Microsoft Edge, with common Linux install paths and binary names such as `brave-origin`, `brave-origin-nightly`, `/opt/brave.com/brave-origin/brave-origin`, `/opt/brave.com/brave-origin-nightly/brave-origin`, `/opt/brave-bin/brave`, and `/snap/bin/brave`.
 
 :::tip
 To start a Chromium-family browser manually with CDP enabled, use a dedicated user-data-dir so the debug port actually comes up even if the browser is already running with your normal profile:
@@ -503,7 +503,7 @@ google-chrome \
   --no-default-browser-check &
 ```
 
-Then launch the Hermes CLI and run `/browser connect`.
+Then launch the Kitsune CLI and run `/browser connect`.
 
 **Why `--user-data-dir`?** Without it, launching a Chromium-family browser while a regular instance is already running typically opens a new window on the existing process — and that existing process was not started with `--remote-debugging-port`, so port 9222 never opens. A dedicated user-data-dir forces a fresh browser process where the debug port actually listens. `--no-first-run --no-default-browser-check` skips the first-launch wizard for the fresh profile.
 
@@ -516,19 +516,19 @@ When connected, `browser_exec`, `browser_cdp`, `browser_dialog` and `browser_vau
 
 ### WSL2 + Windows Chrome: prefer MCP over `/browser connect`
 
-If Hermes runs inside WSL2 but the Chrome window you want to control runs on the Windows host, `/browser connect` is often not the best path.
+If Kitsune runs inside WSL2 but the Chrome window you want to control runs on the Windows host, `/browser connect` is often not the best path.
 
 Why:
 
-- `/browser connect` expects Hermes itself to reach a usable CDP endpoint
+- `/browser connect` expects Kitsune itself to reach a usable CDP endpoint
 - modern Chrome live-debugging sessions often expose a host-local endpoint that is not directly reachable from WSL the same way a classic `9222` port is
-- even when Windows Chrome is debuggable, the cleanest integration is often to let a Windows-side browser MCP server attach to Chrome and let Hermes talk to that MCP server
+- even when Windows Chrome is debuggable, the cleanest integration is often to let a Windows-side browser MCP server attach to Chrome and let Kitsune talk to that MCP server
 
-For that setup, prefer `chrome-devtools-mcp` through Hermes MCP support.
+For that setup, prefer `chrome-devtools-mcp` through Kitsune MCP support.
 
 See the MCP guide for the practical setup:
 
-- [Use MCP with Hermes](../../guides/use-mcp-with-hermes.md#wsl2-bridge-hermes-in-wsl-to-windows-chrome)
+- [Use MCP with Kitsune](../../guides/use-mcp-with-hermes.md#wsl2-bridge-hermes-in-wsl-to-windows-chrome)
 
 ## Bot Desktop screen
 

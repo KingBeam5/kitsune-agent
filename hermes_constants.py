@@ -1,4 +1,4 @@
-"""Shared constants for Hermes Agent.
+"""Shared constants for Kitsune Agent.
 
 Import-safe, stdlib-only — importable from anywhere without circular-import risk.
 """
@@ -22,7 +22,7 @@ _HERMES_HOME_OVERRIDE: ContextVar[str | object] = ContextVar("_HERMES_HOME_OVERR
 INDICATOR_STYLES: tuple[str, ...] = ("ascii", "emoji", "kaomoji", "unicode")
 DEFAULT_INDICATOR_STYLE: str = "kaomoji"
 
-# Browser-hosted attachments are staged on the Hermes host and then read back
+# Browser-hosted attachments are staged on the Kitsune host and then read back
 # as a base64 data URL for the normal remote attachment RPC. Keep the upload
 # and read-back boundaries identical so a successful picker/drop can always be
 # attached afterward.
@@ -30,7 +30,7 @@ WEBAPP_ATTACHMENT_MAX_BYTES: int = 16 * 1024 * 1024
 
 
 def set_hermes_home_override(path: str | Path | None) -> Token:
-    """Set a context-local Hermes home override and return its reset token.
+    """Set a context-local Kitsune home override and return its reset token.
 
     Deliberately does not mutate ``os.environ`` (shared by every thread in the process).
     """
@@ -39,18 +39,18 @@ def set_hermes_home_override(path: str | Path | None) -> Token:
 
 
 def reset_hermes_home_override(token: Token) -> None:
-    """Restore the previous context-local Hermes home override."""
+    """Restore the previous context-local Kitsune home override."""
     _HERMES_HOME_OVERRIDE.reset(token)
 
 
 def get_hermes_home_override() -> str | None:
-    """Return the active context-local Hermes home override, if any."""
+    """Return the active context-local Kitsune home override, if any."""
     override = _HERMES_HOME_OVERRIDE.get()
     return str(override) if override is not _UNSET and override else None
 
 
 def _expand_hermes_home(path: str) -> Path:
-    """Expand environment and user-home syntax in a Hermes home path."""
+    """Expand environment and user-home syntax in a Kitsune home path."""
     return Path(os.path.expanduser(os.path.expandvars(path)))
 
 
@@ -111,7 +111,7 @@ _ENV_REFERENCE = re.compile(r"%([^%]+)%|\$\{([^}]+)\}|\$([A-Za-z0-9_-]+)")
 
 
 def hermes_root_for_environment(environ: Mapping[str, str]) -> Path | None:
-    """The Hermes root that a process started with *environ* resolves, or None.
+    """The Kitsune root that a process started with *environ* resolves, or None.
 
     Applies the root rules of ``get_default_hermes_root`` to another process's
     environment. ``%NAME%``, ``${NAME}`` and ``$NAME`` references and a leading
@@ -192,7 +192,7 @@ def _warn_profile_fallback_once() -> None:
 
 
 def get_hermes_home() -> Path:
-    """Hermes home: context-local override → ``HERMES_HOME`` env var → platform default."""
+    """Kitsune home: context-local override → ``HERMES_HOME`` env var → platform default."""
     override = get_hermes_home_override()
     if override:
         return _expand_hermes_home(override)
@@ -210,7 +210,7 @@ _HOME_KEY_CACHE: dict[str, str] = {}
 
 
 def hermes_home_key(path: str | Path | None = None) -> str:
-    """Stable registry key for a Hermes home/profile dir.
+    """Stable registry key for a Kitsune home/profile dir.
 
     ``strict=False`` so profiles whose directories don't exist yet still get a key.
 
@@ -241,7 +241,7 @@ def reset_hermes_home_key_cache() -> None:
 
 
 def get_process_hermes_home() -> Path:
-    """Hermes home of the running process, ignoring task overrides.
+    """Kitsune home of the running process, ignoring task overrides.
 
     For process-level assets (theme YAML, dashboard plugin manifests) that must stay visible while a
     request is scoped to another profile (e.g. embedded ``/chat`` under ``--open-profile``). Follows
@@ -260,7 +260,7 @@ def pin_process_hermes_home(path: str | Path | None) -> None:
     """Pin the home this process serves as its own profile, for "is this task routed?" decisions.
 
     An embedding host that serves several profiles and mirrors the active turn's profile into
-    ``os.environ["HERMES_HOME"]`` for legacy readers (Hermes WebUI) otherwise makes every turn's own
+    ``os.environ["HERMES_HOME"]`` for legacy readers (Kitsune WebUI) otherwise makes every turn's own
     profile look like the launch profile: ``agent.secret_scope.serves_routed_profile()`` turns
     False and that turn's MCP connections fall back to bare, cross-profile names; the sibling
     launch-home checks (``secret_scope._is_process_home``, ``tools.environments.local._is_routed_home``,
@@ -285,7 +285,7 @@ def get_routing_process_hermes_home() -> Path:
     return _expand_hermes_home(pinned) if pinned else get_process_hermes_home()
 
 
-# Hermes-managed runtime downloads at the root of a home (GGUF models, llama.cpp runtimes,
+# Kitsune-managed runtime downloads at the root of a home (GGUF models, llama.cpp runtimes,
 # managed Node): re-downloadable on demand and routinely tens to hundreds of GB. Shared by
 # ``hermes backup`` (excludes them) and ``profile create --clone-all`` (skips them from the
 # default profile) so the two lists cannot drift apart.
@@ -316,14 +316,14 @@ def get_default_hermes_root(*, home: str | Path | None = None) -> Path:
 
 # Tombstone lives beside the profile dir (not inside) so a stale mkdir or rmtree cannot erase it.
 _DELETED_PROFILES_DIR = ".deleted"
-# Files marking a real Hermes home; arbitrary dirs with a ``profiles`` segment lack them.
+# Files marking a real Kitsune home; arbitrary dirs with a ``profiles`` segment lack them.
 _HERMES_HOME_MARKERS = ("config.yaml", ".env", "state.db")
 
 
 def _is_hermes_profiles_root(profiles_dir: Path) -> bool:
     """True when *profiles_dir* is provably ``<hermes-home>/profiles``.
 
-    Accepts the classic ``~/.hermes`` layout, a root carrying Hermes-home marker files, a
+    Accepts the classic ``~/.hermes`` layout, a root carrying Kitsune-home marker files, a
     ``profiles/.deleted`` tombstone dir (only ``profile delete`` creates it), or the default root.
     """
     root = profiles_dir.parent
@@ -345,7 +345,7 @@ def _is_hermes_profiles_root(profiles_dir: Path) -> bool:
 def named_profile_home(path: str | Path) -> Path | None:
     """Return ``<root>/profiles/<name>`` when *path* is that home or under it.
 
-    Requires ``<name>`` not to start with ``.`` and the ``profiles`` parent to be a real Hermes home;
+    Requires ``<name>`` not to start with ``.`` and the ``profiles`` parent to be a real Kitsune home;
     a default home whose path merely contains a ``profiles`` segment is not a named profile.
     """
     current = Path(path)
@@ -361,7 +361,7 @@ def named_profile_home(path: str | Path) -> Path | None:
 def profile_name_for_home(path: str | Path | None) -> str | None:
     """Return the canonical profile id owning *path*, or ``None`` when it is not a profile home.
 
-    The default home is the Hermes root itself, so its basename is an installation detail (``.hermes``
+    The default home is the Kitsune root itself, so its basename is an installation detail (``.hermes``
     on POSIX and commonly ``hermes`` on Windows), not the profile id ``default``.
     """
     if path is None or not str(path).strip():
@@ -496,7 +496,7 @@ def get_bundled_skills_dir(default: Path | None = None) -> Path:
 
 
 def get_hermes_dir(new_subpath: str, old_name: str, *, home: Path | None = None) -> Path:
-    """Resolve a Hermes subdirectory, honouring a populated legacy ``<old_name>/`` (no migration).
+    """Resolve a Kitsune subdirectory, honouring a populated legacy ``<old_name>/`` (no migration).
 
     An empty legacy dir does NOT count (install scaffolds, manual mkdir) so it cannot shadow the new path.
 
@@ -542,7 +542,7 @@ def _run_version_probe(argv: list[str], **kwargs):
 
 
 def _version_probe_ok(path: str) -> bool:
-    """True when ``<path> --version`` exits 0 under the Hermes-managed Node PATH."""
+    """True when ``<path> --version`` exits 0 under the Kitsune-managed Node PATH."""
     result = _run_version_probe([path, "--version"], env=with_hermes_node_path())
     return result is not None and result.returncode == 0
 
@@ -736,7 +736,7 @@ def _iter_real_home_candidates(env: dict[str, str] | None = None) -> list[str]:
 
 
 def get_real_home(env: dict[str, str] | None = None) -> str:
-    """The OS user's real home, avoiding the Hermes profile HOME.
+    """The OS user's real home, avoiding the Kitsune profile HOME.
 
     ``HOME`` belongs to the OS account and external CLIs keeping credentials under ``~``; a parent
     already running with ``HOME={HERMES_HOME}/home`` is repaired back when possible.
@@ -789,7 +789,7 @@ def get_subprocess_home(env: dict[str, str] | None = None) -> str | None:
 
 
 def apply_subprocess_home_env(env: MutableMapping[str, str]) -> None:
-    """Apply Hermes' subprocess HOME contract to *env* in-place: ``HOME``/``HERMES_REAL_HOME``
+    """Apply Kitsune' subprocess HOME contract to *env* in-place: ``HOME``/``HERMES_REAL_HOME``
     per the home mode, and the temp vars re-pointed at ``env["HERMES_HOME"]``'s scratch dir."""
     real_home = get_real_home(env)
     if real_home:
@@ -800,9 +800,9 @@ def apply_subprocess_home_env(env: MutableMapping[str, str]) -> None:
     apply_scratch_tmp_env(env)
 
 
-# --- Scratch dir: Hermes' own temp space, never the system /tmp ---
+# --- Scratch dir: Kitsune' own temp space, never the system /tmp ---
 # System temp is tmpfs on most Linux distros and containers, so browser profiles, PTY probes,
-# download spools and every ``tempfile.mkdtemp()`` a Hermes-launched script performs eat RAM
+# download spools and every ``tempfile.mkdtemp()`` a Kitsune-launched script performs eat RAM
 # and vanish on reboot. ``HERMES_HOME/cache/scratch`` is real storage with an IDLE retention:
 # an entry lives while anything inside it is still being written and goes 24h after the last
 # write anywhere in its subtree. A fixed age was wrong both ways — a directory's own mtime only
@@ -892,7 +892,7 @@ def _resolve_hermes_uid_gid() -> tuple[int | None, int | None]:
     The entrypoint chowns HERMES_HOME once, but subdirs created at runtime (``profiles/<name>/``)
     need the same chown or they land root:root and block later uid-mapped workers.
 
-    Docker containers running Hermes commonly set these to map the in-container user to a host user so
+    Docker containers running Kitsune commonly set these to map the in-container user to a host user so
     volume-mounted state files end up with the right ownership. See #34107.
     """
     if sys.platform == "win32":
@@ -924,7 +924,7 @@ def _chown_to_hermes_uid(path) -> None:
 
 
 def apply_secure_dir_policy(path, *, home: str | Path | None = None) -> None:
-    """Apply the canonical Hermes home-directory permission policy to *path*.
+    """Apply the canonical Kitsune home-directory permission policy to *path*.
 
     Owner-only ``0700`` by default, but the operator's explicit and managed sharing choices
     win (#117347): managed installs are left exactly as the package manager / activation
@@ -960,9 +960,9 @@ def apply_secure_dir_policy(path, *, home: str | Path | None = None) -> None:
 
 
 def get_scratch_dir(home: str | Path | None = None, *, prune: bool = True) -> Path:
-    """``<home>/cache/scratch`` (created, owner-only); *home* defaults to the active Hermes home.
+    """``<home>/cache/scratch`` (created, owner-only); *home* defaults to the active Kitsune home.
 
-    Every Hermes process and child gets ``TMPDIR``/``TMP``/``TEMP`` pointed here at boot (see
+    Every Kitsune process and child gets ``TMPDIR``/``TMP``/``TEMP`` pointed here at boot (see
     :func:`export_scratch_tmp_env`), so ``tempfile`` defaults land here without call sites
     knowing. Entries idle for ``SCRATCH_MAX_IDLE_HOURS`` are pruned at most once per process
     and once per hour across processes (stamp file), so a fan-out of children stays cheap.
@@ -1036,7 +1036,7 @@ def apply_scratch_tmp_env(env: MutableMapping[str, str]) -> bool:
     """Point ``TMPDIR``/``TMP``/``TEMP`` in *env* at the scratch dir of ``env["HERMES_HOME"]``.
 
     A temp var the user (or the OS: macOS ``/var/folders``, Windows ``%TEMP%``) set is
-    respected and nothing changes. A value Hermes itself exported earlier — recognisable
+    respected and nothing changes. A value Kitsune itself exported earlier — recognisable
     because it equals ``HERMES_SCRATCH_DIR`` — is re-derived, so a child running under another
     profile's home gets that home's scratch dir rather than its parent's. Returns True when
     the vars were (re)written.
@@ -1253,7 +1253,7 @@ def wsl_unc_path_to_posix(path: str) -> str | None:
 
 
 def translate_cwd_for_wsl_backend(cwd: str) -> str:
-    """Map a Windows-host cwd (drive path or ``\\\\wsl.localhost\\`` UNC) to POSIX when Hermes runs in WSL.
+    """Map a Windows-host cwd (drive path or ``\\\\wsl.localhost\\`` UNC) to POSIX when Kitsune runs in WSL.
 
     No-op off WSL and for paths already POSIX.
     """
@@ -1438,7 +1438,7 @@ FIRST_PARTY_MODULE_ROOTS = frozenset({
 
 
 def is_first_party_module(name: str | None) -> bool:
-    """True when *name* ships with Hermes (exact first segment; ``startswith`` would claim ``agentops``)."""
+    """True when *name* ships with Kitsune (exact first segment; ``startswith`` would claim ``agentops``)."""
     root = str(name).split(".")[0] if name else ""
     return bool(root) and (root in FIRST_PARTY_MODULE_ROOTS or root.startswith("hermes_"))
 

@@ -30,7 +30,7 @@ a masked password field. *Save & sign in* stores it and continues; *Don't save*
 tells the agent to stop asking for this turn.
 
 From then on the agent lists your saved logins, types the identifier itself and
-fills the password through Hermes. The tool result it sees is
+fills the password through Kitsune. The tool result it sees is
 `{filled_fields: 1, origin: "https://github.com"}`; the password is also
 registered with the redactor so a later page read cannot echo it back.
 
@@ -43,7 +43,7 @@ with the in-app browser available an omitted target means the preview. This
 uses the preview already open beside the chat and does not require a separate
 browser runtime. `target: "browser"` uses the managed browser.
 
-Keep the chat and its preview page selected while filling. Hermes binds each
+Keep the chat and its preview page selected while filling. Kitsune binds each
 operation to that window and page, and refuses if the target changes or navigates.
 Vault requests are live-only and are not replayed after a reconnect. A failed
 preview fill never switches to a different browser. Filling does not submit
@@ -55,12 +55,12 @@ Sites that ask for a code after the password are handled the same way:
 
 - **Authenticator key saved with the login** (the "setup key" or `otpauth://`
   link a site shows when you enable 2FA; 1Password and Bitwarden items that
-  hold a TOTP seed count too): Hermes generates the current code and enters
+  hold a TOTP seed count too): Kitsune generates the current code and enters
   it. Nobody is asked. Add the key in **Settings → Passwords & Logins → Add**
   or `hermes vault add`; the item shows a *2FA auto* badge. Like the
   password, the code is only generated for a page on the login's saved site.
 - **Code sent to your phone or email**: a small prompt appears in your
-  surface ("Verification code for github.com"), you type the code, Hermes
+  surface ("Verification code for github.com"), you type the code, Kitsune
   enters it into the page. The code never enters the conversation either.
 - **Passkeys, hardware keys, app approvals** ("tap Approve in Duo"): nothing
   to type. The agent tells you to complete it on your device and waits for
@@ -69,10 +69,10 @@ Sites that ask for a code after the password are handled the same way:
 ## Already using 1Password or Bitwarden?
 
 Nothing to enable. If the `op` or `bw` command-line tool is installed and signed
-in, Hermes picks it up automatically and its website logins become fillable
+in, Kitsune picks it up automatically and its website logins become fillable
 alongside the local ones. The first time the agent needs one of those logins it
 asks you to unlock the manager with your master password (masked prompt; once
-per session, 30 minutes idle). Hermes hands the master password to the manager's
+per session, 30 minutes idle). Kitsune hands the master password to the manager's
 CLI through its non-interactive channel (`op signin` on stdin, `bw unlock
 --passwordenv` in the child's environment) and keeps only the session token in
 memory. The agent never sees the master password, the token, or any login.
@@ -88,15 +88,15 @@ or the switch in **Settings → Passwords & Logins**.
 If you turn on [real-profile browsing](browser.md#real-profile-browsing-use-your-own-logins)
 (`browser.use_real_profile: true`), the passwords your everyday Chrome / Brave /
 Edge has saved become a login source too, shown in the Browser bar's key-button
-picker as **Browser profile — `your browser`** beside the Hermes vault and any
-1Password / Bitwarden entries. Pick one and Hermes fills it into the in-app
+picker as **Browser profile — `your browser`** beside the Kitsune vault and any
+1Password / Bitwarden entries. Pick one and Kitsune fills it into the in-app
 browser just like a vault login.
 
-It is **read-only** and needs no master password: Hermes reads only the site and
+It is **read-only** and needs no master password: Kitsune reads only the site and
 username from your profile's saved logins, and the password is filled by your own
 browser (which decrypts its own store) and read back over the debugging protocol
 at the moment of the fill — the agent never sees it, and it is scrubbed from every
-tool result and log. Nothing is decrypted or copied out by Hermes, and there is no
+tool result and log. Nothing is decrypted or copied out by Kitsune, and there is no
 separate switch: the source appears exactly while real-profile browsing is on, and
 disappears (along with the profile snapshot) when you turn it off. This is the
 saved-passwords companion to the real-profile **cookies** that the in-app browser
@@ -163,12 +163,12 @@ What changes in keychain mode:
   synced or copied `~/.hermes`, or a disk image no longer carries everything
   needed to open the vault. Before moving a profile to another machine, run
   `hermes vault key migrate --to file`.
-- **The keychain may ask.** macOS can ask whether Hermes may use the entry
-  (for example after an update replaces Hermes' Python), and a locked Linux
+- **The keychain may ask.** macOS can ask whether Kitsune may use the entry
+  (for example after an update replaces Kitsune' Python), and a locked Linux
   keyring asks to be unlocked. Cron jobs that run while you are logged out
   cannot read the key, so their local logins fail with a clear error.
 - **A lost entry means lost items.** If the keychain entry is deleted, the
-  vault cannot be opened and Hermes says so instead of creating a new key over
+  vault cannot be opened and Kitsune says so instead of creating a new key over
   it. Restore the entry from a keychain backup, or delete `vault.json.enc` to
   start over.
 
@@ -194,14 +194,14 @@ vault:
 
 ## What this does and does not guarantee
 
-**Does:** the password never enters the model's context through Hermes: not in
+**Does:** the password never enters the model's context through Kitsune: not in
 tool results, logs, the session database, or the CLI arguments of any process.
 Fills happen over the supervised browser session's direct CDP socket and are
 refused unless the page origin exactly matches the saved origin, checked again
 inside the page immediately before the write. With the Camofox browser plugin,
 which has no CDP endpoint, the same checks run and the fill goes to the Camofox
 tab through its REST evaluate endpoint, only when `CAMOFOX_URL` is loopback or
-HTTPS. In the Hermes Desktop in-app Browser the fill goes to that exact tab
+HTTPS. In the Kitsune Desktop in-app Browser the fill goes to that exact tab
 through the Desktop's authenticated preview request channel, with the same
 origin checks; saved authenticator codes are bound to the login's origins too.
 
@@ -218,18 +218,18 @@ against a compromised right one.
 | Other users on this computer (not administrators) | Blocked: both files are `0600` | Blocked |
 | Someone with a backup, sync copy or image of `~/.hermes` | Can decrypt: key and vault travel together | Gets ciphertext only |
 | Someone with the powered-off disk and no full-disk encryption | Can decrypt | Needs whatever protects that keychain (on macOS and Windows, your login password; a Linux keyring left unencrypted protects nothing) |
-| A program running as you, or a plugin running inside Hermes | Can decrypt | Can still ask the keychain, or call the vault code directly |
+| A program running as you, or a plugin running inside Kitsune | Can decrypt | Can still ask the keychain, or call the vault code directly |
 | An administrator / root, or malware with your privileges | Can decrypt | Can decrypt |
 
-Password-manager session tokens (1Password, Bitwarden) stay in Hermes' memory
+Password-manager session tokens (1Password, Bitwarden) stay in Kitsune' memory
 only, are dropped after 30 idle minutes or on Lock, and are handed only to the
-single `op`/`bw` command that needs them, never to Hermes' own environment, the
+single `op`/`bw` command that needs them, never to Kitsune' own environment, the
 terminal tool or any other child process. They are kept out of reach of a plain
 import, which stops casual access by other code in the process, but not a
-plugin determined to read Hermes' memory.
+plugin determined to read Kitsune' memory.
 
 Plugins are the boundary that matters: a third-party plugin that runs inside
-the Hermes process can do anything Hermes can, including filling a saved login.
+the Kitsune process can do anything Kitsune can, including filling a saved login.
 If you save logins and install plugins you have not reviewed, run them out of
 process with [`plugins.isolation: host`](plugins.md#running-plugins-out-of-process-pluginsisolation).
 A plugin host still runs as your user and can read files you can read, so for

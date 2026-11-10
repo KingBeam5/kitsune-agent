@@ -1,4 +1,4 @@
-"""Hermes CLI - Unified command-line interface for Hermes Agent."""
+"""Kitsune CLI - Unified command-line interface for Kitsune Agent."""
 
 import sys
 

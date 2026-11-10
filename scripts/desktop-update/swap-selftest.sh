@@ -33,7 +33,7 @@ SWAP_ST_FAILED="" SWAP_ST_CELL=""
 
 swap_st_fail() { echo "FAIL [$SWAP_ST_CELL] $*"; SWAP_ST_FAILED="$SWAP_ST_FAILED $SWAP_ST_CELL"; }
 
-swap_st_bundle() { # dir version -- a fixture Hermes.app; every file carries the version
+swap_st_bundle() { # dir version -- a fixture Kitsune.app; every file carries the version
   local d="$1" v="$2" i=0
   mkdir -p "$d/Contents/MacOS" "$d/Contents/Resources/payload" || return 1
   printf '%s\n' "$v" > "$d/Contents/Resources/hermes-version"

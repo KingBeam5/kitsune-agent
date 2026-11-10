@@ -1,6 +1,6 @@
 """The gated dashboard accepts the deployment session token in ``X-Hermes-Session-Token``.
 
-Regression for #147387: Hermes Desktop's "Session token" connection sends its token in that
+Regression for #147387: Kitsune Desktop's "Session token" connection sends its token in that
 header on REST, but the gate read only a bearer token from the Authorization header, so every
 REST call got 401 ``no_cookie`` even with the right token. Only the session-token provider may
 verify the header; anything else there leaves the request to the cookie path as before.

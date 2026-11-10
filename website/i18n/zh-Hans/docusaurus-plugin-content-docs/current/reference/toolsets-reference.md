@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 title: "工具集参考"
-description: "Hermes 核心、复合、平台及动态工具集参考"
+description: "Kitsune 核心、复合、平台及动态工具集参考"
 ---
 
 # 工具集参考
@@ -54,7 +54,7 @@ hermes tools                            # curses UI to enable/disable per platfo
 |--------|------|------|
 | `browser` | `browser_cdp`、`browser_dialog`、`browser_exec`、`browser_vault` | 核心浏览器自动化。`browser_exec` 通过运行预导入辅助函数的 Python 驱动浏览器（仅提供给同时拥有 `terminal` 的会话）；`browser_cdp`、`browser_dialog` 和 `browser_vault` 作用于同一个浏览器会话。`browser_vault` 随浏览器一起用于凭据表单，默认延迟到工具搜索后加载。禁用此工具集即可关闭浏览功能。快速查询属于 `web`/`search` 工具集——`web_search` 刻意不是其成员，因此 `disabled_toolsets: [browser]` 不会移除它。 |
 | `clarify` | `clarify` | 当 agent 需要澄清时向用户提问。 |
-| `code_execution` | `execute_code` | 运行以编程方式调用 Hermes 工具的 Python 脚本。 |
+| `code_execution` | `execute_code` | 运行以编程方式调用 Kitsune 工具的 Python 脚本。 |
 | `cronjob` | `cronjob` | 调度和管理周期性任务。 |
 | `debugging` | 复合（`file` + `terminal` + `web`） | 调试套件——文件、进程/终端、网页提取/搜索。 |
 | `delegation` | `delegate_task` | 生成隔离的子 agent 实例以并行执行工作。 |

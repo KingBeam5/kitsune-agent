@@ -87,7 +87,7 @@ def _resolve_checkpoint_base() -> Path:
 _STORE_DIRNAME = "store"
 _REFS_PREFIX = "refs/hermes"
 # Commit-body line carrying a snapshot's exact take time (listings read only the subject).
-TAKEN_AT_TRAILER = "Hermes-Taken-At"
+TAKEN_AT_TRAILER = "Kitsune-Taken-At"
 _INDEXES_DIRNAME = "indexes"
 _PROJECTS_DIRNAME = "projects"
 _LEDGERS_DIRNAME = "ledgers"
@@ -124,7 +124,7 @@ DEFAULT_EXCLUDES = [
     ".git/",
     ".hg/",
     ".svn/",
-    # Worktrees (Hermes convention — don't recursively snapshot siblings)
+    # Worktrees (Kitsune convention — don't recursively snapshot siblings)
     ".worktrees/",
     # Native / compiled binaries
     "*.so",
@@ -158,7 +158,7 @@ DEFAULT_EXCLUDES = [
     "Thumbs.db",
     # Logs
     "*.log",
-    # Hermes browser profiles (CDP / agent-browser user-data dirs): locked SQLite files and
+    # Kitsune browser profiles (CDP / agent-browser user-data dirs): locked SQLite files and
     # hundreds of MB of cache that are never project state.
     "chrome_cdp_profile/",
     "agent-browser-chrome-*/",
@@ -337,7 +337,7 @@ def _load_ledger(store: Path, dir_hash: str) -> dict[str, dict]:
     """Load the agent-write ledger: {relpath: {"sha256": ..., "ts": ...}}.
 
     The ledger records the content hash of every file the last successful
-    ``write_file`` / ``patch`` produced, so restores can tell "Hermes wrote
+    ``write_file`` / ``patch`` produced, so restores can tell "Kitsune wrote
     this" apart from "the user hand-edited this afterwards".
     """
     try:
@@ -404,7 +404,7 @@ def _git_env(
 ) -> dict:
     """Build env dict that redirects git to the shared store.
 
-    The shared store is internal Hermes infrastructure — it must NOT inherit
+    The shared store is internal Kitsune infrastructure — it must NOT inherit
     the user's global or system git config.  User-level settings like
     ``commit.gpgsign = true``, signing hooks, or credential helpers would
     either break background snapshots or, worse, spawn interactive prompts
@@ -650,7 +650,7 @@ def _init_store(store: Path, working_dir: str) -> Optional[str]:
     # exists since we just created the store inside it.
     cfg_wd = str(base)
     _run_git(["config", "user.email", "hermes@local"], store, cfg_wd)
-    _run_git(["config", "user.name", "Hermes Checkpoint"], store, cfg_wd)
+    _run_git(["config", "user.name", "Kitsune Checkpoint"], store, cfg_wd)
     _run_git(["config", "commit.gpgsign", "false"], store, cfg_wd)
     _run_git(["config", "tag.gpgSign", "false"], store, cfg_wd)
     _run_git(["config", "gc.auto", "0"], store, cfg_wd)
@@ -956,11 +956,11 @@ class CheckpointManager:
     # ------------------------------------------------------------------
 
     def record_agent_write(self, file_path: str) -> None:
-        """Record the content hash of a file Hermes just successfully wrote.
+        """Record the content hash of a file Kitsune just successfully wrote.
 
         Feeds the agent-write ledger used by :meth:`restore` in safe mode:
         at restore time, a file whose current content no longer matches the
-        recorded hash was hand-edited by the user after Hermes last touched
+        recorded hash was hand-edited by the user after Kitsune last touched
         it, and is skipped instead of clobbered.
 
         Never raises — the ledger is best-effort bookkeeping.
@@ -988,9 +988,9 @@ class CheckpointManager:
 
         Returns ``{"success", "restore": [rel...], "skipped": [rel...],
         "error"?}`` where ``restore`` lists files whose current content
-        still matches what Hermes last wrote (per the agent-write ledger)
-        and ``skipped`` lists files the user hand-edited after Hermes'
-        last write or that Hermes never wrote at all.
+        still matches what Kitsune last wrote (per the agent-write ledger)
+        and ``skipped`` lists files the user hand-edited after Kitsune'
+        last write or that Kitsune never wrote at all.
         """
         hash_err = _validate_commit_hash(commit_hash)
         if hash_err:
@@ -1021,7 +1021,7 @@ class CheckpointManager:
         # Read the same marker-walked project key as record_agent_write.
         ledger = _load_ledger(store, self._ledger_key(abs_dir))
         if not ledger:
-            # No agent-write ledger yet (pre-existing store, or Hermes has
+            # No agent-write ledger yet (pre-existing store, or Kitsune has
             # not written any files here since the ledger was introduced).
             # Signal callers to fall back to a full restore rather than
             # skipping every file.
@@ -1034,14 +1034,14 @@ class CheckpointManager:
             entry = ledger.get(str(abs_path))
             recorded = entry.get("sha256") if isinstance(entry, dict) else None
             if recorded is None:
-                # Hermes never wrote this file (or the ledger predates it) —
+                # Kitsune never wrote this file (or the ledger predates it) —
                 # do not touch it in safe mode.
                 skipped.append(rel)
                 continue
             current = _hash_file(abs_path)
             if current is None:
-                # File deleted since Hermes wrote it: restoring it back is
-                # safe — its last content was Hermes-authored.
+                # File deleted since Kitsune wrote it: restoring it back is
+                # safe — its last content was Kitsune-authored.
                 restore.append(rel)
             elif current == recorded:
                 restore.append(rel)
@@ -1221,7 +1221,7 @@ class CheckpointManager:
     def session_diff(self, working_dir: str) -> dict:
         """Show the cumulative diff of everything changed in this directory.
 
-        This powers ``/diff session``.  It answers "what has Hermes changed
+        This powers ``/diff session``.  It answers "what has Kitsune changed
         here?" by diffing the *earliest retained checkpoint* — the snapshot
         taken before the first recorded edit — against the current working
         tree.  Because checkpoints are captured just before each file-mutating
@@ -1231,7 +1231,7 @@ class CheckpointManager:
         Note: checkpoints are a persistent per-project ref, so the earliest
         *retained* checkpoint may predate the current session (or, after
         pruning, postdate its true start).  It is an approximation of "what
-        Hermes changed", not an exact per-session ledger.
+        Kitsune changed", not an exact per-session ledger.
 
         Returns the same shape as :meth:`diff` (``{"success", "stat",
         "diff"}``).  When no checkpoints exist yet — nothing has been edited —
@@ -1260,8 +1260,8 @@ class CheckpointManager:
         """Restore files to a checkpoint state.
 
         With ``safe=True`` (full-directory restores only), files the user
-        hand-edited after Hermes' last write — per the agent-write ledger —
-        are left untouched, and only Hermes-authored changes are reverted.
+        hand-edited after Kitsune' last write — per the agent-write ledger —
+        are left untouched, and only Kitsune-authored changes are reverted.
         The result gains ``skipped_user_edits`` listing the preserved paths,
         ``skipped_oversize`` listing paths kept because the size cap excluded
         them from every checkpoint, and — only when a delete failed —
@@ -1418,7 +1418,7 @@ class CheckpointManager:
 
         if restore_paths is not None:
             # Split into files present in the checkpoint (checkout) and
-            # Hermes-created files absent from it (delete to restore state).
+            # Kitsune-created files absent from it (delete to restore state).
             checkout_targets: list[str] = []
             delete_targets: list[str] = []
             for rel in restore_paths:
@@ -1431,7 +1431,7 @@ class CheckpointManager:
                 elif self._exceeds_size_cap(Path(abs_dir) / rel):
                     # Absent from the checkpoint because ``max_file_size_mb``
                     # kept it out (_drop_oversize_from_index), not because
-                    # Hermes created it. Deleting it would not restore a prior
+                    # Kitsune created it. Deleting it would not restore a prior
                     # state — no checkpoint holds one — it would destroy the
                     # only copy. The ledger records a content hash, not whether
                     # a write created or modified the file, so an oversize path

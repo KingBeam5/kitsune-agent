@@ -3,7 +3,7 @@
  *
  * Pure Windows venv-holder selection logic (testable without Electron).
  *
- * The pre-update handoff kills Hermes-OWNED venv daemons (the memory plugin's
+ * The pre-update handoff kills Kitsune-OWNED venv daemons (the memory plugin's
  * hindsight daemon) so the updater never races a mapped shim. External
  * holders (a user terminal running `hermes`, unrelated scripts) must NOT be
  * killed — current design reports them via scanVenvBlockers and ABORTS the
@@ -18,10 +18,10 @@ export function hasWindowsPathPrefix(exePath: string, venvScriptsDir: string): b
 }
 
 /**
- * True when a process is a Hermes-owned venv daemon: its exe lives under
+ * True when a process is a Kitsune-owned venv daemon: its exe lives under
  * `<venv>\Scripts\` (ordinal case-insensitive prefix) AND its cmdline
  * references `hindsight_api.main` (the memory daemon the memory plugin
- * spawns DETACHED — it outlives Hermes and holds venv shims mapped).
+ * spawns DETACHED — it outlives Kitsune and holds venv shims mapped).
  */
 export function isHermesOwnedVenvDaemon(
   exePath: string | null | undefined,
@@ -36,9 +36,9 @@ export function isHermesOwnedVenvDaemon(
 }
 
 /**
- * True when a process is an external Hermes process holding this install's venv
+ * True when a process is an external Kitsune process holding this install's venv
  * (#62311): its exe lives under `<venv>\Scripts\` AND it is unambiguously a
- * Hermes program — the `hermes.exe` shim, `python -m hermes_cli...`, or
+ * Kitsune program — the `hermes.exe` shim, `python -m hermes_cli...`, or
  * `python -m hermes ...`. These are the autostart holders (the gateway Startup
  * item, the dashboard Scheduled Task) that neither the desktop's backend
  * teardown nor the hindsight-daemon sweep reach, and that keep the venv shim

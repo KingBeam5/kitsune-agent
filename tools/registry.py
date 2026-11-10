@@ -328,7 +328,7 @@ def _prune_check_fn_caches(now: float) -> None:
 
 def check_fn_cache_scope() -> Optional[str]:
     """Return the active profile key when availability is profile-scoped. Single-profile
-    processes keep the process-wide cache; a multiplex gateway installs a Hermes-home override
+    processes keep the process-wide cache; a multiplex gateway installs a Kitsune-home override
     per profile turn, so the canonical profile key is the boundary."""
     try:
         from agent.secret_scope import serves_routed_profile

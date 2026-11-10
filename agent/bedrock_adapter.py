@@ -130,7 +130,7 @@ def _require_boto3():
 
 def _new_client(factory: Any, service: str, region: str, read_timeout: Optional[float]):
     """``factory.client(...)`` with botocore's own timeouts (60s read / 60s connect) unless a
-    request timeout is configured. The model-call client makes one attempt per call: Hermes's
+    request timeout is configured. The model-call client makes one attempt per call: Kitsune's
     retry loop owns retries and backoff (throttles classify as rate_limit there), and botocore's
     default of 5 attempts re-sends a read timeout, so a hung call took ~5x the timeout to fail.
     ``total_max_attempts`` counts the first request; ``max_attempts`` would count retries only."""

@@ -65,7 +65,7 @@ def other_pid():
 
 @pytest.fixture(autouse=True)
 def _no_runtime_host_above_the_runner(monkeypatch):
-    """Judge hand-offs as if no Hermes gateway/serve/dashboard ran this test process.
+    """Judge hand-offs as if no Kitsune gateway/serve/dashboard ran this test process.
 
     A hand-off is refused when such a host sits above us (cli §7 V9), and that walk reads the real
     process ancestry: run from a terminal that a ``hermes gateway run`` agent opened, every hand-off
@@ -636,7 +636,7 @@ class TestHandoffFromOrchestratingUpdater:
     """The Tauri updater holds the marker, then spawns ``hermes update``.
 
     The regression: the child saw its own parent's live marker and exited 2,
-    so every GUI update failed with "Hermes is still running" and retrying
+    so every GUI update failed with "Kitsune is still running" and retrying
     just re-ran the same self-deadlock. The parent names its pid in
     HANDOFF_PID_ENV; a live holder matching it is our own orchestrator.
     """
@@ -736,7 +736,7 @@ class TestAncestryHandoff:
         ``_update_takeover.py`` as ``python -I -S -B``, where psutil cannot import
         (-S skips site-packages). The psutil-only ancestry walk returned False for
         the two-hops-up shim, and the takeover child refused with exit 2 —
-        "Another Hermes update is already running (PID <the shim itself>)" —
+        "Another Kitsune update is already running (PID <the shim itself>)" —
         observed live on a macOS rehearsal install, then again on Windows, where
         the stdlib walk had no /proc and no ps. Marked for every lane: the Windows
         lane only imports files carrying a platforms marker, which is how the

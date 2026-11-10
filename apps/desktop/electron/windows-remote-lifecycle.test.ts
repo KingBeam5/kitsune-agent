@@ -55,7 +55,7 @@ test('Windows spawn publishes the initial ownership record before releasing the 
       ownershipId,
       spawnNonce: '0123456789abcdef',
       profile: 'default',
-      hermesPath: 'C:\\Hermes\\hermes.exe',
+      hermesPath: 'C:\\Kitsune\\hermes.exe',
       hermesHome: 'C:\\Users\\andre\\.hermes',
       tokenFingerprint: 'a'.repeat(32),
       startedAt: '2026-07-14T00:00:00.000Z'
@@ -206,8 +206,8 @@ test('Windows relaunch gate refuses live and uncertain markers before executing 
           os: 'Windows',
           arch: 'AMD64',
           hermesHome: 'C:\\Users\\alice\\.hermes',
-          hermesPath: 'C:\\Hermes\\hermes.exe',
-          python: 'C:\\Hermes\\python.exe'
+          hermesPath: 'C:\\Kitsune\\hermes.exe',
+          python: 'C:\\Kitsune\\python.exe'
         })
       }
 
@@ -298,7 +298,7 @@ test('Windows relaunch gate uses strict install-wide marker parsing and fail-clo
   assert.doesNotMatch(script, /ErrorAction SilentlyContinue/)
 })
 
-test('Windows probe validates Hermes and Python topology before selection', async () => {
+test('Windows probe validates Kitsune and Python topology before selection', async () => {
   let script = ''
   await probeWindowsRemote(
     sshWith(async (command, options) => {
@@ -736,7 +736,7 @@ test('platform detection surfaces transport failures as themselves, not unsuppor
           throw new Error('not recognized')
         }
 
-        throw new Error('Hermes is not installed on the remote Windows host.')
+        throw new Error('Kitsune is not installed on the remote Windows host.')
       })
     ),
     (err: any) => err.kind === 'unsupported-platform' && /Hermes is not installed/.test(err.message)
@@ -750,13 +750,13 @@ test('platform detection surfaces transport failures as themselves, not unsuppor
         }
 
         throw new Error(
-          '#< CLIXML <Objs><S S="progress">module load</S><S S="Error">The remote Hermes Python runtime was not found._x000D__x000A_</S></Objs>'
+          '#< CLIXML <Objs><S S="progress">module load</S><S S="Error">The remote Kitsune Python runtime was not found._x000D__x000A_</S></Objs>'
         )
       })
     ),
     (err: any) =>
       err.kind === 'unsupported-platform' &&
-      /probe: The remote Hermes Python runtime was not found\./.test(err.message) &&
+      /probe: The remote Kitsune Python runtime was not found\./.test(err.message) &&
       !/CLIXML|module load/.test(err.message)
   )
 })
@@ -796,7 +796,7 @@ test('platform detection preserves typed Windows probe failures', async () => {
 
 test('helper command enters through the launcher module dispatch and quotes path data', () => {
   // The shape update drain and bootstrap rollback rebuild from stored state: no runtime command.
-  const command = helperCommand({ hermesPath: "C:\\Program Files\\Hermes's\\bin\\hermes.exe", hermesHome: 'C:\\h', python: '' }, 'inspect', [
+  const command = helperCommand({ hermesPath: "C:\\Program Files\\Kitsune's\\bin\\hermes.exe", hermesHome: 'C:\\h', python: '' }, 'inspect', [
     'C:\\x y\\hermes.exe'
   ])
 

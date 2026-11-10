@@ -1,4 +1,4 @@
-"""A context window Hermes only defaulted to is labelled "fallback" wherever it is shown, so an operator can
+"""A context window Kitsune only defaulted to is labelled "fallback" wherever it is shown, so an operator can
 tell it from a known or detected limit (field report: GPT-6.1 Terra on Bedrock showed "128K (detected)")."""
 from __future__ import annotations
 

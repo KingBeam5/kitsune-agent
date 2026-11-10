@@ -3,26 +3,26 @@ title: "Middleware"
 description: "Behavior-changing plugin middleware for LLM and tool calls: contract, execution order, examples"
 ---
 
-# Hermes Middleware
+# Kitsune Middleware
 
-Hermes middleware is the behavior-changing companion to observer hooks.
+Kitsune middleware is the behavior-changing companion to observer hooks.
 Observer hooks report what happened. Middleware can change what happens by
 rewriting a request before execution or by wrapping the execution callback
 itself.
 
 This contract is intentionally backend-neutral. A plugin can use it for local
 policy, request shaping, tracing, adaptive routing, cache control, sandbox
-selection, or handoff to runtimes such as NeMo Relay without changing Hermes'
+selection, or handoff to runtimes such as NeMo Relay without changing Kitsune'
 planner, model provider adapters, tool registry, memory, or CLI UX.
 
 With middleware enabled, plugins can:
 
-- Rewrite LLM provider request kwargs before Hermes calls the provider.
+- Rewrite LLM provider request kwargs before Kitsune calls the provider.
 - Rewrite tool arguments before guardrails, approval checks, hooks, and tool
   execution see them.
-- Wrap the actual LLM execution callback while preserving Hermes retry,
+- Wrap the actual LLM execution callback while preserving Kitsune retry,
   streaming, interrupt, and hook behavior.
-- Wrap the actual tool execution callback while preserving Hermes guardrails,
+- Wrap the actual tool execution callback while preserving Kitsune guardrails,
   approval, post-tool hooks, and tool-result transformation.
 
 ## Contract
@@ -64,7 +64,7 @@ return {
 }
 ```
 
-Hermes stores those trace entries in later observer hook payloads as
+Kitsune stores those trace entries in later observer hook payloads as
 `middleware_trace`.
 
 Execution middleware receives a `next_call` callback. Call it to continue the
@@ -79,9 +79,9 @@ def on_tool_execution(**kwargs):
 As with hooks, a callback without `**kwargs` receives only the fields its
 signature names, so a field added to the payload later does not break it.
 
-If multiple plugins register the same execution middleware kind, Hermes runs
+If multiple plugins register the same execution middleware kind, Kitsune runs
 them as a nested chain in registration order. Middleware failures are fail-open:
-Hermes logs a warning and continues with the next middleware or the base
+Kitsune logs a warning and continues with the next middleware or the base
 runtime path. A callback that fails the same way on every call (typically a
 signature naming a field the middleware does not send) is reported **once** at
 WARNING — the message lists the fields it does provide — and identical repeats go
@@ -92,7 +92,7 @@ resets the report.
 
 ### LLM Calls
 
-For each provider request, Hermes applies middleware in this order:
+For each provider request, Kitsune applies middleware in this order:
 
 1. Build provider kwargs from the current conversation.
 2. Apply `llm_request` middleware.
@@ -107,11 +107,11 @@ request plus `next_call`.
 
 ### Tool Calls
 
-For each tool call, Hermes applies middleware in this order:
+For each tool call, Kitsune applies middleware in this order:
 
 1. Parse and coerce model-provided tool arguments.
 2. Apply `tool_request` middleware.
-3. Run the normal Hermes pre-execution path against the effective arguments:
+3. Run the normal Kitsune pre-execution path against the effective arguments:
    tool availability checks, observer block directives, guardrails, and
    approval checks.
 4. Run tool execution through `tool_execution` middleware.
@@ -228,7 +228,7 @@ def time_llm_execution(**kwargs):
     return response
 ```
 
-Return the same response shape Hermes expects from the provider adapter. Do not
+Return the same response shape Kitsune expects from the provider adapter. Do not
 wrap the response in a plugin-specific envelope unless the rest of the runtime
 expects that envelope.
 
@@ -264,14 +264,14 @@ and system configuration, or through an explicit `plugins.toml` selected with
   patches.
 - Execution middleware should call `next_call(...)` exactly once unless it is
   intentionally short-circuiting execution.
-- If execution middleware raises before calling `next_call(...)`, Hermes treats
+- If execution middleware raises before calling `next_call(...)`, Kitsune treats
   that as middleware failure and continues with the remaining middleware chain
   and base execution.
 - If execution middleware calls `next_call(...)` successfully and then raises
-  during post-processing, Hermes preserves the downstream result and does not
+  during post-processing, Kitsune preserves the downstream result and does not
   run the provider or tool a second time.
 - If downstream provider or tool execution fails, middleware may let that error
-  propagate or translate it deliberately. Hermes does not convert downstream
+  propagate or translate it deliberately. Kitsune does not convert downstream
   failure into a successful `None` result.
 - Tool request middleware runs before approvals. If it mutates file paths,
   commands, URLs, or arguments, the mutated values are what guardrails and

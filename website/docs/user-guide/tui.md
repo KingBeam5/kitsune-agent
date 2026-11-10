@@ -1,14 +1,14 @@
 ---
 sidebar_position: 2
 title: "TUI"
-description: "Launch the modern terminal UI for Hermes — mouse-friendly, rich overlays, and non-blocking input."
+description: "Launch the modern terminal UI for Kitsune — mouse-friendly, rich overlays, and non-blocking input."
 ---
 
 # TUI
 
-The TUI is the modern front-end for Hermes — a terminal UI backed by the same Python runtime as the [Classic CLI](cli.md). Same agent, same sessions, same slash commands; a cleaner, more responsive surface for interacting with them.
+The TUI is the modern front-end for Kitsune — a terminal UI backed by the same Python runtime as the [Classic CLI](cli.md). Same agent, same sessions, same slash commands; a cleaner, more responsive surface for interacting with them.
 
-It's the recommended way to run Hermes interactively.
+It's the recommended way to run Kitsune interactively.
 
 ## Launch
 
@@ -53,7 +53,7 @@ The classic CLI remains the shipped default. Anything documented in [CLI Interfa
 
 ## Why the TUI
 
-- **Instant first frame** — the banner paints before the app finishes loading, so the terminal never feels frozen while Hermes is starting.
+- **Instant first frame** — the banner paints before the app finishes loading, so the terminal never feels frozen while Kitsune is starting.
 - **Non-blocking input** — type and queue messages before the session is ready. Your first prompt sends the moment the agent comes online.
 - **Rich overlays** — model picker, session picker, approval and clarification prompts all render as modal panels rather than inline flows.
 - **Live session panel** — tools and skills fill in progressively as they initialize.
@@ -81,7 +81,7 @@ Click anywhere on a section header (or its chevron) to toggle it. The Tools list
 - **Node.js** ≥ 20 — the TUI runs as a subprocess launched from the Python CLI. `hermes doctor` verifies this.
 - **TTY** — like the classic CLI, piping stdin or running in non-interactive environments falls back to single-query mode.
 
-On first launch Hermes installs the TUI's Node dependencies into `ui-tui/node_modules` (one-time, a few seconds). Subsequent launches are fast. If you pull a new Hermes version, the TUI bundle is rebuilt automatically when sources are newer than the dist.
+On first launch Kitsune installs the TUI's Node dependencies into `ui-tui/node_modules` (one-time, a few seconds). Subsequent launches are fast. If you pull a new Kitsune version, the TUI bundle is rebuilt automatically when sources are newer than the dist.
 
 :::tip Working across git worktrees?
 Contributors who run `hermes --tui --dev` from many worktrees can share one `node_modules` instead of installing per checkout — see [TUI & Desktop from Worktrees](../developer-guide/worktree-ui-dev.md).
@@ -89,7 +89,7 @@ Contributors who run `hermes --tui --dev` from many worktrees can share one `nod
 
 ### External prebuild
 
-Distributions that ship a prebuilt bundle (Nix, system packages) can point Hermes at it:
+Distributions that ship a prebuilt bundle (Nix, system packages) can point Kitsune at it:
 
 ```bash
 export HERMES_TUI_DIR=/path/to/prebuilt/ui-tui
@@ -115,7 +115,7 @@ On macOS, `F7` means the physical F7 function key. MacBook keyboards may use tha
 - **Typing while the agent is busy** (`display.busy_input_mode: queue`, the TUI default) submits the message to the gateway immediately. The gateway's durable session queue orders it behind the running turn, so it survives a gateway crash or restart and shows up as `[queued] …` in the `queued (N)` panel of every client attached to the session — the Desktop app sees the same list. Your message's transcript bubble appears when its turn actually starts. `steer` and `interrupt` still act on the live turn as before.
 - **`Ctrl+X`** opens the live session switcher. When a queued message is highlighted (sent while the agent was still running), it still deletes that queued message instead — for a gateway-queued row this cancels it on the gateway (`prompt.cancel`), so it disappears for every viewer; picking and re-sending an edited row cancels the original and submits the edit as a new input (if the original has already started by then, it is stopped and the edit runs after it). **`Esc`** cancels editing and unhighlights without deleting.
 - **`Esc`, `Esc`** on an idle, empty composer goes back to an earlier prompt (Codex-style backtrack, same as `/rewind`). The first `Esc` primes it and the hint row shows `esc again to edit previous message` (only when there is an earlier prompt; with none, the second `Esc` says `No previous message to edit.`). There is no time limit, but any other key, a click, a paste or a new turn cancels the prime and then acts as usual. The second `Esc` opens **transcript browsing** with your latest prompt selected and drawn in reverse video, and a hint row `Browsing transcript · ↑↓/jk scroll · ←→/hl prompts · ↵ edit · f fork · esc back`. **←/h** picks the next older prompt and **→/l** the next newer one (it stops at the ends); **↑/↓/j/k** scroll the transcript a line and **PgUp/PgDn** a page, without changing the selection. **Enter** closes browsing and puts the selected prompt in the composer, not sent, with the hint `↺ Editing prompt N — Enter rewinds here and sends · Esc Esc cancels`: edit it and press **Enter**, and that prompt plus everything after it is removed from the session and your edit goes out as a new turn. Nothing is removed until you send. Sending an empty composer, a slash command, `Esc Esc`, `Ctrl+C` or switching session cancels the edit and removes nothing. **f** forks instead: a new session with everything *before* the selected prompt, with that prompt waiting in the composer (not sent); the original session is left untouched, and forking the very first prompt starts a fresh session with it prefilled. **Esc** goes back to where the transcript was scrolled before, **q** or `Ctrl+C` closes, and any other key closes browsing and is typed into the composer. In `--tui-native` mode, where the transcript lives in the terminal's own scrollback, browsing opens a transcript pager of the session's prompts and replies above the composer instead, with the same keys. With a draft in the composer `Esc Esc` still discards the draft, and mid-turn it still interrupts. Prompts that carried images keep their number but can't be selected.
-- **Approval prompts** offer **No, and tell Hermes what to do instead** after **Deny**. Pick it (or press its number), type the instruction, and press **Enter**: the instruction is steered into the running turn (as `/steer` would) and the command is denied, so Hermes sees both together and tries again your way. If the turn already ended, the instruction is queued as your next prompt. **Esc** on the typing row goes back to the choices; **Esc** on the choices still denies outright.
+- **Approval prompts** offer **No, and tell Kitsune what to do instead** after **Deny**. Pick it (or press its number), type the instruction, and press **Enter**: the instruction is steered into the running turn (as `/steer` would) and the command is denied, so Kitsune sees both together and tries again your way. If the turn already ended, the instruction is queued as your next prompt. **Esc** on the typing row goes back to the choices; **Esc** on the choices still denies outright.
 - **`Ctrl+G` / `Ctrl+X Ctrl+E`** — open the current input buffer in `$EDITOR` for multi-line / long-prompt composition; save-and-exit sends the contents back as the prompt.
 
 ## Slash commands
@@ -149,9 +149,9 @@ Open it with any of these:
 - `/sessions new` to create a fresh live session immediately.
 - Click the `N live sessions` count in the status line.
 
-<img alt="Hermes TUI Session Orchestrator with one live session and a +new row" src="/docs/img/docs/tui-session-orchestrator/session-orchestrator.png" />
+<img alt="Kitsune TUI Session Orchestrator with one live session and a +new row" src="/docs/img/docs/tui-session-orchestrator/session-orchestrator.png" />
 
-<video controls muted loop playsInline src="/docs/img/docs/tui-session-orchestrator/session-orchestrator-demo.mp4" title="Hermes TUI Session Orchestrator demo" style={{maxWidth: '100%'}}></video>
+<video controls muted loop playsInline src="/docs/img/docs/tui-session-orchestrator/session-orchestrator-demo.mp4" title="Kitsune TUI Session Orchestrator demo" style={{maxWidth: '100%'}}></video>
 
 Inside the switcher:
 
@@ -185,7 +185,7 @@ export HERMES_TUI_THEME=light
 
 ## Busy indicator styles
 
-The status-bar busy indicator is pluggable — the default rotates Hermes' kawaii face palette every 2.5 seconds during agent work. Pick a different style via config or the `/indicator` slash command:
+The status-bar busy indicator is pluggable — the default rotates Kitsune' kawaii face palette every 2.5 seconds during agent work. Pick a different style via config or the `/indicator` slash command:
 
 ```yaml
 display:
@@ -232,7 +232,7 @@ The status line also shows:
 
 ## Configuration
 
-The TUI respects all standard Hermes config: `~/.hermes/config.yaml`, profiles, personalities, skins, quick commands, credential pools, memory providers, tool/skill enablement. No TUI-specific config file exists.
+The TUI respects all standard Kitsune config: `~/.hermes/config.yaml`, profiles, personalities, skins, quick commands, credential pools, memory providers, tool/skill enablement. No TUI-specific config file exists.
 
 A handful of keys tune the TUI surface specifically:
 
@@ -303,7 +303,7 @@ There is no general "point any TUI at any gateway port" mode: the gateway's own 
 
 ### If the connection drops
 
-- **The WebSocket drops:** the TUI says *Connection to Hermes lost — reconnecting and reopening your chat…*, reconnects with growing backoff and reattaches to the same session — including a reply that is still streaming on the gateway. Nothing is resubmitted.
+- **The WebSocket drops:** the TUI says *Connection to Kitsune lost — reconnecting and reopening your chat…*, reconnects with growing backoff and reattaches to the same session — including a reply that is still streaming on the gateway. Nothing is resubmitted.
 - **The gateway is gone** (a crash, its idle exit, `hermes gateway stop`): the TUI starts it again, at most a few times per minute, and reopens the same saved session. A reply that was in flight when the gateway crashed is lost with it.
 
 The TUI, `hermes chat`, the Desktop app and your messaging platforms already share the profile's gateway and its sessions (see [Sessions](sessions.md)); a hand-set gateway URL adds nothing.
@@ -312,7 +312,7 @@ The TUI, `hermes chat`, the Desktop app and your messaging platforms already sha
 
 Launching `hermes` (without `--tui`) stays on the classic CLI by default. To make a machine prefer the TUI, set `display.interface: tui` in `~/.hermes/config.yaml` (persistent) or `HERMES_TUI=1` in your shell profile (per-shell). To go back, set `interface: cli` / unset the env var, or pass `hermes --cli` for a one-off.
 
-If the TUI fails to launch (no Node, missing bundle, TTY issue), Hermes prints a diagnostic and falls back — rather than leaving you stuck.
+If the TUI fails to launch (no Node, missing bundle, TTY issue), Kitsune prints a diagnostic and falls back — rather than leaving you stuck.
 
 ## See also
 

@@ -30,7 +30,7 @@ function fixture() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mac-sign-cache-test-'))
   const entitlements = path.join(root, 'inherit.plist')
   fs.writeFileSync(entitlements, '<plist/>')
-  const app = path.join(root, 'Hermes.app')
+  const app = path.join(root, 'Kitsune.app')
   /** @param {string} relative @param {Buffer | string} bytes @returns {string} */
   const put = (relative, bytes) => {
     const file = path.join(app, 'Contents', relative)

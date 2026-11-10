@@ -58,7 +58,7 @@ describe('spawnRelaunch', () => {
     async () => {
       const saved = { ...process.env }
       const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-relaunch-fds-'))
-      const image = path.join(dir, 'Hermes.AppImage')
+      const image = path.join(dir, 'Kitsune.AppImage')
       const report = path.join(dir, 'fds')
       const held = path.join(dir, 'held')
       const events: string[] = []
@@ -211,7 +211,7 @@ describe('spawnRelaunch', () => {
     }
   )
 
-  // Started from another app's AppImage (an AppImage terminal), Hermes inherits
+  // Started from another app's AppImage (an AppImage terminal), Kitsune inherits
   // that app's APPDIR/APPIMAGE and its mount on PATH and EDITOR; app.relaunch
   // kept them, so a restart must not strip half of that env.
   it.skipIf(process.platform !== 'linux')("keeps another app's AppImage env intact", async () => {

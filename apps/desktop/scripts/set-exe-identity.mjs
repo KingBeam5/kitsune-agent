@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// set-exe-identity.mjs — stamp the Hermes icon + version metadata onto the
-// built Hermes.exe using rcedit, completely decoupled from electron-builder's
+// set-exe-identity.mjs — stamp the Kitsune icon + version metadata onto the
+// built Kitsune.exe using rcedit, completely decoupled from electron-builder's
 // signing path.
 //
 // WHY THIS EXISTS
@@ -13,7 +13,7 @@
 // try to extract winCodeSign.
 //
 // The cost of disabling signAndEditExecutable is that electron-builder also
-// skips rcedit, so the unpacked Hermes.exe keeps the stock Electron icon and
+// skips rcedit, so the unpacked Kitsune.exe keeps the stock Electron icon and
 // "Electron" taskbar name. This script restores the icon + identity by calling
 // rcedit DIRECTLY. rcedit is a pure PE resource editor: no signing, no certs,
 // no winCodeSign, no symlinks.
@@ -62,7 +62,7 @@ function wait(delay) {
   return new Promise(resolve => setTimeout(resolve, delay))
 }
 
-// Stamp the Hermes icon + identity onto `exe`. Resolves on success, throws on
+// Stamp the Kitsune icon + identity onto `exe`. Resolves on success, throws on
 // failure. `desktopRoot` defaults to this script's package root so the icon and
 // the rcedit dependency resolve regardless of cwd.
 async function stampExeIdentity(
@@ -86,8 +86,8 @@ async function stampExeIdentity(
   const options = {
     icon,
     'version-string': {
-      ProductName: 'Hermes',
-      FileDescription: 'Hermes',
+      ProductName: 'Kitsune',
+      FileDescription: 'Kitsune',
       CompanyName: 'Nous Research',
       LegalCopyright: 'Copyright (c) 2026 Nous Research'
     }
@@ -107,7 +107,7 @@ async function stampExeIdentity(
     }
   }
 
-  console.log('[set-exe-identity] done — Hermes icon + identity stamped')
+  console.log('[set-exe-identity] done — Kitsune icon + identity stamped')
 }
 
 export { RCEDIT_COMMIT_RETRY_DELAYS_MS, stampExeIdentity }

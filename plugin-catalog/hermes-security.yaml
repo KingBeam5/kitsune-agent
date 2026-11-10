@@ -6,7 +6,7 @@ title: Security
 description: 'Security review for a local repository. The agent builds a threat model, splits the code
   into chunks and reviews them with parallel subagents, checks each candidate against the code and
   traces whether an attacker can reach it. Reports keep evidence, rejected candidates and coverage
-  gaps, export to Markdown, JSON, CSV and SARIF, and get a Security page in Hermes Desktop. Standard,
+  gaps, export to Markdown, JSON, CSV and SARIF, and get a Security page in Kitsune Desktop. Standard,
   deep and diff modes; `/security` slash command and `hermes security-review` CLI. Optional "Run tests
   to confirm findings" writes small reproductions and runs them in a temporary copy of the repository;
   testing a running app needs a per-scan grant (one origin, one hour, 200 requests) that agent tools

@@ -68,7 +68,7 @@ def resolve_bundle_layout(
     *project_root* is the payload's ``repo/`` tree — the install root a
     bundled backend runs from. The app sits two directories above the
     payload on Windows and Linux, and four above it on macOS, where the
-    payload lands in ``Hermes.app/Contents/Resources``.
+    payload lands in ``Kitsune.app/Contents/Resources``.
 
     The macOS offset is detected from the directory names themselves
     rather than from *platform*, so a layout can be resolved for any host

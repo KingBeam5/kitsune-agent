@@ -118,7 +118,7 @@ describe('AboutSettings', (): void => {
     expect(checkBackendUpdates).toHaveBeenCalledTimes(2)
   })
 
-  it('hides the Hermes Cloud backend update card and never checks it', (): void => {
+  it('hides the Kitsune Cloud backend update card and never checks it', (): void => {
     $connection.set({ ...connection('remote'), baseUrl: 'https://lab.agents.nousresearch.com', remoteKind: 'cloud' })
     render(<AboutSettings />)
 

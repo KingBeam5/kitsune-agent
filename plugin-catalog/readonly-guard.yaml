@@ -3,7 +3,7 @@ repo: https://github.com/mciocchi/hermes-readonly-guard
 sha: "1f2d12e215fe95c7b2ecf743ef06e12f07a0ff68"
 subdir: ""
 description: >-
-  Three-mode, per-session tool guard for Hermes: read-only (writes blocked; inspection tools plus
+  Three-mode, per-session tool guard for Kitsune: read-only (writes blocked; inspection tools plus
   single allowlisted read-only shell commands), plan (the same, plus the plan markdown), and
   writable. Switched from the status bar, /readonly, the dashboard API, or — in the Desktop app —
   three contributed keybinds (Ctrl+Alt+R read-only, Ctrl+Alt+P plan, writable left unbound), which

@@ -244,7 +244,7 @@ if [ "$needs_chown" = true ]; then
         chown hermes:hermes "$HERMES_HOME" 2>/dev/null || \
             echo "[stage2] Warning: chown $HERMES_HOME failed (rootless container?) — continuing"
     fi
-    # Hermes-owned subdirs: recursive chown is safe here because these are
+    # Kitsune-owned subdirs: recursive chown is safe here because these are
     # created and managed exclusively by hermes (see the s6-setuidgid mkdir
     # -p block below for the canonical list).
     for sub in cron sessions logs hooks memories skills skins plans workspace home profiles pairing platforms/pairing; do
@@ -467,7 +467,7 @@ seed_one "SOUL.md" "docker/SOUL.md"
 #
 # OPERATOR-PROVIDED KEYS WIN: if the container environment already carries
 # API_SERVER_KEY (documented `docker run -e API_SERVER_KEY=...` flow), do
-# not generate one. Hermes loads $HERMES_HOME/.env with override=True, so
+# not generate one. Kitsune loads $HERMES_HOME/.env with override=True, so
 # a generated key written here would silently SHADOW the operator's env
 # key and 401 every client still using the supplied credential.
 if [ -n "${API_SERVER_KEY:-}" ]; then
@@ -772,7 +772,7 @@ fi
 # The image's Dockerfile pm-provisions pinned full Chromium into
 # $HERMES_RUNTIME_DIR (/opt/hermes/tools) at BUILD time and bakes the
 # resolved binary path into /etc/hermes/chromium-executable-path (the layout
-# differs per arch, so it is resolved at build time, not hard-coded). Hermes
+# differs per arch, so it is resolved at build time, not hard-coded). Kitsune
 # reads that file itself (hermes_cli/browser_runtime.py) when pm's facts are
 # hidden, so nothing is exported here: the hook only says, once per boot,
 # when the baked path no longer names a runnable binary (a custom build that

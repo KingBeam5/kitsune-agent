@@ -359,7 +359,7 @@ There are three release paths, and none of them starts from a tag push:
 | | Canary | Stable | One-off / channel build |
 |---|---|---|---|
 | Entry | `canary-release.yml` (daily cron or dispatch) | `python scripts/release.py release …` → dispatches `stable-release.yml` | `python scripts/release.py --build-commit REV [--channel NAME] --publish` → dispatches `desktop-bundled-release.yml` |
-| Identity | `v<stable>+canary.<UTC>` tag, separate `hermes-canary` app | `rc.<N>-vX.Y.Z` attempt ref, then a `vX.Y.Z` receipt at publish | commit: `hermes-<sha7>` app; channel: `Hermes NAME` or stable branding |
+| Identity | `v<stable>+canary.<UTC>` tag, separate `hermes-canary` app | `rc.<N>-vX.Y.Z` attempt ref, then a `vX.Y.Z` receipt at publish | commit: `hermes-<sha7>` app; channel: `Kitsune NAME` or stable branding |
 | Tests | native smokes of each bundle | full CI (strict) + Docker + Nix + PM bundle + install/update E2E + signed upgrade acceptance, per the claim's lanes | native smokes |
 | Publishes | canary feeds, canary GitHub prerelease | Docker versioned tag → `stable`/`latest`, R2 stable feeds, App Installer, Store, APT, GitHub release | commit/channel pages under R2; never a feed or Store |
 
@@ -490,8 +490,8 @@ gh workflow run desktop-bundle-smoke.yml --ref <test-branch> \
 |---|---|---|
 | `install-e2e.yml`, **Install & Update E2E** | `workflow_dispatch`; `workflow_call` from stable (`route=all`) | "Can a user on a released version get to this commit?" `pick-releases` samples release tags (newest, oldest, spread; `tag-count` or `install-ref`). `generate-matrix` expands `scripts/sandbox/generate-e2e-matrix.mjs` into linux/windows/macos legs. The bundled legs need `windows-bundle-manifest` / `macos-bundle-manifest` and a matching `route`. **Never runs on PRs, pushes, or a schedule.** |
 | `install-e2e-run.yml` | `workflow_call` | Linux/OS-agnostic leg: real `curl \| bash` install, then update. Unsupported method pairs skip (grey). |
-| `install-e2e-windows-run.yml` | `workflow_call` | Windows leg (Hermes-Setup.exe via AutoHotkey, `install.ps1`, app "Update now" under Playwright). Packaged-bundle arm only with `install-method=packaged-app`. Also called by stable for signed acceptance. |
-| `install-e2e-macos-run.yml` | `workflow_call` | macOS leg (script installs, Hermes-Setup.dmg, packaged-bundle arm). Also called by stable. |
+| `install-e2e-windows-run.yml` | `workflow_call` | Windows leg (Kitsune-Setup.exe via AutoHotkey, `install.ps1`, app "Update now" under Playwright). Packaged-bundle arm only with `install-method=packaged-app`. Also called by stable for signed acceptance. |
+| `install-e2e-macos-run.yml` | `workflow_call` | macOS leg (script installs, Kitsune-Setup.dmg, packaged-bundle arm). Also called by stable. |
 | `install-e2e-red.yml`, **Install & Update E2E red tracker** | `workflow_run` of Install & Update E2E; `workflow_dispatch` (`run-id`, `dry-run` default true) | Keeps one `install-e2e-red` issue in sync. The automatic path runs only when the watched run was a `schedule` event (see [dormant paths](#known-dormant-or-inert-paths)). |
 
 ```sh
@@ -504,7 +504,7 @@ gh workflow run install-e2e-red.yml -f run-id=<id> -f dry-run=false
 
 | Workflow | Triggers | Notes |
 |---|---|---|
-| `bootstrap-installer-build.yml`, **Bootstrap installer build** | `workflow_dispatch` (`ref`, `pin_branch`, `pin_commit`) | Signed Hermes-Setup.exe (Azure Trusted Signing) and notarized Hermes-Setup.dmg. Uploaded as run artifacts only, never published. No caches. |
+| `bootstrap-installer-build.yml`, **Bootstrap installer build** | `workflow_dispatch` (`ref`, `pin_branch`, `pin_commit`) | Signed Kitsune-Setup.exe (Azure Trusted Signing) and notarized Kitsune-Setup.dmg. Uploaded as run artifacts only, never published. No caches. |
 | `live-providers.yml`, **Live provider canaries** | `push: tags v*`; `workflow_dispatch` (`filter`) | Live calls to real provider APIs, upstream only. Each case skips when its `LIVE_*_API_KEY` secret is missing. Tags pushed by `GITHUB_TOKEN` do not start it, and stable attempt refs (`rc.*`) do not match `v*`. In practice it runs on dispatch or on a `v*` tag a person pushes. `gh workflow run live-providers.yml -f filter='openrouter-anthropic'` |
 | `sandbox-image.yml` | see [standalone](#standalone-pr--main-checks) | Publishes `:desktop` on `release: published` or dispatch. |
 | `deploy-site.yml` | see [post-merge](#post-merge-automation-on-main) | The Vercel deploy runs on `release: published` or dispatch. |

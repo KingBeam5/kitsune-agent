@@ -138,7 +138,7 @@ def _claim_short_dir(key: str, budget: Optional[int]) -> Optional[str]:
     getuid = getattr(os, "getuid", lambda: 0)
     digest = hashlib.sha256(f"{getuid()}\0{key}".encode()).hexdigest()[:12]
     # socket_safe_tmpdir() caps the root at 50 bytes for Chrome's longer socket names; ours needs a
-    # root of at most 17-21, which a Hermes scratch TMPDIR exceeds, so the sticky system root follows.
+    # root of at most 17-21, which a Kitsune scratch TMPDIR exceeds, so the sticky system root follows.
     # A container or macOS has no XDG_RUNTIME_DIR, which is why the shared roots stay as fallbacks.
     xdg = [xdg_dir] if (xdg_dir := private_user_runtime_dir()) else []
     roots = dict.fromkeys(os.path.realpath(r) for r in (*xdg, socket_safe_tmpdir(), "/tmp"))  # no-tmp: ok — AF_UNIX sun_path budget; dir claimed 0700 and ownership-checked

@@ -165,7 +165,7 @@ class TestReloadEnv:
 
 
     def test_removes_deleted_known_vars(self, tmp_path):
-        """reload_env() removes known Hermes vars not present in .env."""
+        """reload_env() removes known Kitsune vars not present in .env."""
         env_file = tmp_path / ".env"
         env_file.write_text("")  # empty .env
         # Pick a known key from OPTIONAL_ENV_VARS
@@ -1125,7 +1125,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
     def test_model_set_maps_unknown_vendor_to_aggregator(self, monkeypatch):
         """A bare vendor name from analytics rows (no billing_provider) is not
-        a Hermes provider — keep the user's aggregator instead of writing a
+        a Kitsune provider — keep the user's aggregator instead of writing a
         provider that can never resolve credentials."""
         monkeypatch.setattr(
             "hermes_cli.model_cost_guard.expensive_model_warning",
@@ -3615,7 +3615,7 @@ class TestStatusInstallId:
     """Stable per-install identity on /api/status.
 
     Behaviour contracts: the id is minted once, persisted under the ROOT
-    Hermes home (not the profile home), survives a fresh process-cache read,
+    Kitsune home (not the profile home), survives a fresh process-cache read,
     and is byte-identical for every profile served by the same install — the
     desktop uses it to collapse duplicate roster rows when one backend is
     registered under two addresses.

@@ -204,7 +204,7 @@ def test_a_narrow_request_on_a_tree_without_an_old_venv_records_only_the_request
 
 @pytest.fixture(params=["venv", ".venv"])
 def reinstalled_tree(legacy_tree, request):
-    """A main-era venv that a pre-PM updater (v2026.3.12 .. v2026.5.29.2) reinstalled Hermes into with
+    """A main-era venv that a pre-PM updater (v2026.3.12 .. v2026.5.29.2) reinstalled Kitsune into with
     ``uv pip install -e .[all]`` right after pulling a PM tree: its dist-info is the PM tree's. ``.venv``
     is the old README's manual install (``uv venv .venv``) and uv's default name."""
     import shutil
@@ -228,7 +228,7 @@ def test_an_old_venv_an_old_updater_reinstalled_from_the_pulled_tree_is_carried(
 @pytest.fixture()
 def developer_tree(legacy_tree):
     """The same checkout with no main-era venv, but the test env CONTRIBUTING.md has a contributor
-    build into it (``pm.build_env --source . --out .venv --group dev --group test``): Hermes from a
+    build into it (``pm.build_env --source . --out .venv --group dev --group test``): Kitsune from a
     PM tree on PM's pinned Python, beside the same SDKs the main-era venv held."""
     import shutil
 
@@ -277,7 +277,7 @@ def test_an_old_venv_with_an_undecodable_pyvenv_cfg_is_still_carried(legacy_tree
 
 
 def test_a_bare_venv_holds_no_old_install(legacy_tree):
-    """`uv venv .venv` with nothing installed: no Hermes, so nothing of an old install to carry."""
+    """`uv venv .venv` with nothing installed: no Kitsune, so nothing of an old install to carry."""
     import shutil
 
     import pm

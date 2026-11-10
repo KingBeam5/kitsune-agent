@@ -183,11 +183,11 @@ def _ensure_tui_workspace(tui_dir: Path) -> None:
         return
 
     print(
-        "Error: the TUI workspace is missing from this Hermes checkout.\n"
+        "Error: the TUI workspace is missing from this Kitsune checkout.\n"
         f"Expected directory: {tui_dir}\n"
         "This usually means `hermes update` left tracked ui-tui files deleted.\n"
         "Recovery:\n"
-        "  1. From the Hermes checkout, run `git restore -- ui-tui`\n"
+        "  1. From the Kitsune checkout, run `git restore -- ui-tui`\n"
         "  2. Run `pnpm install --frozen-lockfile`\n"
         "  3. Retry `hermes --tui`\n"
         "If the checkout is still inconsistent, run `hermes update --force`.",
@@ -378,7 +378,7 @@ def _apply_tui_python_env(env: dict) -> None:
     """Pin the TUI's Python helpers to this process's tree and interpreter; repair its cwd.
 
     Inherited values name whatever shell launched us (a checkout's dev shell exports both),
-    and the gateway child must run the code and interpreter of the Hermes that spawned it.
+    and the gateway child must run the code and interpreter of the Kitsune that spawned it.
     """
     from hermes_cli.main import PROJECT_ROOT
     env["HERMES_PYTHON_SRC_ROOT"] = str(PROJECT_ROOT)

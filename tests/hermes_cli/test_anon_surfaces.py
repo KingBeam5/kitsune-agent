@@ -183,7 +183,7 @@ def test_keepalive_does_not_start_for_free_tier(isolated_store, monkeypatch):
 _HANDOFF_VIEWS = [
     *({"state": "claimed", "account_email": "person@example.test", "connectors_kind": kind,
        "moved_toolkits": ["gmail"], "dropped_toolkits": ["slack"]} for kind in ("moved", "conflict", "none")),
-    # The retrying line names Hermes as a subject ("Hermes keeps trying"), not a command; it is not checked here.
+    # The retrying line names Kitsune as a subject ("Kitsune keeps trying"), not a command; it is not checked here.
     {"state": "failed", "error": "no_destination"}, {"state": "gone", "probably_moved": True},
 ]
 

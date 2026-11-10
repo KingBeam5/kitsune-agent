@@ -84,7 +84,7 @@ model couldn't produce valid JSON, `result.parsed` is `None` and
   objects.
 * **Host-owned credentials.** OAuth tokens, refresh flows, the
   credential pool, per-task aux overrides — every credential
-  concept Hermes already has applies. The plugin never sees a
+  concept Kitsune already has applies. The plugin never sees a
   token; the host attributes the call back through `result.audit`.
 * **Bounded.** Single sync or async call. No streaming, no tool
   loops, no conversation state to manage. State the input, get the
@@ -215,7 +215,7 @@ timeout, vision routing — is the same across all four.
 ```python
 result = ctx.llm.complete(
     messages=[{"role": "user", "content": "Hi"}],
-    provider=None,         # optional, gated — Hermes provider id (e.g. "openrouter")
+    provider=None,         # optional, gated — Kitsune provider id (e.g. "openrouter")
     model=None,            # optional, gated — whatever string that provider expects
     temperature=None,
     max_tokens=None,
@@ -326,7 +326,7 @@ the plugin's `display_name`) and can pin, reset, or flag it as a stale
 provider pin like any built-in. A plugin can only use a task
 it registered itself; unknown or foreign task names fail before provider
 invocation. `allow_task_override: true` is an explicit operator grant for
-using Hermes built-in auxiliary tasks; it does not permit another plugin's
+using Kitsune built-in auxiliary tasks; it does not permit another plugin's
 tasks. Omit `task=` (or use `"auto"`) to keep the active main provider/model.
 
 #### From the plugin's frontend: a plugin RPC method
@@ -500,8 +500,8 @@ plugins:
   entries:
     my-plugin:
       llm:
-        # Allow this plugin to choose a different Hermes provider
-        # (must be one Hermes already knows about — same names as
+        # Allow this plugin to choose a different Kitsune provider
+        # (must be one Kitsune already knows about — same names as
         # `hermes model` and config.yaml model.provider).
         allow_provider_override: true
 
@@ -515,7 +515,7 @@ plugins:
 
         # Optionally restrict which models. Use ["*"] for any.
         # Models are matched literally against whatever string the
-        # plugin sends — Hermes does not look anything up.
+        # plugin sends — Kitsune does not look anything up.
         allowed_models:
           - openai/gpt-4o-mini
           - anthropic/claude-3-5-haiku
@@ -574,7 +574,7 @@ don't have to:
   active text model is text-only, the host falls back to the
   configured vision model automatically.
 * **Fallback chain.** If the user's primary provider 5xxs or 429s,
-  the request goes through Hermes' usual aggregator-aware fallback
+  the request goes through Kitsune' usual aggregator-aware fallback
   before it returns an error to the plugin.
 * **Timeout.** Honours your `timeout=` argument, falling back to
   `auxiliary.<task>.timeout` config or the global aux default.
@@ -693,7 +693,7 @@ plugin, and the turn-scoped `pre_api_request` /
 
 ## Where this fits in the plugin surface
 
-Existing `ctx.*` methods extend an existing Hermes subsystem:
+Existing `ctx.*` methods extend an existing Kitsune subsystem:
 
 | `ctx.register_tool` | adds a tool the agent can call |
 | `ctx.register_platform` | wires a new gateway adapter |

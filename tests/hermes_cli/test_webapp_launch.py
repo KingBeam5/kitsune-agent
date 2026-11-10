@@ -115,7 +115,7 @@ def _loopback_request():
 
 @pytest.mark.parametrize("platform", ["darwin", "freebsd14", "openbsd7", "sunos5"])
 def test_where_no_peer_check_exists_a_launch_ticket_is_never_spent(platform):
-    """macOS and the other Unixes show every process's argv to all local users by default and Hermes
+    """macOS and the other Unixes show every process's argv to all local users by default and Kitsune
     cannot tell who owns a loopback connection there. So the launcher prints a link for the user to
     open by hand rather than passing a launch ticket to a browser launcher, and a launch ticket is
     never spent. The platform is passed in as data; the marked tests below run each host's own path."""

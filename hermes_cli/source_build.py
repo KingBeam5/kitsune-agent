@@ -51,7 +51,7 @@ def source_build_env(base_env: dict | None = None, *, explicit: bool = False, ve
     npmrc = user_npmrc(env)
     if npmrc == hermes_npmrc():
         env.setdefault("NPM_CONFIG_USERCONFIG", str(npmrc))
-    # pnpm reads the npmrc that user_npmrc selects (an explicit userconfig, else Hermes's, else
+    # pnpm reads the npmrc that user_npmrc selects (an explicit userconfig, else Kitsune's, else
     # ~/.npmrc) only for its registry and auth. npm also handed every other key to the processes it
     # spawned as npm_config_<key>; keep doing that, since it is how node-pre-gyp (run by
     # stage-native-deps.mjs) finds a binary mirror (node_get_windows_binary_host_mirror).

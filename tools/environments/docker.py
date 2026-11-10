@@ -115,7 +115,7 @@ _sandbox_dir_name = sanitize_task_id_for_path
 
 
 def _get_active_profile_name() -> str:
-    """Active Hermes profile name (the container key's own lookup), or ``"default"`` on error. Resolved
+    """Active Kitsune profile name (the container key's own lookup), or ``"default"`` on error. Resolved
     at container-create time so a container stays tagged with its creator even if the process switches
     profiles."""
     return home_profile_name()
@@ -692,7 +692,7 @@ class DockerEnvironment(BaseEnvironment):
         self._init_env_values: dict[str, str] = {}
         self._workspace_dir: Optional[str] = None
         self._home_dir: Optional[str] = None
-        # (host_dir, container_path) of the Hermes-created sandbox bind mounts; owner handback targets.
+        # (host_dir, container_path) of the Kitsune-created sandbox bind mounts; owner handback targets.
         self._sandbox_mounts: list[tuple[str, str]] = []
         logger.info("DockerEnvironment volumes: %s", volumes)
         if volumes is not None and not isinstance(volumes, list):

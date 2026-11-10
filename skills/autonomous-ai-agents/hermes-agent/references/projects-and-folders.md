@@ -94,7 +94,7 @@ accept the display name; get the slug from `hermes project list`.
 
 ```bash
 # Make a project for a repo and start using it
-hermes project create "Hermes Agent" ~/Work/hermes-agent --use
+hermes project create "Kitsune Agent" ~/Work/hermes-agent --use
 
 # A workspace spanning two repos (first given = primary)
 hermes project create "Payments" ~/Work/payments-api ~/Work/payments-web

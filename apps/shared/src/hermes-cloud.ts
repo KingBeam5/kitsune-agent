@@ -1,5 +1,5 @@
 /**
- * Hermes Cloud agents: their public host is `<label>.agents.nousresearch.com`
+ * Kitsune Cloud agents: their public host is `<label>.agents.nousresearch.com`
  * (staging `<label>.agents.staging-nousresearch.com`), the URL the portal gives
  * each agent. Cloud updates an agent by replacing its image, so nothing may run
  * `hermes update` against one.

@@ -15,7 +15,7 @@ def site_packages(root: Path, name: str = "venv") -> Path:
 
 
 def main_era_venv(root: Path, *anchors: str, name: str = "venv", reinstalled_from_pm_tree: bool = False) -> Path:
-    """``root/<name>`` as a main-era installer left it: Hermes installed on a uv-managed Python.
+    """``root/<name>`` as a main-era installer left it: Kitsune installed on a uv-managed Python.
 
     ``reinstalled_from_pm_tree``: a pre-PM updater then ran ``uv pip install -e .[all]`` from the
     tree it had just pulled, so the dist-info is the PM tree's (its top level lists ``pm``).

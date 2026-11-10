@@ -1,4 +1,4 @@
-"""IRC Platform Adapter for Hermes Agent — stdlib asyncio only, zero external dependencies.
+"""IRC Platform Adapter for Kitsune Agent — stdlib asyncio only, zero external dependencies.
 
 config.yaml ``gateway.platforms.irc.extra`` keys: server, port (6697), nickname (hermes-bot), channel,
 use_tls (true), server_password, nickserv_password, allowed_users ([] = allow all), max_message_length (450).
@@ -362,7 +362,7 @@ def interactive_setup() -> None:
     existing_server = get_env_value("IRC_SERVER")
     if declines_reconfigure("IRC", "Reconfigure IRC?", "IRC_SERVER"):
         return
-    info("Connect Hermes to an IRC network. Uses Python stdlib — no extra packages needed.",
+    info("Connect Kitsune to an IRC network. Uses Python stdlib — no extra packages needed.",
          "   Works with Libera.Chat, OFTC, your own ZNC/InspIRCd, etc.")
     print()
     if not _required("IRC server hostname (e.g. irc.libera.chat)", "IRC_SERVER", existing_server or "", "Server"):
@@ -587,10 +587,10 @@ async def _standalone_send(pconfig, chat_id: str, message: str, *, thread_id: Op
 
 
 def register(ctx):
-    """Plugin entry point: called by the Hermes plugin system."""
+    """Plugin entry point: called by the Kitsune plugin system."""
     ctx.register_platform(
         name="irc",
-        dashboard_description="Relay messages between an IRC channel (or DMs) and Hermes.",
+        dashboard_description="Relay messages between an IRC channel (or DMs) and Kitsune.",
         docs_url="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/irc",
         label="IRC",
         adapter_factory=IRCAdapter,

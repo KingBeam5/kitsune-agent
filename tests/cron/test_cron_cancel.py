@@ -121,7 +121,7 @@ def test_cancelling_a_script_job_kills_it_and_names_the_reason(tmp_path, monkeyp
     monkeypatch.setattr(scheduler, "_get_hermes_home", lambda: tmp_path)
     monkeypatch.setattr(scheduler_script, "_get_script_timeout", lambda: 60)
     # Spawn through a scratch dependency environment: the store interpreter resolves under the
-    # real Hermes home, which the home-I/O guard refuses. Pinned the same way
+    # real Kitsune home, which the home-I/O guard refuses. Pinned the same way
     # tests/cron/test_cron_script.py pins this seam — what is under test is the marker and the
     # kill, not interpreter selection.
     venv = tmp_path / "venv"

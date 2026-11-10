@@ -199,7 +199,7 @@ describe('Linux runtime --no-sandbox relaunch', () => {
       const saved = { ...process.env }
       const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-appimage-relaunch-'))
       const report = path.join(dir, 'report')
-      const image = path.join(dir, 'Hermes.AppImage')
+      const image = path.join(dir, 'Kitsune.AppImage')
       const shortDir = '/run/user/1000/hermes-desktop'
       const events: string[] = []
 
@@ -312,7 +312,7 @@ describe('Linux runtime --no-sandbox relaunch', () => {
   })
 
   // AppImage apps (terminals, IDEs) export APPIMAGE/APPDIR to everything they
-  // start; Hermes launched from one must relaunch itself, not that app.
+  // start; Kitsune launched from one must relaunch itself, not that app.
   it('relaunches this executable when APPIMAGE was inherited from another AppImage', () => {
     for (const env of [
       { APPIMAGE: '/home/u/Apps/Terminal.AppImage' },

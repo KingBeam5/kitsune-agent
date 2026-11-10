@@ -1,30 +1,30 @@
 ---
 sidebar_position: 4
 title: "MCP (Model Context Protocol)"
-description: "Connect Hermes Agent to external tool servers via MCP — and control exactly which MCP tools Hermes loads"
+description: "Connect Kitsune Agent to external tool servers via MCP — and control exactly which MCP tools Kitsune loads"
 ---
 
 # MCP (Model Context Protocol)
 
 Python dependency commands on this page use a
 [PM-prepared source checkout](../../reference/package-management.md#developer-workflow).
-After a dependency change, reactivate the checkout and restart Hermes.
+After a dependency change, reactivate the checkout and restart Kitsune.
 
-MCP lets Hermes Agent connect to external tool servers so the agent can use tools that live outside Hermes itself — GitHub, databases, file systems, browser stacks, internal APIs, and more.
+MCP lets Kitsune Agent connect to external tool servers so the agent can use tools that live outside Kitsune itself — GitHub, databases, file systems, browser stacks, internal APIs, and more.
 
-If you have ever wanted Hermes to use a tool that already exists somewhere else, MCP is usually the cleanest way to do it.
+If you have ever wanted Kitsune to use a tool that already exists somewhere else, MCP is usually the cleanest way to do it.
 
 :::tip Coming from Claude Code?
-The `mcpServers` block in your `~/.claude.json` maps to `mcp_servers` in Hermes' `config.yaml` — and `hermes import-agent claude-code` (from the `agent-importers` plugin) migrates it, along with skills and instructions. See [Import from Other Agents](../import-from-other-agents.md).
+The `mcpServers` block in your `~/.claude.json` maps to `mcp_servers` in Kitsune' `config.yaml` — and `hermes import-agent claude-code` (from the `agent-importers` plugin) migrates it, along with skills and instructions. See [Import from Other Agents](../import-from-other-agents.md).
 :::
 
 ## What MCP gives you
 
-- Access to external tool ecosystems without writing a native Hermes tool first
+- Access to external tool ecosystems without writing a native Kitsune tool first
 - Local stdio servers and remote HTTP MCP servers in the same config
 - Automatic tool discovery and registration at startup
 - Utility wrappers for MCP resources and prompts when supported by the server
-- Per-server filtering so you can expose only the MCP tools you actually want Hermes to see
+- Per-server filtering so you can expose only the MCP tools you actually want Kitsune to see
 
 ## Quick start
 
@@ -39,13 +39,13 @@ mcp_servers:
     args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
 ```
 
-3. Start Hermes:
+3. Start Kitsune:
 
 ```bash
 hermes chat
 ```
 
-4. Ask Hermes to use the MCP-backed capability.
+4. Ask Kitsune to use the MCP-backed capability.
 
 For example:
 
@@ -53,11 +53,11 @@ For example:
 List the files in /home/user/projects and summarize the repo structure.
 ```
 
-Hermes will discover the MCP server's tools and use them like any other tool.
+Kitsune will discover the MCP server's tools and use them like any other tool.
 
 ## Catalog: one-click install for Nous-approved MCPs
 
-Hermes ships a curated catalog of MCP servers that Nous staff has reviewed
+Kitsune ships a curated catalog of MCP servers that Nous staff has reviewed
 and merged. They're disabled by default — install only what you actually
 want.
 
@@ -72,17 +72,17 @@ card works the same way in the desktop app (a dialog), the terminal UI
 2. **Connect or Cancel.** Cancel skips that one server; other servers in the
    same request continue.
 3. **Authorization.** For an OAuth entry the card shows the authorization link.
-   Hermes never opens the browser by itself: click **Open in browser** on the
+   Kitsune never opens the browser by itself: click **Open in browser** on the
    desktop, or press Enter in the terminal. Over SSH the card tells you how to
    reach the callback port or paste the redirected URL.
-4. **Save.** Hermes saves the server configuration, the tokens and your setup
+4. **Save.** Kitsune saves the server configuration, the tokens and your setup
    values together, once the server has accepted the new token and the first
    connection has returned. If the server rejects the token, or you cancel
    before that point, nothing from the attempt is kept, your earlier
    configuration and tokens stay as they were, and a failed form reopens with
    what you typed. A server that is already authorized connects with its saved
-   tokens; Hermes asks you to authorize again only when they no longer work.
-5. **Tools.** Hermes then lists the server's tools and registers them. The
+   tokens; Kitsune asks you to authorize again only when they no longer work.
+5. **Tools.** Kitsune then lists the server's tools and registers them. The
    agent can call them in the same turn. If authorization worked and the tool
    list failed, the card says "Authorized. Tools unavailable." and the agent can
    run discovery again later without asking you to authorize again.
@@ -119,11 +119,11 @@ available. This change does not migrate existing connections to
 
 Catalog entries can require:
 
-- **API key** — Hermes prompts at install time and writes the value to
+- **API key** — Kitsune prompts at install time and writes the value to
   `~/.hermes/.env`. Non-secret values (base URLs) go to the same file.
 - **OAuth** (remote MCP) — written as `auth: oauth` in your config; the MCP
   client opens a browser on first connection.
-- **OAuth** (third-party provider like Google/GitHub) — Hermes points you at
+- **OAuth** (third-party provider like Google/GitHub) — Kitsune points you at
   `hermes auth <provider>` if you haven't authenticated already.
 
 ### n8n's official MCP server
@@ -142,7 +142,7 @@ API key is required.
 5. Review tools with `hermes mcp configure n8n-official`, then start a new
    session or use `/reload-mcp`.
 
-The Hermes backend must be able to reach the URL. n8n controls permissions
+The Kitsune backend must be able to reach the URL. n8n controls permissions
 and workflow exposure; some tools modify or run workflows. See
 [n8n's connection guide](https://docs.n8n.io/connect/connect-to-n8n-mcp-server/).
 
@@ -152,7 +152,7 @@ installed files, and tool selections are not replaced.
 
 ### Tool selection at install time
 
-After credentials are configured, Hermes probes the MCP server to list every
+After credentials are configured, Kitsune probes the MCP server to list every
 tool it exposes and presents a checklist:
 
 ```
@@ -212,10 +212,10 @@ before clicking Install.
 ### Manifest version compatibility
 
 Manifests pin a `manifest_version`. The catalog is forward-compatible: if a
-PR adds an entry with a newer `manifest_version` than your installed Hermes
+PR adds an entry with a newer `manifest_version` than your installed Kitsune
 understands, the picker will surface a warning (`⚠ '<name>' requires a newer
-Hermes`) for that entry instead of silently hiding it. Run `hermes update`
-to install the latest Hermes when you see that.
+Kitsune`) for that entry instead of silently hiding it. Run `hermes update`
+to install the latest Kitsune when you see that.
 
 ### Runtime `${ENV_VAR}` substitution
 
@@ -264,10 +264,10 @@ Read the entry's `post_install` notes for the exact app type and redirect URL
 to register, then run `hermes mcp login <name>` and restart (or
 `/reload-mcp`) the session or gateway that should expose the tools. The
 dashboard / Desktop **Authorize** button works too: because the client is
-pre-registered with a pinned `redirect_port`, Hermes keeps the registered
+pre-registered with a pinned `redirect_port`, Kitsune keeps the registered
 loopback callback (`http://localhost:27890/callback`) instead of the
 dashboard's own callback URL — so the browser you approve in must run on the
-same machine as the Hermes process. For a remote host, use `hermes mcp login`
+same machine as the Kitsune process. For a remote host, use `hermes mcp login`
 over SSH port-forwarding.
 
 ### Updating tool selection later
@@ -283,7 +283,7 @@ you want to opt into.
 ### Updating the catalog manifest
 
 MCPs are never auto-updated. Re-run `hermes mcp install <name>` to refresh
-after a Hermes update if a manifest version changed.
+after a Kitsune update if a manifest version changed.
 
 To add an MCP to the catalog, open a PR against
 [`optional-mcps/`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps).
@@ -304,7 +304,7 @@ a desktop application.
 
 GitHub is deliberately **not** in the catalog: its hosted MCP requires each
 client to bring its own OAuth app (generic dynamic client registration is
-rejected), and Hermes's bundled `github/*` skills driving the `gh` CLI are a
+rejected), and Kitsune's bundled `github/*` skills driving the `gh` CLI are a
 more capable integration. On Desktop, GitHub mentions instead offer the
 `github-auth` skill when `gh` isn't signed in yet.
 
@@ -330,7 +330,7 @@ Use stdio servers when:
 
 ### HTTP servers
 
-HTTP MCP servers are remote endpoints Hermes connects to directly.
+HTTP MCP servers are remote endpoints Kitsune connects to directly.
 
 ```yaml
 mcp_servers:
@@ -343,18 +343,18 @@ mcp_servers:
 Use HTTP servers when:
 - the MCP server is hosted elsewhere
 - your organization exposes internal MCP endpoints
-- you do not want Hermes spawning a local subprocess for that integration
+- you do not want Kitsune spawning a local subprocess for that integration
 
 HTTP and SSE servers honor the standard proxy settings: `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY` (a `socks://` alias is normalized to `socks5://`), then the OS proxy (Windows registry, macOS system settings), with `NO_PROXY` hosts — including CIDR ranges and `*.example.com` patterns — connecting directly.
 
 ### OAuth-authenticated HTTP servers
 
-Most hosted MCP servers (Cloudflare, Linear, Sentry, Atlassian, Asana, Figma, Stripe, …) require OAuth 2.1 instead of a static bearer token. Set `auth: oauth` and Hermes handles discovery, client identification, PKCE, token exchange, refresh, and step-up auth via the MCP Python SDK.
+Most hosted MCP servers (Cloudflare, Linear, Sentry, Atlassian, Asana, Figma, Stripe, …) require OAuth 2.1 instead of a static bearer token. Set `auth: oauth` and Kitsune handles discovery, client identification, PKCE, token exchange, refresh, and step-up auth via the MCP Python SDK.
 
-Hermes identifies itself with a [Client ID Metadata Document](../../reference/mcp-config-reference.md#client-identification-cimd-and-dcr) on servers that support one, and falls back to Dynamic Client Registration on those that don't. Both are automatic; there is nothing to configure.
+Kitsune identifies itself with a [Client ID Metadata Document](../../reference/mcp-config-reference.md#client-identification-cimd-and-dcr) on servers that support one, and falls back to Dynamic Client Registration on those that don't. Both are automatic; there is nothing to configure.
 
 :::tip Figma remote MCP
-Figma's hosted endpoint (`https://mcp.figma.com/mcp`) allowlists Dynamic Client Registration by **exact `client_name`** — bare `"Hermes Agent"` 403s, while `"Claude Code"` and `"Codex"` succeed. Hermes auto-sets `oauth.client_name: "Claude Code"` for `mcp.figma.com` so install/login works without a special trick:
+Figma's hosted endpoint (`https://mcp.figma.com/mcp`) allowlists Dynamic Client Registration by **exact `client_name`** — bare `"Kitsune Agent"` 403s, while `"Claude Code"` and `"Codex"` succeed. Kitsune auto-sets `oauth.client_name: "Claude Code"` for `mcp.figma.com` so install/login works without a special trick:
 
 ```yaml
 mcp_servers:
@@ -373,23 +373,23 @@ mcp_servers:
     auth: oauth
 ```
 
-On first connect, Hermes prints an authorize URL, opens your browser when possible, and waits for the OAuth callback on a local loopback port. Tokens are cached at `~/.hermes/mcp-tokens/<server>.json` with 0o600 perms; subsequent runs reuse them silently until refresh fails.
+On first connect, Kitsune prints an authorize URL, opens your browser when possible, and waits for the OAuth callback on a local loopback port. Tokens are cached at `~/.hermes/mcp-tokens/<server>.json` with 0o600 perms; subsequent runs reuse them silently until refresh fails.
 
-Refresh tokens are bound to the authorization server that granted them: Hermes records the discovered issuer alongside the cached tokens and, if a server's advertised authorization server ever changes (server migration, metadata edit, or hijack), the stored refresh token is dropped instead of being sent to the new issuer. The current access token keeps working until it expires, then a normal re-authorization runs against the new issuer.
+Refresh tokens are bound to the authorization server that granted them: Kitsune records the discovered issuer alongside the cached tokens and, if a server's advertised authorization server ever changes (server migration, metadata edit, or hijack), the stored refresh token is dropped instead of being sent to the new issuer. The current access token keeps working until it expires, then a normal re-authorization runs against the new issuer.
 
-The redirect back from the authorization server is checked against RFC 9207: when the server's metadata advertises `authorization_response_iss_parameter_supported`, a redirect without a matching `iss` is rejected. Figma's authorization server (`https://api.figma.com`) advertises that support and then omits `iss`; Hermes fills the missing value from the discovered issuer for that one issuer and logs a warning, so `hermes mcp login figma` completes. A present-but-different `iss` is still rejected, and no other server gets the exemption.
+The redirect back from the authorization server is checked against RFC 9207: when the server's metadata advertises `authorization_response_iss_parameter_supported`, a redirect without a matching `iss` is rejected. Figma's authorization server (`https://api.figma.com`) advertises that support and then omits `iss`; Kitsune fills the missing value from the discovered issuer for that one issuer and logs a warning, so `hermes mcp login figma` completes. A present-but-different `iss` is still rejected, and no other server gets the exemption.
 
 The authorization server's metadata document must name the server the resource advertised (RFC 8414 §3.3); a document for a different server is rejected before any registration or login. One shape is accepted without an exact match: a server advertised with a path (`https://host/path`) whose document, fetched from `https://host/.well-known/oauth-authorization-server/path`, names the origin `https://host` as its issuer — Strava's MCP connector publishes exactly that pair. Only the origin's operator controls that well-known location, so the document is treated as the advertised server's own; a document naming another origin or another path, or one reached only through a redirect or a fallback location, still fails with `Authorization server metadata issuer mismatch`.
 
-**Google-hosted servers (Gmail, Calendar).** Google only issues a refresh token when the authorization request carries `access_type=offline`, which MCP discovery never advertises. Hermes adds it (plus `prompt=consent`, so a repeat login is re-granted one) whenever the discovered authorization server is `accounts.google.com`, so the connection persists across restarts and works from `hermes gateway`. Other issuers' requests are untouched.
+**Google-hosted servers (Gmail, Calendar).** Google only issues a refresh token when the authorization request carries `access_type=offline`, which MCP discovery never advertises. Kitsune adds it (plus `prompt=consent`, so a repeat login is re-granted one) whenever the discovered authorization server is `accounts.google.com`, so the connection persists across restarts and works from `hermes gateway`. Other issuers' requests are untouched.
 
-**Remote / headless hosts.** When Hermes runs on a different machine than your browser, the loopback callback can't reach your laptop. Ways to complete the flow:
+**Remote / headless hosts.** When Kitsune runs on a different machine than your browser, the loopback callback can't reach your laptop. Ways to complete the flow:
 
-- **Hermes Desktop (automatic):** when you run the OAuth sign-in from the Desktop app's MCP setup UI against a remote backend, Desktop hosts the callback listener on *your* machine and relays the authorization back to the gateway automatically — no tunnel, paste, or proxy needed. Requires both the Desktop app and the backend to be up to date.
-- **Paste-back (no setup):** on an interactive terminal Hermes prints "Or paste the redirect URL here…" alongside the authorize URL. Open the URL in your browser, approve, copy the full URL the browser ends up on (the redirect will show a connection error — that's expected), paste it at the prompt. Bare `?code=…&state=…` query strings work too.
-- **Device-code login (no callback at all):** if the server's authorization server advertises a device authorization endpoint, run `hermes mcp login <server> --flow device` on the machine running Hermes. It prints a verification URL and a short code; open the URL on any device, enter the code, and Hermes polls for approval. No browser is launched on the host and no callback listener is needed. Set `oauth.flow: device` on the server to make `login` and `reauth` use it by default. Details: [Device-code login](../../reference/mcp-config-reference.md#device-code-login-rfc-8628).
+- **Kitsune Desktop (automatic):** when you run the OAuth sign-in from the Desktop app's MCP setup UI against a remote backend, Desktop hosts the callback listener on *your* machine and relays the authorization back to the gateway automatically — no tunnel, paste, or proxy needed. Requires both the Desktop app and the backend to be up to date.
+- **Paste-back (no setup):** on an interactive terminal Kitsune prints "Or paste the redirect URL here…" alongside the authorize URL. Open the URL in your browser, approve, copy the full URL the browser ends up on (the redirect will show a connection error — that's expected), paste it at the prompt. Bare `?code=…&state=…` query strings work too.
+- **Device-code login (no callback at all):** if the server's authorization server advertises a device authorization endpoint, run `hermes mcp login <server> --flow device` on the machine running Kitsune. It prints a verification URL and a short code; open the URL on any device, enter the code, and Kitsune polls for approval. No browser is launched on the host and no callback listener is needed. Set `oauth.flow: device` on the server to make `login` and `reauth` use it by default. Details: [Device-code login](../../reference/mcp-config-reference.md#device-code-login-rfc-8628).
 - **SSH port forward:** `ssh -N -L <port>:127.0.0.1:<port> user@host` in a separate terminal, then let the redirect flow normally.
-- **Proxied callback (`redirect_uri`):** when a public HTTPS endpoint forwards to the host (e.g. a Tailscale Funnel or reverse proxy pointed at the callback port), set `oauth.redirect_uri` and the browser redirect reaches Hermes on its own — no tunnel or paste needed:
+- **Proxied callback (`redirect_uri`):** when a public HTTPS endpoint forwards to the host (e.g. a Tailscale Funnel or reverse proxy pointed at the callback port), set `oauth.redirect_uri` and the browser redirect reaches Kitsune on its own — no tunnel or paste needed:
 
 ```yaml
 mcp_servers:
@@ -401,7 +401,7 @@ mcp_servers:
       redirect_uri: "https://oauth.example.ts.net/callback"
 ```
 
-For fully headless gateways (messaging bot, no interactive terminal at all), the optional [`mcp-oauth-remote-gateway` skill](../skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md) walks the agent through completing the flow manually and writing tokens where Hermes expects them.
+For fully headless gateways (messaging bot, no interactive terminal at all), the optional [`mcp-oauth-remote-gateway` skill](../skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md) walks the agent through completing the flow manually and writing tokens where Kitsune expects them.
 
 **Pitfall — WAF rejects `127.0.0.1` redirect URIs.** A few providers front their authorization server with a WAF that 403s any authorize request whose query string contains a literal `127.0.0.1` (Reclaim.ai's AWS API Gateway is a known example — every attempt returns `{"message":"Forbidden"}` before reaching the OAuth app). Set `oauth.redirect_host: localhost` to use `http://localhost:<port>/callback` instead; the callback listener still binds `127.0.0.1` either way.
 
@@ -419,15 +419,15 @@ mcp_servers:
       client_secret: "<your-oauth-client-secret>"
 ```
 
-Then run `hermes mcp login googledrive` — with the pre-registered client, Hermes skips registration and runs the normal browser authorization flow.
+Then run `hermes mcp login googledrive` — with the pre-registered client, Kitsune skips registration and runs the normal browser authorization flow.
 
-**Pitfall — config auto-reload race.** When you edit `~/.hermes/config.yaml` from inside a running Hermes session, the CLI auto-reloads MCP connections with a 30s timeout. That's not enough for an interactive OAuth flow. Add the entry, then run `hermes mcp login <server>` from a fresh terminal — it waits the full 5 minutes for you to complete auth.
+**Pitfall — config auto-reload race.** When you edit `~/.hermes/config.yaml` from inside a running Kitsune session, the CLI auto-reloads MCP connections with a 30s timeout. That's not enough for an interactive OAuth flow. Add the entry, then run `hermes mcp login <server>` from a fresh terminal — it waits the full 5 minutes for you to complete auth.
 
 **Need longer than 5 minutes to approve?** Set `oauth.timeout` on the server entry (seconds). `hermes mcp login`, the dashboard and Desktop re-auth all wait `oauth.timeout` + 15 s (or the entry's `connect_timeout`, whichever is longer); a login that still runs out of time reports `Connecting to MCP server '<name>' timed out after Ns` naming both knobs instead of a blank failure line.
 
 ## mTLS / client certificates
 
-Remote HTTP MCP servers that require mutual TLS (client-certificate authentication) are supported via `client_cert` / `client_key`. Hermes passes the resolved certificate to the underlying HTTP client for the TLS handshake.
+Remote HTTP MCP servers that require mutual TLS (client-certificate authentication) are supported via `client_cert` / `client_key`. Kitsune passes the resolved certificate to the underlying HTTP client for the TLS handshake.
 
 `client_cert` accepts three shapes:
 
@@ -475,13 +475,13 @@ mcp_servers:
 ```
 
 - `value_from: static` sends the literal `value` from config.yaml.
-- `value_from: profile` sends the active Hermes profile name, resolved once at connect time — useful when multiple profiles on one machine talk to the same server and it needs to tell them apart.
+- `value_from: profile` sends the active Kitsune profile name, resolved once at connect time — useful when multiple profiles on one machine talk to the same server and it needs to tell them apart.
 
 An explicit entry in the server's `headers` mapping with the same name (any casing) always wins; the identity header never overrides your own header config. Invalid `identity_header` blocks are warned about and ignored — they never block the server from connecting. On stdio servers the key is ignored with a warning (stdio transports have no headers).
 
 ## Basic configuration reference
 
-Hermes reads MCP config from `~/.hermes/config.yaml` under `mcp_servers`.
+Kitsune reads MCP config from `~/.hermes/config.yaml` under `mcp_servers`.
 
 ### Common keys
 
@@ -490,7 +490,7 @@ Hermes reads MCP config from `~/.hermes/config.yaml` under `mcp_servers`.
 | `command` | string | Executable for a stdio MCP server |
 | `args` | list | Arguments for the stdio server |
 | `env` | mapping | Environment variables passed to the stdio server |
-| `cwd` | string | Working directory for the stdio server process. Default: the session working directory when one is pinned (ACP/gateway sessions, `terminal.cwd`), else the Hermes process directory |
+| `cwd` | string | Working directory for the stdio server process. Default: the session working directory when one is pinned (ACP/gateway sessions, `terminal.cwd`), else the Kitsune process directory |
 | `url` | string | HTTP MCP endpoint |
 | `headers` | mapping | HTTP headers for remote servers |
 | `client_cert` | string \| list | Client certificate for mTLS — a combined PEM path, or `[cert, key]` / `[cert, key, password]` |
@@ -501,7 +501,7 @@ Hermes reads MCP config from `~/.hermes/config.yaml` under `mcp_servers`.
 | `lazy` | bool | If `true`, register the server's tools from the schema cache at startup and only start/connect it on the first tool call (default `false`). Needs one prior live connect to fill the cache. |
 | `idle_timeout_seconds` | number | Recycle a stdio server after this many seconds without a tool call (`0` = never, default). The server restarts transparently on the next tool call. |
 | `max_lifetime_seconds` | number | Recycle a stdio server after this total age (`0` = never, default). Restarts transparently on next use. |
-| `enabled` | bool | If `false`, Hermes skips the server entirely |
+| `enabled` | bool | If `false`, Kitsune skips the server entirely |
 | `supports_parallel_tool_calls` | bool | If `true`, tools from this server may run concurrently |
 | `events` | bool | If `true`, register the experimental MCP events tools for this server (default `false`). See [MCP Events](#mcp-events-experimental) |
 | `tools` | mapping | Per-server tool filtering and utility policy |
@@ -566,9 +566,9 @@ mcp_servers:
 
 You can pick any local name (`hermes mcp add my-codex --preset codex` is fine); the preset only provides the `command`/`args` defaults.
 
-## How Hermes registers MCP tools
+## How Kitsune registers MCP tools
 
-Hermes prefixes MCP tools so they do not collide with built-in names:
+Kitsune prefixes MCP tools so they do not collide with built-in names:
 
 ```text
 mcp_<server_name>_<tool_name>
@@ -582,22 +582,22 @@ Examples:
 | `github` | `create-issue` | `mcp_github_create_issue` |
 | `my-api` | `query.data` | `mcp_my_api_query_data` |
 
-In practice, you usually do not need to call the prefixed name manually — Hermes sees the tool and chooses it during normal reasoning.
+In practice, you usually do not need to call the prefixed name manually — Kitsune sees the tool and chooses it during normal reasoning.
 
 ### Tool-result sanitization and `_meta`
 
 Two behaviors apply to every MCP tool result before the model sees it:
 
-- **Invisible Unicode TAG characters are stripped.** Characters in the U+E0000–U+E007F range render as nothing in terminals and chat UIs but are fully visible to the model — a classic prompt-injection smuggling channel for a malicious or compromised server. Hermes strips them from tool results, resource content, and tool descriptions. Legitimate emoji tag sequences (regional flags like 🏴󠁧󠁢󠁳󠁣󠁴󠁿) are preserved.
-- **Vendor `_meta` is surfaced; protocol-reserved keys are not.** When a server attaches a `_meta` mapping to a tool result (vendor namespaces like `com.example/handoff`), Hermes passes it through to the model alongside the result content. Keys under protocol-reserved prefixes — a `modelcontextprotocol` or `mcp` label followed by another label, e.g. `modelcontextprotocol.io/...` or `tools.mcp.com/...` — are dropped, matching the MCP spec's key-name rules. If nothing model-facing remains, the `_meta` field is omitted entirely.
+- **Invisible Unicode TAG characters are stripped.** Characters in the U+E0000–U+E007F range render as nothing in terminals and chat UIs but are fully visible to the model — a classic prompt-injection smuggling channel for a malicious or compromised server. Kitsune strips them from tool results, resource content, and tool descriptions. Legitimate emoji tag sequences (regional flags like 🏴󠁧󠁢󠁳󠁣󠁴󠁿) are preserved.
+- **Vendor `_meta` is surfaced; protocol-reserved keys are not.** When a server attaches a `_meta` mapping to a tool result (vendor namespaces like `com.example/handoff`), Kitsune passes it through to the model alongside the result content. Keys under protocol-reserved prefixes — a `modelcontextprotocol` or `mcp` label followed by another label, e.g. `modelcontextprotocol.io/...` or `tools.mcp.com/...` — are dropped, matching the MCP spec's key-name rules. If nothing model-facing remains, the `_meta` field is omitted entirely.
 
 ### Image results
 
-An `ImageContent` block (a screenshot, a rendered chart, a page capture) is saved to Hermes' image cache and its path is reported in the result as `MEDIA:/path/to/image.png`, so you can ask for the file on any attachment-capable surface. When the main model can see images inside tool results, the image itself is attached to the result too, so the model reads the pixels directly. MCP results follow the same rule as `vision_analyze`: `agent.image_input_mode`, an explicit `auxiliary.vision` backend and the model's vision capability all apply (see [Vision](vision.md#vision_analyze-has-the-same-dual-behavior)). Attached images are downscaled to `vision.embed_target_bytes` (up to 4 per result) because they are re-sent on every later turn. Text-only models get the path only.
+An `ImageContent` block (a screenshot, a rendered chart, a page capture) is saved to Kitsune' image cache and its path is reported in the result as `MEDIA:/path/to/image.png`, so you can ask for the file on any attachment-capable surface. When the main model can see images inside tool results, the image itself is attached to the result too, so the model reads the pixels directly. MCP results follow the same rule as `vision_analyze`: `agent.image_input_mode`, an explicit `auxiliary.vision` backend and the model's vision capability all apply (see [Vision](vision.md#vision_analyze-has-the-same-dual-behavior)). Attached images are downscaled to `vision.embed_target_bytes` (up to 4 per result) because they are re-sent on every later turn. Text-only models get the path only.
 
 ## MCP utility tools
 
-When supported, Hermes also registers utility tools around MCP resources and prompts:
+When supported, Kitsune also registers utility tools around MCP resources and prompts:
 
 - `list_resources`
 - `read_resource`
@@ -612,14 +612,14 @@ These are registered per server with the same prefix pattern, for example:
 ### Important
 
 These utility tools are now capability-aware:
-- Hermes only registers resource utilities if the MCP session actually supports resource operations
-- Hermes only registers prompt utilities if the MCP session actually supports prompt operations
+- Kitsune only registers resource utilities if the MCP session actually supports resource operations
+- Kitsune only registers prompt utilities if the MCP session actually supports prompt operations
 
 So a server that exposes callable tools but no resources/prompts will not get those extra wrappers.
 
 ## Per-server filtering
 
-You can control which tools each MCP server contributes to Hermes, allowing fine-grained management of your tool namespace.
+You can control which tools each MCP server contributes to Kitsune, allowing fine-grained management of your tool namespace.
 
 ### Disable a server entirely
 
@@ -630,7 +630,7 @@ mcp_servers:
     enabled: false
 ```
 
-If `enabled: false`, Hermes skips the server completely and does not even attempt a connection.
+If `enabled: false`, Kitsune skips the server completely and does not even attempt a connection.
 
 ### Whitelist server tools
 
@@ -697,7 +697,7 @@ tools:
 
 ### Filter utility tools too
 
-You can also separately disable Hermes-added utility wrappers:
+You can also separately disable Kitsune-added utility wrappers:
 
 ```yaml
 mcp_servers:
@@ -740,7 +740,7 @@ mcp_servers:
 
 ## What happens if everything is filtered out?
 
-If your config filters out all callable tools and disables or omits all supported utilities, Hermes does not create an empty runtime MCP toolset for that server.
+If your config filters out all callable tools and disables or omits all supported utilities, Kitsune does not create an empty runtime MCP toolset for that server.
 
 That keeps the tool list clean.
 
@@ -748,7 +748,7 @@ That keeps the tool list clean.
 
 ### Discovery time
 
-Hermes discovers MCP servers at startup and registers their tools into the normal tool registry.
+Kitsune discovers MCP servers at startup and registers their tools into the normal tool registry.
 
 Servers are connected at most **4 at a time** per discovery pass (startup, `/reload-mcp`, config
 watcher). Every stdio server spawns its own child-process tree, so an unbounded pass with many servers
@@ -769,7 +769,7 @@ A server with `lazy: true` is registered from the on-disk schema cache instead: 
 
 ### Dynamic Tool Discovery
 
-MCP servers can notify Hermes when their available tools change at runtime by sending a `notifications/tools/list_changed` notification. When Hermes receives this notification, it automatically re-fetches the server's tool list and updates the registry — no manual `/reload-mcp` required.
+MCP servers can notify Kitsune when their available tools change at runtime by sending a `notifications/tools/list_changed` notification. When Kitsune receives this notification, it automatically re-fetches the server's tool list and updates the registry — no manual `/reload-mcp` required.
 
 This is useful for MCP servers whose capabilities change dynamically (e.g. a server that adds tools when a new database schema is loaded, or removes tools when a service goes offline).
 
@@ -803,7 +803,7 @@ That makes MCP servers easier to reason about at the toolset level.
 
 ### Stdio env filtering
 
-For stdio servers, Hermes does not blindly pass your full shell environment.
+For stdio servers, Kitsune does not blindly pass your full shell environment.
 
 Only explicitly configured `env` plus a safe baseline are passed through. This reduces accidental secret leakage.
 
@@ -884,7 +884,7 @@ node --version
 npx --version
 ```
 
-Then verify your config and restart Hermes.
+Then verify your config and restart Kitsune.
 
 The startup summary in `agent.log` names every server that did not register, with the recorded
 connect error, so you never have to work out the failing one by elimination:
@@ -899,7 +899,7 @@ failure is listed as `not attempted (in retry cooldown)`.
 ### Remote (HTTP) server rejects the connection
 
 `hermes mcp test <name>` reports what the server actually answered. When the MCP SDK can only say
-`Server returned an error response` (a 4xx/5xx whose body is not a JSON-RPC error), Hermes appends
+`Server returned an error response` (a 4xx/5xx whose body is not a JSON-RPC error), Kitsune appends
 the HTTP status, the URL it requested and the start of the response body:
 
 ```
@@ -914,7 +914,7 @@ endpoint. `hermes logs --level debug` additionally shows the exact endpoint each
 
 ### A server's response is too large
 
-Hermes accepts up to 10 MiB in one HTTP response, or in one SSE event of a streamed response, so a
+Kitsune accepts up to 10 MiB in one HTTP response, or in one SSE event of a streamed response, so a
 large `tools/list` catalog or tool result (an editor screenshot, say) fits. On the legacy SSE
 transport (`transport: sse`) the MCP SDK caps each event at 1 MiB and offers no way to raise it; if
 the server also serves Streamable HTTP, remove `transport: sse` from its entry.
@@ -932,7 +932,7 @@ If you are intentionally filtering, this is expected.
 
 ### Why didn't resource or prompt utilities appear?
 
-Because Hermes now only registers those wrappers when both are true:
+Because Kitsune now only registers those wrappers when both are true:
 1. your config allows them
 2. the server session actually supports the capability
 
@@ -949,7 +949,7 @@ mcp_servers:
     supports_parallel_tool_calls: true
 ```
 
-When `supports_parallel_tool_calls` is `true`, Hermes may execute multiple tools from that server at the same time within a single tool-call batch, just like it does for built-in read-only tools (web_search, read_file, etc.).
+When `supports_parallel_tool_calls` is `true`, Kitsune may execute multiple tools from that server at the same time within a single tool-call batch, just like it does for built-in read-only tools (web_search, read_file, etc.).
 
 :::caution
 Only enable parallel calls for MCP servers whose tools are safe to run at the same time. If tools read and write shared state, files, databases, or external resources, review the read/write race conditions before enabling this setting.
@@ -957,7 +957,7 @@ Only enable parallel calls for MCP servers whose tools are safe to run at the sa
 
 ## MCP Sampling Support
 
-MCP servers can request LLM inference from Hermes via the `sampling/createMessage` protocol. This allows an MCP server to ask Hermes to generate text on its behalf — useful for servers that need LLM capabilities but don't have their own model access.
+MCP servers can request LLM inference from Kitsune via the `sampling/createMessage` protocol. This allows an MCP server to ask Kitsune to generate text on its behalf — useful for servers that need LLM capabilities but don't have their own model access.
 
 Sampling is **enabled by default** for all MCP servers (when the MCP SDK supports it). Configure it per-server under the `sampling` key:
 
@@ -1006,18 +1006,18 @@ mcp_servers:
 ```
 
 - The approval prompt names the cost: `Costs about 20 credits.` or `Costs 5-20 credits (per animation).`, plus `This chat has used about 40 credits on 'renders' (limit 100).` once the chat has spent something.
-- Hermes keeps a running total per chat and per server, counting the declared figure (the top of a range) for every costed call it approved and started. Declined or blocked calls add nothing; a call whose server dies before receiving it still counts, which errs toward asking sooner. The total lives in memory: it is a budget for one conversation, not the vendor's bill.
-- The total follows the conversation when context compression or `/branch` continues it under a new session id. Starting a new chat (`/new` in the CLI, a new Desktop chat) starts a new total; on messaging platforms the total belongs to the chat, so it survives `/new` there. Each cron run has its own total. Restarting Hermes resets every total.
+- Kitsune keeps a running total per chat and per server, counting the declared figure (the top of a range) for every costed call it approved and started. Declined or blocked calls add nothing; a call whose server dies before receiving it still counts, which errs toward asking sooner. The total lives in memory: it is a budget for one conversation, not the vendor's bill.
+- The total follows the conversation when context compression or `/branch` continues it under a new session id. Starting a new chat (`/new` in the CLI, a new Desktop chat) starts a new total; on messaging platforms the total belongs to the chat, so it survives `/new` there. Each cron run has its own total. Restarting Kitsune resets every total.
 - With `spend_limit`, a costed call that would take the chat past the limit asks first, even on a `trust: full` server that otherwise never prompts, and every further costed call in that chat asks again: that prompt offers only Allow Once and Deny, and an earlier Session or Always answer for the tool does not silence it. Where nobody can answer (cron jobs, `hermes chat -q`, a gateway with no approver), the call is refused without running and the model is told not to retry.
 - Below the limit, a `trust: full` server still runs costed tools without asking; on a `trust: untrusted` server every write-capable call already asks and the prompt now carries the cost. Tools annotated `readOnlyHint: true` stay unprompted unless the budget requires it.
 - [YOLO](../security.md#yolo-mode) (`/yolo`, `--yolo`) and `approvals.mode: off` skip the `trust: untrusted` prompt (`/yolo` for that chat, `--yolo` for that process, `approvals.mode: off` for that profile), but not the spend limit: below the limit a costed call runs without asking, and a call that would cross it still asks (or is refused where nobody can answer, such as a cron job with `approvals.mode: off`).
-- A malformed `tool_costs`, `spend_limit` or `cost_unit` skips the server with an error naming the key, so a budget you declared is never silently dropped. A `tool_costs` key the server does not offer (a typo, or Hermes' `mcp_<server>_` display prefix copied in) is named in a warning at connect time: use the server's own tool names.
+- A malformed `tool_costs`, `spend_limit` or `cost_unit` skips the server with an error naming the key, so a budget you declared is never silently dropped. A `tool_costs` key the server does not offer (a typo, or Kitsune' `mcp_<server>_` display prefix copied in) is named in a warning at connect time: use the server's own tool names.
 
 A [portable plugin package](../../developer-guide/plugins/index.md#portable-agent-plugins-v1-packages) can declare the same table for its server. If you add a same-name `mcp_servers` entry (for example to set `trust: full`), the package's `tool_costs`, `spend_limit` and `cost_unit` still apply unless your entry sets those keys itself; `spend_limit: 0` turns the package's limit off and `tool_costs: {}` drops its costs.
 
 ## MCP Elicitation Support
 
-MCP servers can ask the user for structured input mid-tool-call via the `elicitation/create` protocol (mcp Python SDK ≥ 1.11.0). Hermes routes **form-mode** elicitations through its existing approval surface — an interactive prompt in the CLI/TUI, or approval buttons on gateway platforms like Telegram and Slack — so the request reaches you wherever the session lives. Each answer covers that one request, so the prompt offers only Allow Once and Deny. YOLO and `approvals.mode: off` do not answer these for you: the server is asking you a question, not asking permission. **URL-mode** elicitations (where a server points you at an external URL) are declined as unsupported.
+MCP servers can ask the user for structured input mid-tool-call via the `elicitation/create` protocol (mcp Python SDK ≥ 1.11.0). Kitsune routes **form-mode** elicitations through its existing approval surface — an interactive prompt in the CLI/TUI, or approval buttons on gateway platforms like Telegram and Slack — so the request reaches you wherever the session lives. Each answer covers that one request, so the prompt offers only Allow Once and Deny. YOLO and `approvals.mode: off` do not answer these for you: the server is asking you a question, not asking permission. **URL-mode** elicitations (where a server points you at an external URL) are declined as unsupported.
 
 Elicitation is **enabled by default** per server. Configure it under the `elicitation` key:
 
@@ -1037,11 +1037,11 @@ The 5-minute default timeout mirrors the gateway approval default so users on as
 Some MCP servers can notify an agent when something happens upstream (a new email, an incident, a
 new item in a feed) through the `events/*` methods of the
 [MCP events design sketch](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/main/docs/design-sketch-proposal.md).
-The proposal is still a working-group draft. Hermes implements its **webhook** delivery mode: the
+The proposal is still a working-group draft. Kitsune implements its **webhook** delivery mode: the
 server POSTs each event to the gateway's [webhook listener](../messaging/webhooks.md), and every
 event starts an agent run like any other webhook route.
 
-Turn it on per server, and tell Hermes the public HTTPS address of the webhook listener (servers
+Turn it on per server, and tell Kitsune the public HTTPS address of the webhook listener (servers
 reject plain-HTTP callbacks, so put a TLS-terminating reverse proxy or tunnel in front of port 8644):
 
 ```yaml
@@ -1069,7 +1069,7 @@ The server then gets three more utility tools:
 Each subscription is stored as a dynamic webhook route (`hermes webhook list` shows it) with its own
 `whsec_` signing secret; the grant and the replay cursor are kept beside it in
 `mcp_event_subscriptions.json`, so the route itself only changes when you resubscribe with different
-instructions or a different destination. Hermes answers the server's signed verification challenge, deduplicates
+instructions or a different destination. Kitsune answers the server's signed verification challenge, deduplicates
 events by `eventId`, and refreshes the subscription before the lifetime the server granted runs out
 while the MCP connection is up (and again whenever it reconnects). With `lazy: true` or
 `idle_timeout_seconds` the connection is not always up, so a subscription can lapse until the next
@@ -1077,7 +1077,7 @@ connection resubscribes it. A refresh the server refuses
 for good (access revoked, event type removed, arguments no longer valid) removes the route; other
 failures are retried with back-off. Turning the route off in the webhook dashboard lets the
 subscription lapse, and turning it back on resubscribes it. If the server ends a subscription,
-Hermes removes the route and tells the `deliver` target. Events only arrive while
+Kitsune removes the route and tells the `deliver` target. Events only arrive while
 `hermes gateway run` is running. The event payload reaches the run whole, up to 32,000 characters
 of JSON, with a note when it is cut. Event payloads are external data: event runs use the same
 constrained webhook toolset as other webhook routes.
@@ -1088,9 +1088,9 @@ rejected delivery.
 Not supported yet: the `poll` and `push` delivery modes, and subscriptions made from a secondary
 profile under `gateway.multiplex_profiles`.
 
-## Running Hermes as an MCP server
+## Running Kitsune as an MCP server
 
-Hermes can also **be** an MCP server, so Claude Code, Claude Desktop, Cursor, Codex or any MCP client can list and read your messaging conversations, wait for new messages and send messages across every platform Hermes is connected to, and optionally call Hermes' own web, browser, vision, image generation, skills and TTS tools. This ships as the official **mcp-serve** plugin:
+Kitsune can also **be** an MCP server, so Claude Code, Claude Desktop, Cursor, Codex or any MCP client can list and read your messaging conversations, wait for new messages and send messages across every platform Kitsune is connected to, and optionally call Kitsune' own web, browser, vision, image generation, skills and TTS tools. This ships as the official **mcp-serve** plugin:
 
 ```bash
 hermes plugins install mcp-serve
@@ -1111,7 +1111,7 @@ It used to be built in as `hermes mcp serve`. An MCP client configured with `"ar
 
 ## Related docs
 
-- [Use MCP with Hermes](../../guides/use-mcp-with-hermes.md)
+- [Use MCP with Kitsune](../../guides/use-mcp-with-hermes.md)
 - [CLI Commands](../../reference/cli-commands.md)
 - [Slash Commands](../../reference/slash-commands.md)
 - [FAQ](../../reference/faq.md)

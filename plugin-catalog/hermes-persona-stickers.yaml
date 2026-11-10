@@ -3,7 +3,7 @@ title: Persona Stickers
 repo: https://github.com/EricBlack47/hermes-persona-stickers
 sha: 7db126a7bfb51d21e53d1520da46c346b0a72611
 description: >-
-  Instant persona-aware emotion reaction stickers for Hermes: stamps pre-baked
+  Instant persona-aware emotion reaction stickers for Kitsune: stamps pre-baked
   chibi bases with comic captions in about 13 ms, and falls back to a pure
   Pillow vector path when the pool misses. Slash command /sticker and tool
   generate_persona_sticker return MEDIA:<path> PNG/WebP. Disclosure: writes

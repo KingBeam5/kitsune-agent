@@ -65,7 +65,7 @@ check-icons:
 check-repo-guards:
     scripts/ci/local_step.sh scripts/ci/check_infographic_images.py scripts/ci/check_common_ancestor.py scripts/ci/check_contributor_emails.py 'scripts/ci/scan_supply_chain.py patterns' 'scripts/ci/scan_supply_chain.py dependency-bounds'
 
-# Fail when uv.lock is out of sync with pyproject.toml (re-resolves against PyPI; prepares pm's runtime in the Hermes home)
+# Fail when uv.lock is out of sync with pyproject.toml (re-resolves against PyPI; prepares pm's runtime in the Kitsune home)
 [group('check')]
 check-uv-lock:
     scripts/ci/local_step.sh scripts/ci/verify_uv_lock.py

@@ -26,7 +26,7 @@ Build PowerPoint decks headless with python-pptx.
 ## Reference: full SKILL.md
 
 :::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
+The following is the complete skill definition that Kitsune loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
 :::
 
 # pptx-author
@@ -44,13 +44,13 @@ For the broader, already-shipped PowerPoint authoring skill (slides, speaker not
 
 ## Setup
 
-Use `python` when it already imports `pptx` (the Hermes Docker image ships
-it). Otherwise, when `hermes` is on PATH, let Hermes build its shared, pinned
-documents environment under the Hermes home (safe to run from several agents
-at once); in a Docker sandbox without Hermes the block builds a venv in the
+Use `python` when it already imports `pptx` (the Kitsune Docker image ships
+it). Otherwise, when `hermes` is on PATH, let Kitsune build its shared, pinned
+documents environment under the Kitsune home (safe to run from several agents
+at once); in a Docker sandbox without Kitsune the block builds a venv in the
 sandbox home with the same pinned versions. It is the same block as the
 microsoft-office/pdf skills. Never `pip install` into the interpreter that
-runs Hermes:
+runs Kitsune:
 
 ```bash
 python -c "import pptx" 2>/dev/null && PY=python || if command -v hermes >/dev/null 2>&1; then

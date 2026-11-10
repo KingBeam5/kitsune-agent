@@ -42,7 +42,7 @@ command. A hook with no concrete consumer is speculative infrastructure and is r
   becomes the plugin's own `hermes <name>` command (row field `cli`; the old spelling prints the new one),
   and a nested core command becomes a top-level plugin command (`command` + `old_command`:
   `hermes mcp serve` → `hermes mcp-serve`). A feature with no in-home signal (MCP clients live
-  outside Hermes) gets an `in_use` that is always False: hint only, never an automatic install.
+  outside Kitsune) gets an `in_use` that is always False: hint only, never an automatic install.
   A built-in terminal backend leaves its name off `BUILTIN_BACKEND_NAMES` so the plugin can register it
   (row field `terminal_backend`: unknown-backend errors name the install command).
   A model provider that leaves core (GitHub Copilot → `github-copilot`) lists its ids and aliases
@@ -117,9 +117,9 @@ Platform plugins never mutate `os.environ`: YAML goes to `PlatformConfig.extra` 
 
 ## Plugin host boundary (`plugins.isolation: host`)
 
-`in_process` (default) imports user plugins into Hermes. `host` runs every non-bundled plugin in a
+`in_process` (default) imports user plugins into Kitsune. `host` runs every non-bundled plugin in a
 per-profile host process (`hermes_cli/plugin_host.py` parent side, `plugin_host_child.py` child,
-`plugin_host_wire.py` framed JSON protocol). The child hands plugins a `RemotePluginContext`; Hermes
+`plugin_host_wire.py` framed JSON protocol). The child hands plugins a `RemotePluginContext`; Kitsune
 registers proxies (tools, hooks, commands, provider objects as subclasses of the ABC it checks).
 Invariants:
 

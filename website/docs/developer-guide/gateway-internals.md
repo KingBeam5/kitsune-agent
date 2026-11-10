@@ -6,7 +6,7 @@ description: "How the messaging gateway boots, authorizes users, routes sessions
 
 # Gateway Internals
 
-The messaging gateway is the long-running process that connects Hermes to 20+ external messaging platforms through a unified architecture.
+The messaging gateway is the long-running process that connects Kitsune to 20+ external messaging platforms through a unified architecture.
 
 ## Canonical group metadata and profile discovery
 
@@ -81,7 +81,7 @@ last event of that turn. Desktop translates both paths into its existing
 `pending_submissions` queue store.
 
 A turn that was `started` when its owning gateway died is recovered by the next owner
-as `unknown`: Hermes cannot prove which side effects happened, so it neither replays
+as `unknown`: Kitsune cannot prove which side effects happened, so it neither replays
 the input nor lets the queued turns behind it run. `prompt.resolve_unknown`
 (`session:control`, params `session_id`, `admission_id`, `execution_generation`)
 acknowledges the loss: the row settles as `interrupted`, the session FIFO resumes and
@@ -90,7 +90,7 @@ row (visible in the resume/`session.info` projection), so a stale or already-res
 row is refused with `stale_generation`. Desktop shows such a row in the queue panel as
 "Turn lost during restart" with a **Discard** button; the gateway CLI exposes it as
 `/discard <admission_id>`. The lost input stays in the transcript for the user to resend; the
-discard closes it with a Hermes notice (like a failed turn), so it is never merged into the
+discard closes it with a Kitsune notice (like a failed turn), so it is never merged into the
 follower's model request.
 
 A messaging user (Telegram, Discord, ...) whose session is paused this way is told once per
@@ -379,7 +379,7 @@ works without a service, including with no messaging platforms configured.
 
 `hermes setup`, quick setup, and `hermes gateway setup` ask interactive users once:
 
-> Install the gateway service so Hermes starts automatically at login and keeps scheduled jobs and messaging available?
+> Install the gateway service so Kitsune starts automatically at login and keeps scheduled jobs and messaging available?
 
 The profile's `gateway.service_install_choice` stores `null`, `install`, or `decline`.
 An unset value is not permission to install. Declining records `decline` without creating,
@@ -475,7 +475,7 @@ Each gateway listens on a local control socket. It is how a client on the same m
 gateway that serves its profile and gets a WebSocket ticket, without spawning Python. Three verbs
 are public: `identify` (read-only), `resolve-profile` and the public form of `session-ticket`.
 Every other verb, the `session-ticket` parameters `subject` and `scope`, and purposes other than
-`interactive` are internal to Hermes (Desktop, the dashboard, the updater) and may change.
+`interactive` are internal to Kitsune (Desktop, the dashboard, the updater) and may change.
 Starting or recovering a gateway stays `hermes gateway attach --start` / `--recover`
 ([below](#hermes-gateway-attach)).
 
@@ -525,7 +525,7 @@ every connection and reconnect.
 | 1024 tickets outstanding | `PermissionError: bootstrap capacity exhausted` |
 
 **Rendezvous.** The socket node and its `gateway.sock.path` pointer are the only files in a
-profile home a client touches. They are a rendezvous, not Hermes data: read no lock, state file or
+profile home a client touches. They are a rendezvous, not Kitsune data: read no lock, state file or
 config. Try the profile home, then, for a named profile `<root>/profiles/<name>` (name not starting
 with `.`), the root, whose multiplexer answers for the profiles it serves. For each candidate,
 canonicalized like Python's `Path.resolve`:
@@ -566,7 +566,7 @@ out of the root resolves outside and is refused. Only then does it follow a priv
 `profile_mismatch` with `control: null`, and nothing outside the root is opened, created or
 changed (the only calls that reach outside are resolving the home's path and an in-root
 `gateway.lock` link). For a home it accepts it does what discovery does: an unserved profile's
-same-user lock left at mode 0644 by an older Hermes is narrowed to 0600, as
+same-user lock left at mode 0644 by an older Kitsune is narrowed to 0600, as
 `hermes gateway attach` does. None of this protects against code already running as your user,
 or root.
 
@@ -585,7 +585,7 @@ same discovery, start, recovery and verdicts.
 |------|---------|
 | (none) | Discover the owner that serves the active profile. Never start one. |
 | `--start` | Ensure the owner, as `ensure` does (a client's first launch). |
-| `--recover` | Discover; when the owner is not ready (it crashed, ended by its idle exit, was stopped, or an older Hermes's gateway answers), ensure it. Bound how often a client uses this, as Ink does with `OWNER_RECOVERY_LIMIT`, so a crash-looping owner is not restarted without pause. |
+| `--recover` | Discover; when the owner is not ready (it crashed, ended by its idle exit, was stopped, or an older Kitsune's gateway answers), ensure it. Bound how often a client uses this, as Ink does with `OWNER_RECOVERY_LIMIT`, so a crash-looping owner is not restarted without pause. |
 | `--timeout S` | Start deadline for `--start`/`--recover` (default `60`). Discovery and the ticket mint each add at most 5 seconds. `--start` and `--recover` are mutually exclusive. |
 
 When no service is installed, `attach` starts an unmanaged gateway with the idle exit: it stops
@@ -780,7 +780,7 @@ gateway/platforms/                  # core base + HTTP ingress adapters
 
 **Deferred loading:** Bundled `kind: platform` plugins register cheap `register_deferred` loaders in `gateway/platform_registry.py` (via `hermes_cli/plugins.py`) so platform SDKs import only when the gateway starts, delivers, or runs setup/status — not on plain `hermes chat`. Resolution loads one adapter on lookup; full enumeration runs pending loaders only on paths that need every platform.
 
-Experimental connector-backed platforms use the generic relay adapter in `gateway/relay/` instead of a direct platform module. When `GATEWAY_RELAY_URL` or `gateway.relay_url` is configured, the gateway registers the `relay` platform, dials the connector over an outbound WebSocket, and receives `descriptor`, `inbound`, and `interrupt_inbound` frames on that same socket. The connector advertises a `CapabilityDescriptor`; Hermes can send normal outbound replies, token-less `follow_up` operations, and interrupt frames back through the relay. The source-grounded wire contract lives in [Relay ↔ Connector contract](relay-connector-contract.md).
+Experimental connector-backed platforms use the generic relay adapter in `gateway/relay/` instead of a direct platform module. When `GATEWAY_RELAY_URL` or `gateway.relay_url` is configured, the gateway registers the `relay` platform, dials the connector over an outbound WebSocket, and receives `descriptor`, `inbound`, and `interrupt_inbound` frames on that same socket. The connector advertises a `CapabilityDescriptor`; Kitsune can send normal outbound replies, token-less `follow_up` operations, and interrupt frames back through the relay. The source-grounded wire contract lives in [Relay ↔ Connector contract](relay-connector-contract.md).
 
 Adapters implement a common interface:
 - `connect()` / `disconnect()` — lifecycle management

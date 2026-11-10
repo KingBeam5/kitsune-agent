@@ -17,7 +17,7 @@ from typing import Any
 import pytest
 
 # Imported at MODULE level on purpose: gateway.run's import side effects (hermes_bootstrap's
-# interrupted-update probe) stat the checkout's git dir, which sits inside the real Hermes home
+# interrupted-update probe) stat the checkout's git dir, which sits inside the real Kitsune home
 # when the suite runs from a developer worktree — the home-I/O guard is fixture-scoped and only
 # active during a test, so the probe must happen here at collection time.
 import gateway.run as gateway_run

@@ -84,7 +84,7 @@ jobs:
         run: just check --only no-tmp
 
       # A child in its own session/group (start_new_session, os.setsid/setpgid) does not die with
-      # a SIGKILLed Hermes. Long-lived children start through process_identity.spawn_owned; a line
+      # a SIGKILLed Kitsune. Long-lived children start through process_identity.spawn_owned; a line
       # that must stay detached says why with `detached-spawn: ok — <why>`.
       - name: Forbid detached spawns outside the owned-child helper
         if: ${{ !cancelled() && steps.setup.outcome == 'success' && inputs.python }}

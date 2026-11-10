@@ -222,7 +222,7 @@ def test_without_after_a_failed_first_migration_keeps_the_other_legacy_extras(mo
 def test_automatic_repair_never_undoes_a_without_that_landed_after_its_read(monkeypatch):
     """Configured-platform repair reads the declines, then asks PM for the configured extra. A
     `--without matrix` completing between that read and PM's lock wins: repair's request was
-    Hermes's choice, not the user's, so it neither re-adds matrix nor clears the new decline."""
+    Kitsune's choice, not the user's, so it neither re-adds matrix nor clears the new decline."""
     import pm.client
     from hermes_cli import main_install_repair
 

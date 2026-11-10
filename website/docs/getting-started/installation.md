@@ -1,17 +1,17 @@
 ---
 sidebar_position: 2
 title: "Installation"
-description: "Install Hermes Agent with desktop bundles, source installers, Docker, Nix, or the Termux APT package"
+description: "Install Kitsune Agent with desktop bundles, source installers, Docker, Nix, or the Termux APT package"
 ---
 
 <head>
-  <title>Install Hermes Agent: Official Guide | Nous Research</title>
-  <meta property="og:title" content="Install Hermes Agent: Official Guide | Nous Research" />
+  <title>Install Kitsune Agent: Official Guide | Nous Research</title>
+  <meta property="og:title" content="Install Kitsune Agent: Official Guide | Nous Research" />
 </head>
 
 # Installation
 
-Get Hermes Agent up and running in under two minutes!
+Get Kitsune Agent up and running in under two minutes!
 
 :::tip Platform Support
 For the full platform support matrix (which OSes, distribution methods, and
@@ -22,22 +22,22 @@ platform-gated features are supported), see **[Platform Support](./platform-supp
 ### Desktop packages on macOS or Windows
 
 Download the package for your platform from the
-[Hermes website](https://hermes-agent.nousresearch.com/).
+[Kitsune website](https://hermes-agent.nousresearch.com/).
 
 - **Windows:** open the `.appinstaller` download with Windows App Installer.
   It installs the signed MSIX bundle and records its update source.
   Microsoft Store packages have separate Store ownership.
-- **macOS:** open the DMG, then copy `Hermes.app` to Applications. The ZIP
+- **macOS:** open the DMG, then copy `Kitsune.app` to Applications. The ZIP
   artifact carries the signed app used by the automatic updater.
 
 Bundled packages contain the agent, Python, supported dependencies, and prebuilt
 interfaces. First launch does not build that base runtime. Provider access and
 optional integrations can still require network access.
 
-A `Hermes-Setup` bootstrap installer is different: it downloads a source
-installation and builds the desktop app. See [Hermes Desktop](../user-guide/desktop.md).
+A `Kitsune-Setup` bootstrap installer is different: it downloads a source
+installation and builds the desktop app. See [Kitsune Desktop](../user-guide/desktop.md).
 
-There is no separate remote-only Desktop download. To use Desktop with a Hermes
+There is no separate remote-only Desktop download. To use Desktop with a Kitsune
 backend on another machine, install one of the packages above and connect it
 from **Settings → Gateways**; see
 [Connecting to a remote backend](../user-guide/desktop.md#connecting-to-a-remote-backend).
@@ -46,8 +46,8 @@ from **Settings → Gateways**; see
 The macOS installer is **Apple Silicon only**. macOS on x86 (Intel) processors is [not a supported platform](./platform-support.md#unsupported).
 :::
 
-### Without Hermes Desktop:
-For a command-line only install without Hermes Desktop, run:
+### Without Kitsune Desktop:
+For a command-line only install without Kitsune Desktop, run:
 
 #### Linux / macOS / WSL2
 ```bash
@@ -61,7 +61,7 @@ Run in powershell:
 iex (irm https://hermes-agent.nousresearch.com/install.ps1) 
 ```
 
-If you want to install & run Hermes Desktop after a command-line only install, simply run
+If you want to install & run Kitsune Desktop after a command-line only install, simply run
 ```bash
 hermes desktop
 ```
@@ -78,13 +78,13 @@ The scripts clone the source, bootstrap uv, and delegate dependency preparation
 to PM. PM provides pinned Python, Node.js, npm, pnpm, ripgrep, and FFmpeg. The source
 installation selects the `all` Python extra, not every optional extra.
 PM also installs the browser and computer-use tools by default: a pinned
-Chromium (Chrome for Testing) that Hermes launches for local browsing, and
+Chromium (Chrome for Testing) that Kitsune launches for local browsing, and
 `cua-driver` (the computer-use driver, on macOS, Windows and glibc Linux). If a
 download fails, the install still completes and prints the command to retry.
 The browser driver behind `browser_exec` (browser-harness, the engine of the
 Browser Use CLI) is a regular Python dependency, so every install, the Desktop
 app included, already has it. Where PM has no Chromium build (Android/Termux,
-musl Linux), Hermes uses a system `chromium` on `PATH` instead.
+musl Linux), Kitsune uses a system `chromium` on `PATH` instead.
 Other optional tools use their feature-specific installation paths.
 
 A new install lands on the latest stable release, the channel `hermes update`
@@ -94,7 +94,7 @@ follows from then on (see [Updating](./updating.md)). To install the tip of
 
 To leave the browser tools out, pass `--skip-browser` on POSIX or `-SkipBrowser`
 on Windows; for the computer-use driver, `--skip-computer-use` /
-`-SkipComputerUse`. Hermes remembers these choices: later installs and
+`-SkipComputerUse`. Kitsune remembers these choices: later installs and
 `hermes update` do not add them back. Run `hermes pm install chromium` or
 `hermes pm install cua-driver` to install them and undo the choice.
 
@@ -104,7 +104,7 @@ also invoke setup and gateway configuration. `--non-interactive` on POSIX, or
 `--include-desktop` / `-IncludeDesktop` stage builds the desktop from source.
 
 On a terminal the scripts show one status line per step and write the output
-of git, uv and the builds to `logs/install.log` under the Hermes data
+of git, uv and the builds to `logs/install.log` under the Kitsune data
 directory; a failed step prints its last lines and the log path. CI (`CI` or
 `GITHUB_ACTIONS` set), redirected output, `--verbose` / `-Verbose` or
 `HERMES_INSTALL_VERBOSE=1` stream everything instead.
@@ -115,7 +115,7 @@ directory; a failed step prints its last lines and the log path. CI (`CI` or
 |---|---|---|---|
 | POSIX source script | `~/.hermes/hermes-agent/` | `~/.local/bin/hermes` wrapper | `~/.hermes/` |
 | Windows source script | `%LOCALAPPDATA%\hermes\hermes-agent\` | `%LOCALAPPDATA%\hermes\bin\` | `%LOCALAPPDATA%\hermes\` |
-| Desktop bundle | Inside the installed app package | Packaged launchers; Windows execution aliases | Platform default Hermes data directory |
+| Desktop bundle | Inside the installed app package | Packaged launchers; Windows execution aliases | Platform default Kitsune data directory |
 | Docker | `/opt/hermes/` | Image entrypoint and `hermes` shim | Mounted `/opt/data/` |
 | Termux APT | `$PREFIX/lib/hermes-agent/` | Symlinks in `$PREFIX/bin/` | `~/.hermes/` |
 
@@ -158,8 +158,8 @@ hermes setup --portal
 That logs you in, sets Nous as your provider, and turns on the Tool Gateway in one command.
 :::
 
-:::tip Already running Hermes on another machine?
-You don't need to rebuild your setup from scratch. Restore a full backup with `hermes import` (see [Exporting Hermes to another machine](../reference/faq.md#exporting-hermes-to-another-machine)), or bring over a single agent with `hermes profile import` (see [Moving a single profile to another machine](../reference/faq.md#moving-a-single-profile-to-another-machine)). Note that a profile export excludes credentials by design, so an export alone is not a full backup — [`hermes backup` vs `hermes profile export`](../reference/faq.md#hermes-backup-vs-hermes-profile-export) explains which to use.
+:::tip Already running Kitsune on another machine?
+You don't need to rebuild your setup from scratch. Restore a full backup with `hermes import` (see [Exporting Kitsune to another machine](../reference/faq.md#exporting-hermes-to-another-machine)), or bring over a single agent with `hermes profile import` (see [Moving a single profile to another machine](../reference/faq.md#moving-a-single-profile-to-another-machine)). Note that a profile export excludes credentials by design, so an export alone is not a full backup — [`hermes backup` vs `hermes profile export`](../reference/faq.md#hermes-backup-vs-hermes-profile-export) explains which to use.
 :::
 
 ---
@@ -256,13 +256,13 @@ For more diagnostics, run `hermes doctor` — it will tell you exactly what's mi
 
 ### Symlinked home directories and external storage
 
-Hermes supports a symlinked `HERMES_HOME` and symlinked home subdirectories,
+Kitsune supports a symlinked `HERMES_HOME` and symlinked home subdirectories,
 including `hooks`, `skills`, `sessions`, and `logs`. During home initialization,
 existing directory links are preserved, and permissions on linked directories
 (and descendants such as `logs/curator`) are left to their owner.
 
 If a link target is missing, inaccessible, or not a directory, initialization
-stops with a storage error naming the path and link target. Hermes does **not**
+stops with a storage error naming the path and link target. Kitsune does **not**
 replace the link or create its missing target: doing so could write data onto
 the local disk while an external or NAS volume is unmounted. Check the reported
 link, restore the mount or correct its target, and verify access permissions

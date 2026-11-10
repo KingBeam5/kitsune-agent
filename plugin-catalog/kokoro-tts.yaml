@@ -13,7 +13,7 @@ readme: true
 platforms: [macos, linux]
 known_issues:
   - "Runs on macOS with Apple Silicon (MLX) and on Linux x86_64 with a systemd user session."
-  - "Under plugins.isolation: host the hermes kokoro terminal command is not available (Hermes skips plugin CLI commands in the host); the speech provider still registers."
+  - "Under plugins.isolation: host the hermes kokoro terminal command is not available (Kitsune skips plugin CLI commands in the host); the speech provider still registers."
 capabilities:
   provides_tools: []
   provides_hooks: []

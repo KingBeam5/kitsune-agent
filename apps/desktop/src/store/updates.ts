@@ -212,7 +212,7 @@ export function reportBackendContract(contract: number | undefined, protocol?: s
     }
 
     notify({
-      // Hermes Cloud updates its agents itself: name the skew, offer no update.
+      // Kitsune Cloud updates its agents itself: name the skew, offer no update.
       action: cloudOwnsUpdates('backend')
         ? undefined
         : {
@@ -239,7 +239,7 @@ export function reportBackendContract(contract: number | undefined, protocol?: s
     }
 
     notify({
-      // A Webapp served by Hermes Cloud: Cloud replaced the image under this tab, and a reload loads it.
+      // A Webapp served by Kitsune Cloud: Cloud replaced the image under this tab, and a reload loads it.
       action: cloudOwnsUpdates('client')
         ? { label: translateNow('commandCenter.reloadWindow'), onClick: () => window.location.reload() }
         : {
@@ -1247,7 +1247,7 @@ export function applyEverythingUpdate(): Promise<void> {
   return updateEverythingInFlight
 }
 
-/** The everything-flow's backend leg: a remote backend, unless Hermes Cloud updates it itself. */
+/** The everything-flow's backend leg: a remote backend, unless Kitsune Cloud updates it itself. */
 function backendLegApplies(): boolean {
   return isRemoteMode() && !cloudOwnsUpdates('backend')
 }

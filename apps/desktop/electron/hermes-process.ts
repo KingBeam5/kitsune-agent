@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 
 /**
- * The Hermes runtime executable, matched as a whole argv TOKEN's basename — never an
+ * The Kitsune runtime executable, matched as a whole argv TOKEN's basename — never an
  * argv substring (root AGENTS.md HX003 forbids argv-substring process identity). A
  * substring check over the full command line matched any process whose path merely
  * contained "hermes" (`vim ~/hermes-notes.txt`, a `/opt/hermesbrew/...` tool), so a
@@ -47,10 +47,10 @@ function tokensNameGatewaySubcommand(tokens: string[]): boolean {
   return filtered.includes('gateway')
 }
 
-/** True when `raw` is a Hermes runtime command line, identified by a whole argv TOKEN
+/** True when `raw` is a Kitsune runtime command line, identified by a whole argv TOKEN
  *  (never an argv substring — root AGENTS.md HX003). Two shapes, mirroring the canonical
  *  Python matcher `gateway.status.looks_like_gateway_command_line`:
- *    1. a token whose basename is the Hermes executable (`hermes`, launched directly or by
+ *    1. a token whose basename is the Kitsune executable (`hermes`, launched directly or by
  *       an interpreter such as `python …/hermes gateway run`); or
  *    2. a `hermes_cli.main` / `hermes_cli/main.py` module entry (`python -m hermes_cli.main
  *       … gateway run`, the real unmanaged-gateway launch) carrying the `gateway` subcommand.
@@ -72,7 +72,7 @@ export function commandLineIsHermesRuntime(raw: string): boolean {
   return hasModuleEntry && tokensNameGatewaySubcommand(tokens)
 }
 
-// True when the given pid belongs to a running Hermes process, identified by a whole
+// True when the given pid belongs to a running Kitsune process, identified by a whole
 // argv token (not a substring), avoiding false positives from stale gateway.pid files
 // whose PID was recycled by the OS to an unrelated process.
 export function isHermesProcess(pid: number): boolean {

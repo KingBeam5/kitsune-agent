@@ -34,7 +34,7 @@ STALE_TMP_PACK_MIN_AGE_SECONDS = STALE_LOCK_MIN_AGE_SECONDS
 # ``shallow.lock`` is the one observed in the wild; the others are the same class of failure
 # (interrupted git operation). Locks held by a live git process are protected by the process guard.
 LOCK_NAMES = ("shallow.lock", "index.lock", "HEAD.lock", "MERGE_HEAD.lock")
-# Object-store indexes a killed git (Hermes kills git trees on timeout) leaves locked. Each lock fails
+# Object-store indexes a killed git (Kitsune kills git trees on timeout) leaves locked. Each lock fails
 # every later write of that file, so the commit-graph that keeps ``git tag --merged`` and ancestry
 # walks fast stops refreshing for good (one sat on a real checkout for two months).
 OBJECT_STORE_LOCK_NAMES = (
@@ -162,7 +162,7 @@ def clear_stale_git_locks(repo_root: Path, *, min_age_seconds: Optional[int] = N
 
 def clear_stale_object_store_locks(git_dir: Path) -> list[str]:
     """``OBJECT_STORE_LOCK_NAMES`` only, under ``git_dir`` itself (a linked worktree's or submodule's
-    common dir), for repos Hermes does not own: index.lock / HEAD.lock there are the user's git's."""
+    common dir), for repos Kitsune does not own: index.lock / HEAD.lock there are the user's git's."""
     return _sweep_locks(Path(git_dir), OBJECT_STORE_LOCK_NAMES, None)
 
 

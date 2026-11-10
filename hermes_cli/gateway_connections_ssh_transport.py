@@ -43,7 +43,7 @@ _IPV6_RE = re.compile(r"^[0-9A-Fa-f:.]+(?:%[A-Za-z0-9._-]+)?$")
 
 
 class SshReachError(RuntimeError):
-    """A classified failure reaching or starting a remote Hermes over SSH."""
+    """A classified failure reaching or starting a remote Kitsune over SSH."""
 
     def __init__(self, kind: str, message: str):
         super().__init__(message)
@@ -281,7 +281,7 @@ def ssh_error_message(kind: str, endpoint: SshEndpoint, stderr: str = "") -> str
             f"change is expected, then remove the old key with `ssh-keygen -R {endpoint.host}` and reconnect."
             f"\n\n{detail}"),
         "auth-failed": (
-            f"SSH authentication to {target} failed. Hermes runs ssh non-interactively (BatchMode), so a "
+            f"SSH authentication to {target} failed. Kitsune runs ssh non-interactively (BatchMode), so a "
             "key requiring a passphrase or 2FA must be loaded into ssh-agent first, or set an IdentityFile "
             f"in ~/.ssh/config. Original error: {detail}"),
         "interactive-auth": (

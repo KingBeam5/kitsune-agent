@@ -121,9 +121,9 @@ def hermes_npmrc() -> Path | None:
 
 
 def user_npmrc(env: Mapping[str, str]) -> Path:
-    """The user npmrc Hermes's npm and pnpm children read: ``npm_config_userconfig`` (any case),
+    """The user npmrc Kitsune's npm and pnpm children read: ``npm_config_userconfig`` (any case),
     else ``hermes_npmrc()`` (``source_build_env`` points ``NPM_CONFIG_USERCONFIG`` at it), else
-    ``~/.npmrc``. As npm's userconfig, the Hermes file replaces ``~/.npmrc``; the two never merge."""
+    ``~/.npmrc``. As npm's userconfig, the Kitsune file replaces ``~/.npmrc``; the two never merge."""
     explicit = next((value for key, value in env.items() if key.lower() == "npm_config_userconfig" and value), "")
     if explicit:
         return Path(explicit).expanduser()

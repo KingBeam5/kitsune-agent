@@ -1,1 +1,1 @@
-# Hermes plugins package
+# Kitsune plugins package

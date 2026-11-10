@@ -149,7 +149,7 @@ class GatewayTopicThreadsMixin:
     def _record_telegram_topic_binding(
         self, source: SessionSource, session_entry, *, expected_session_id: Optional[str] = None,
     ) -> None:
-        """Persist the Telegram topic -> Hermes session binding for topic lanes (off-loop).
+        """Persist the Telegram topic -> Kitsune session binding for topic lanes (off-loop).
         ``expected_session_id`` only replaces a binding still naming that id (see
         ``bind_telegram_topic``)."""
         session_db = self._sync_session_db()
@@ -167,7 +167,7 @@ class GatewayTopicThreadsMixin:
         compression rotation reloads the oversized parent next message, retriggering compression.
 
         Telegram topic lanes persist a (chat_id, thread_id) -> session_id row so reopening a topic in a
-        fresh process resumes the right Hermes session. See #20470, #29712, #33414.
+        fresh process resumes the right Kitsune session. See #20470, #29712, #33414.
         """
         if not self._is_telegram_topic_lane(source):
             return
@@ -391,7 +391,7 @@ class GatewayTopicThreadsMixin:
     # ── Discord auto-thread lanes ───────────────────────────────────────────────────────────
 
     def _is_discord_auto_thread_lane(self, source: SessionSource) -> bool:
-        """Return True only for Discord threads Hermes just auto-created."""
+        """Return True only for Discord threads Kitsune just auto-created."""
         return (
             source.platform == Platform.DISCORD and source.chat_type == "thread"
             and bool(getattr(source, "auto_thread_created", False)) and bool(source.thread_id)
@@ -610,7 +610,7 @@ class GatewayTopicThreadsMixin:
         return is_truthy_value((getattr(platform_cfg, "extra", None) or {}).get("disable_topic_auto_rename"))
 
     async def _rename_telegram_topic_for_session_title(self, source: SessionSource, session_id: str, title: str) -> None:
-        """Best-effort rename of a Telegram DM topic when Hermes auto-titles a session."""
+        """Best-effort rename of a Telegram DM topic when Kitsune auto-titles a session."""
         if not await asyncio.to_thread(self._is_telegram_topic_lane, source) or not source.chat_id or not source.thread_id:
             return
         # Operator kill-switch, e.g. user-managed topics (ad-hoc Threaded Mode) that auto-rename
@@ -718,7 +718,7 @@ class GatewayTopicThreadsMixin:
         return "\n".join(lines)
 
     async def _restore_telegram_topic_session(self, event: MessageEvent, raw_session_id: str) -> str:
-        """Restore an existing Telegram-owned Hermes session into this topic."""
+        """Restore an existing Telegram-owned Kitsune session into this topic."""
         source = event.source
         db = self._session_db
         session_id = await db.resolve_session_id(raw_session_id.strip())

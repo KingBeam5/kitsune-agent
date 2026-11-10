@@ -94,7 +94,7 @@ _EXCLUDED_DIRS = {
     ".cache", ".tox", ".nox", ".pytest_cache", ".mypy_cache", ".ruff_cache",
 }
 
-# Hermes-managed runtime downloads are regenerable. Match only profile roots:
+# Kitsune-managed runtime downloads are regenerable. Match only profile roots:
 # a deeper directory of the same name (such as a skill's models/) is user data.
 _EXCLUDED_ROOT_DIRS = LOCAL_RUNTIME_ROOT_DIRS | (PM_RUNTIME_ROOT_DIRS - {"cache"})
 
@@ -175,7 +175,7 @@ _EXTERNAL_PREFIX = "_external/"
 
 
 class BackupInProgressError(RuntimeError):
-    """Raised when another process already owns the Hermes backup slot."""
+    """Raised when another process already owns the Kitsune backup slot."""
 
 
 class _SQLiteSnapshotError(RuntimeError):
@@ -211,7 +211,7 @@ def _backup_operation_lock(hermes_home: Path, timeout_seconds: float = 0.25):
                 acquired = True
             except OSError:
                 if time.monotonic() >= deadline:
-                    raise BackupInProgressError("another Hermes backup is already running")
+                    raise BackupInProgressError("another Kitsune backup is already running")
                 time.sleep(0.05)
         yield
     finally:
@@ -592,7 +592,7 @@ def _collect_external_entries() -> tuple[list[tuple[Path, str]], list[str]]:
 
 
 def run_backup(args) -> bool:
-    """Create a zip backup of the Hermes home directory.
+    """Create a zip backup of the Kitsune home directory.
 
     True when every selected file landed in the archive (or there was nothing to back up); False
     when the zip was written but is incomplete — it is kept so the rest can still be restored, and
@@ -603,7 +603,7 @@ def run_backup(args) -> bool:
     hermes_root = get_default_hermes_root()
 
     if not hermes_root.is_dir():
-        print(f"Error: Hermes home directory not found at {hermes_root}")
+        print(f"Error: Kitsune home directory not found at {hermes_root}")
         sys.exit(1)
 
     try:
@@ -735,7 +735,7 @@ def _import_member_rel(member: str, prefix: str) -> tuple[str, bool]:
 
 
 def run_import(args) -> Optional[int]:
-    """Restore a Hermes backup; return 1 on damaged archives or incomplete restores."""
+    """Restore a Kitsune backup; return 1 on damaged archives or incomplete restores."""
     require_file_tooling("`hermes import`")
     zip_path = Path(args.zipfile).expanduser().resolve()
 
@@ -773,7 +773,7 @@ def run_import(args) -> Optional[int]:
 
         if (has_config or has_env) and not args.force:
             print()
-            print("Warning: Target directory already has Hermes configuration.")
+            print("Warning: Target directory already has Kitsune configuration.")
             print("Importing will overwrite existing files with backup contents.")
             print()
             try:
@@ -910,7 +910,7 @@ def run_import(args) -> Optional[int]:
             print(f"Import incomplete: {len(errors)} file(s) were not restored (see Warnings above). "
                   "Fix the cause and re-run the import.")
             return 1
-        print("Done. Your Hermes configuration has been restored.")
+        print("Done. Your Kitsune configuration has been restored.")
 
 
 def _import_members(
@@ -1701,7 +1701,7 @@ def restore_cron_jobs_if_emptied(
     Args:
         snapshot_id: The pre-update quick-snapshot id (from
             :func:`create_quick_snapshot`).
-        hermes_home: Override for the Hermes home directory (tests).
+        hermes_home: Override for the Kitsune home directory (tests).
 
     Returns:
         ``None`` when no action was taken (the common, healthy path). On a
@@ -1868,7 +1868,7 @@ def restore_config_model_settings_if_rewritten(
     Args:
         snapshot_id: The pre-update quick-snapshot id (from
             :func:`create_quick_snapshot`).
-        hermes_home: Override for the Hermes home directory (tests/siblings).
+        hermes_home: Override for the Kitsune home directory (tests/siblings).
 
     Returns:
         ``None`` when no action was taken (the common, healthy path). On a

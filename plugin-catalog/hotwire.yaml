@@ -4,7 +4,7 @@ sha: c66a0dd354a034da1bad4fe56bd4945f1e5c8e24
 version: "1.0.1"
 title: Hotwire
 description: >-
-  Analog circuit design bench: Hermes writes a SPICE netlist from plain English,
+  Analog circuit design bench: Kitsune writes a SPICE netlist from plain English,
   proves it against measurable specs (gain, corner frequencies, distortion, bias,
   current draw, part stress) with Hotwire's own circuit simulator, plays your
   guitar riff or WAV through the simulated circuit so you can hear it, runs Monte

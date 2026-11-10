@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // The update store's own entry points refuse a Cloud-owned target, so no button,
-// toast or flow left anywhere can start an update Hermes Cloud owns.
+// toast or flow left anywhere can start an update Kitsune Cloud owns.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { HermesConnection } from '@/global'
@@ -49,7 +49,7 @@ afterEach(() => {
   document.documentElement.removeAttribute('data-hermes-desktop-host')
 })
 
-describe('update entry points under Hermes Cloud', () => {
+describe('update entry points under Kitsune Cloud', () => {
   it('a Webapp tab served by a Cloud agent checks, applies and opens nothing', async () => {
     document.documentElement.dataset.hermesDesktopHost = 'browser'
     vi.stubGlobal('location', new URL('https://lab--app.agents.nousresearch.com/'))

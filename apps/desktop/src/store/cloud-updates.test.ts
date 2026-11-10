@@ -15,11 +15,11 @@ afterEach(() => {
   document.documentElement.removeAttribute('data-hermes-desktop-host')
 })
 
-describe('Hermes Cloud owns updates', () => {
+describe('Kitsune Cloud owns updates', () => {
   it('native Desktop connected to a Cloud agent: only the backend is Cloud-owned', () => {
     $connection.set(remote('https://lab.agents.nousresearch.com', 'cloud'))
     expect($cloudOwnsUpdates.get()).toEqual({ backend: true, client: false })
-    // The generic "Update Hermes" command then updates this machine's app.
+    // The generic "Update Kitsune" command then updates this machine's app.
     expect(updateTargetFor($connection.get())).toBe('client')
 
     // A Cloud agent saved as a plain URL remote is still Cloud's.

@@ -8,11 +8,11 @@ import { startMockServer } from '../../../tests-js/scripts/mock-server'
 import { buildAppEnv, createSandbox, launchDesktop } from './fixtures'
 import { expect, test } from './test'
 
-// Electron userData outlives a Hermes reinstall that wipes HERMES_HOME, so the
+// Electron userData outlives a Kitsune reinstall that wipes HERMES_HOME, so the
 // remembered startup profile (and an explicit default) can name a profile this
 // home no longer has. Every boot then ran `hermes --profile <gone> gateway
 // ensure`, which refuses a missing profile, and Desktop never started.
-test('a remembered profile missing from a reinstalled Hermes home boots the default profile', async () => {
+test('a remembered profile missing from a reinstalled Kitsune home boots the default profile', async () => {
   test.setTimeout(300_000)
   const sandbox = createSandbox('missing-startup-profile')
   const mock = await startMockServer()

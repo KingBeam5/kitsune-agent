@@ -1,12 +1,12 @@
 ---
 sidebar_label: "Desktop Plugin SDK"
 title: "Desktop Plugin SDK (@hermes/plugin-sdk)"
-description: "Extend the native Hermes Desktop app — panes, pages, sidebar nav, status bar, palette commands, keybinds, themes, and a scoped backend namespace, with one import and no build step."
+description: "Extend the native Kitsune Desktop app — panes, pages, sidebar nav, status bar, palette commands, keybinds, themes, and a scoped backend namespace, with one import and no build step."
 ---
 
 # Desktop Plugin SDK
 
-The native [Hermes Desktop](../user-guide/desktop.md) app is contribution-driven: every
+The native [Kitsune Desktop](../user-guide/desktop.md) app is contribution-driven: every
 surface in the window — panes, routes, sidebar nav, status-bar items, palette
 entries, keybinds, themes — registers into one central registry. Core registers
 its surfaces exactly the way a plugin does, so the plugin story is the real one,
@@ -21,13 +21,13 @@ repo clone, no `pnpm run build`, no patching app source. Drop the file in
 and hot-reloads every save.
 
 :::warning This is not the web-dashboard plugin SDK
-"Plugin" means several unrelated things across Hermes. This page is the **native
+"Plugin" means several unrelated things across Kitsune. This page is the **native
 desktop app** (`hermes desktop`) SDK — the `@hermes/plugin-sdk` module and
 `$HERMES_HOME/desktop-plugins/`. The **web dashboard** (`hermes dashboard`) has
 its own, unrelated plugin system on `window.__HERMES_PLUGIN_SDK__` with a
 `manifest.json` — documented at
 [Extending the Dashboard](../user-guide/features/extending-the-dashboard.md). Python
-CLI/gateway plugins are documented at [Build a Hermes Plugin](./plugins/index.md).
+CLI/gateway plugins are documented at [Build a Kitsune Plugin](./plugins/index.md).
 The three do not share code, APIs, or delivery. Only the backend `plugin_api.py`
 namespace (`/api/plugins/<id>`) is shared between the desktop and dashboard SDKs.
 :::
@@ -103,7 +103,7 @@ function HelloPane() {
   return jsxs('div', {
     className: 'flex h-full flex-col gap-2 p-3 text-sm',
     children: [
-      jsx('div', { className: 'font-medium', children: 'Hello, Hermes' }),
+      jsx('div', { className: 'font-medium', children: 'Hello, Kitsune' }),
       jsx('div', {
         className: 'text-(--ui-text-tertiary)',
         children: `gateway: ${gateway}`
@@ -1508,7 +1508,7 @@ is the registry routing identity;
 pair it with `profile` for keys and persistence. Endpoint, token, SSH host/key, and
 other raw connection fields never cross the plugin IPC boundary. `profile` is the
 source-local route used
-for requests; `targetProfile` is the backend Hermes profile served by that route.
+for requests; `targetProfile` is the backend Kitsune profile served by that route.
 They differ when a route explicitly maps to another backend profile (for example an
 SSH `remoteProfile` override or a legacy per-profile URL alias). This distinction
 preserves backend identity without exposing connection secrets.
@@ -1546,7 +1546,7 @@ rejection your `.catch()` sees, never an error-boundary crash.
 #### Live tool progress — `tool.progress` {#tool-progress-event}
 
 While a tool call runs, an MCP server that sends `notifications/progress` (the
-MCP spec's progress channel; Hermes opts in by sending `_meta.progressToken` on
+MCP spec's progress channel; Kitsune opts in by sending `_meta.progressToken` on
 every `tools/call`) reaches the renderer as a `tool.progress` event. The native
 tool row shows it as `42% · <message>` next to its timer; a plugin can render
 its own view:
@@ -1575,7 +1575,7 @@ transcript, so a reopened session shows only the finished row.
 `ctx.os` is the curated OS door — every way a plugin reaches outside the app
 window, in one namespace attributed to your plugin. `ctx.os.notify` posts a
 **native OS notification** — the same Electron pipeline the app's own
-approval/turn alerts use. It fires only while the user is away from Hermes
+approval/turn alerts use. It fires only while the user is away from Kitsune
 (backgrounded / unfocused); use `host.notify` for the in-app toast when
 they're looking at the app. Users can silence it per device under Settings ▸
 Notifications ▸ "Plugin notifications", and repeats from the same plugin are
@@ -1588,7 +1588,7 @@ ctx.os.notify({
   title: 'New match found',
   body: 'Someone matched your signal',
   icon: '/abs/path/to/icon.png', // Electron Notification icon
-  // Body click → focus Hermes + navigate. Same vocabulary as OS deep links:
+  // Body click → focus Kitsune + navigate. Same vocabulary as OS deep links:
   activate: 'hermes://index-network/intent/1',
   // or: activate: '/index-network/intent/1'
   // or: activate: { path: '/index-network/intent/1' }
@@ -1627,9 +1627,9 @@ computer running Desktop. A plugin reaches exactly two kinds of folder:
 Every call names a folder handle and a path **relative to that folder**. The
 app's main process checks each call: `..`, absolute paths, drive letters and
 symlinks that resolve outside the folder are refused, never normalized, and
-nothing inside Hermes' own data (the Hermes home with `config.yaml`, `.env`,
+nothing inside Kitsune' own data (the Kitsune home with `config.yaml`, `.env`,
 auth and profiles; the app data folder with every plugin's data and the grants
-record) is reachable. A folder that holds or sits inside Hermes data (however
+record) is reachable. A folder that holds or sits inside Kitsune data (however
 it is spelled: a bind mount, a macOS firmlink, a WSL share or a
 `\\localhost\C$` share counts), a key folder such as `~/.ssh`, or a kernel
 filesystem such as `/proc` (wherever it is mounted) cannot be granted at all;
@@ -2222,7 +2222,7 @@ Ship your plugin repo (agent half, desktop half, or both) and link to it with
 the `hermes://` scheme — a plain anchor on your website or README:
 
 ```html
-<a href="hermes://plugin/install?repo=owner/repo&enable=1">Install in Hermes</a>
+<a href="hermes://plugin/install?repo=owner/repo&enable=1">Install in Kitsune</a>
 ```
 
 The user gets a confirmation dialog (repo id, source links, a probe of what
@@ -2234,7 +2234,7 @@ never auto-install. `force=1` replaces an existing install; dev builds use
 ### The Python side
 
 Desktop plugins reuse the dashboard plugin backend mount. Put the backend in a
-`dashboard/` subfolder of a regular Hermes plugin and declare it in a
+`dashboard/` subfolder of a regular Kitsune plugin and declare it in a
 `manifest.json`:
 
 ```

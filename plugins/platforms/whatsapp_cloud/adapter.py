@@ -622,7 +622,7 @@ class WhatsAppCloudAdapter(WhatsAppBehaviorMixin, BasePlatformAdapter):
     async def send_voice(self, chat_id: str, audio_path: str, caption: Optional[str] = None, reply_to: Optional[str] = None,
                          is_voice: Optional[bool] = None, **kwargs) -> SendResult:
         """Voice message: ``audio/ogg; codecs=opus`` renders as a voice bubble, so a
-        local MP3 (Hermes TTS output) is converted via ffmpeg first; other audio is sent as-is.
+        local MP3 (Kitsune TTS output) is converted via ffmpeg first; other audio is sent as-is.
         A plain audio MEDIA file (``is_voice=False``) is never converted into a voice bubble."""
         mime_type: Optional[str] = None
         if is_voice is False and audio_path.lower().endswith(".mp3"):
@@ -1117,7 +1117,7 @@ _PLATFORM_HINT = (
 
 
 def register(ctx) -> None:
-    """Plugin entry point — called by the Hermes plugin system.
+    """Plugin entry point — called by the Kitsune plugin system.
 
     No ``validate_config``: an unconfigured adapter still reaches ``connect()``, which records the
     ``whatsapp_cloud_unconfigured`` fatal error (same outcome as the former core wiring). No
@@ -1127,7 +1127,7 @@ def register(ctx) -> None:
     ctx.register_platform(
         name="whatsapp_cloud", label="WhatsApp Business (Cloud)", adapter_factory=WhatsAppCloudAdapter,
         dashboard_label="WhatsApp Cloud API",
-        dashboard_description="Use Hermes via Meta's hosted WhatsApp Cloud API (no local bridge).",
+        dashboard_description="Use Kitsune via Meta's hosted WhatsApp Cloud API (no local bridge).",
         docs_url="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp-cloud",
         check_fn=check_whatsapp_cloud_requirements, is_connected=_is_connected,
         config_connected_fn=config_connected_extra("phone_number_id", "access_token"),

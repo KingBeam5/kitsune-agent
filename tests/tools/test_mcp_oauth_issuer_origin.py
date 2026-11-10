@@ -1,4 +1,4 @@
-"""Metadata documents whose issuer the SDK's exact-string check (RFC 8414 §3.3) refuses but Hermes accepts.
+"""Metadata documents whose issuer the SDK's exact-string check (RFC 8414 §3.3) refuses but Kitsune accepts.
 
 Strava's MCP connector advertises ``authorization_servers: ["https://www.strava.com/mcp-issuer"]`` and
 serves ``/.well-known/oauth-authorization-server/mcp-issuer`` with ``issuer: "https://www.strava.com"``
@@ -104,7 +104,7 @@ async def _run_flow(tmp_path, monkeypatch, issuer_doc, advertised=ADVERTISED, is
     storage = HermesTokenStorage("srv")
     provider = _HERMES_PROVIDER_CLS(
         server_name="srv", server_url=RESOURCE, storage=storage,
-        client_metadata=OAuthClientMetadata(redirect_uris=[AnyUrl("http://127.0.0.1:1/cb")], client_name="Hermes Agent"),
+        client_metadata=OAuthClientMetadata(redirect_uris=[AnyUrl("http://127.0.0.1:1/cb")], client_name="Kitsune Agent"),
         redirect_handler=redirect, callback_handler=callback)
     standin = _StandIn(httpx, issuer_doc, advertised)
     async with httpx.AsyncClient(auth=provider, transport=httpx.MockTransport(standin)) as client:

@@ -213,7 +213,7 @@ async def test_upgraded_desktop_history_resumes_by_id(tmp_path, monkeypatch):
     stamped = await native.dispatch({'id': 2, 'method': 'session.resume', 'params': {'session_id': 'old-desktop-account'}})
     assert stamped.get('result', {}).get('session_id') == 'old-desktop-account', stamped
     assert [m['content'] for m in stamped['result']['messages']] == ['OLD-DESKTOP-ACCOUNT']
-    # A served remote backend stamped its basic-auth login on the row at creation (#139818). Hermes
+    # A served remote backend stamped its basic-auth login on the row at creation (#139818). Kitsune
     # is single-user and sign-in is owner-only, so that login is the machine owner: the owner's own
     # native ticket (native Desktop, the TUI) adopts it once its serve is gone (gateway.owner_identity).
     caps = ['session:create', 'session:read', 'session:submit', 'session:control', 'session:approve',

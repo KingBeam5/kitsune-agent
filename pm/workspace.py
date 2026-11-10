@@ -162,7 +162,7 @@ def _generate_pyproject(plugin_dirs: list[Path] | Mapping[Path, Path], root: Pat
 
         document = tomllib.loads(core_text)
         uv_policy = document.setdefault("tool", {}).setdefault("uv", {})
-        # Release age is checked when Hermes locks; users trust that lock (#135589).
+        # Release age is checked when Kitsune locks; users trust that lock (#135589).
         uv_policy.pop("exclude-newer", None)
         uv_policy.pop("exclude-newer-package", None)
         uv_policy["workspace"] = {"members": sorted(members)}
@@ -185,7 +185,7 @@ def _without_release_age(text: str) -> str:
     """Drop ``[tool.uv] exclude-newer`` from a generated root's pyproject text.
 
     The lock already holds checked versions; on the user's machine the cutoff only gates the
-    build tools uv fetches for source builds (setuptools for Hermes itself), and a mirror that
+    build tools uv fetches for source builds (setuptools for Kitsune itself), and a mirror that
     serves no upload times rejects all of them (#135589). Text-level so the pre-3.11 bootstrap
     python, which has no tomllib, can run it.
     """
@@ -298,7 +298,7 @@ def enabled_plugin_dirs(*, proposed_home=None, enabled=None, disabled=None,
 def enabled_member_dirs(*, proposed_home=None, enabled=None, disabled=None) -> list[Path]:
     """Keep every selected member or refuse an incompatible selection.
 
-    A member that does not accept the running Hermes (``hermes_fit_error``) sits out instead:
+    A member that does not accept the running Kitsune (``hermes_fit_error``) sits out instead:
     the verdict is only as good as our version identity (an untagged source checkout reads
     as an older release), the loader skips that plugin anyway, and the member rejoins as
     soon as the verdict flips. Enabling one is still refused at admission. Judged with no
@@ -321,7 +321,7 @@ def enabled_member_dirs(*, proposed_home=None, enabled=None, disabled=None) -> l
 
 def build_member_dirs(extras: Iterable[str], python: Path | None = None) -> list[Path]:
     """``enabled_member_dirs`` for a build selecting core *extras*: a plugin extra they select
-    can add a ``hermes-agent`` requirement the running Hermes misses, which sits out too.
+    can add a ``hermes-agent`` requirement the running Kitsune misses, which sits out too.
     A build passes its interpreter *python*, whose markers the generation (and so the loader)
     sees; PM itself may run under a bootstrap Python."""
     extras, members = list(extras), enabled_member_dirs()
@@ -548,7 +548,7 @@ def _recorded_extras() -> list[str]:
 
 def core_requirement_error(declaration, extras: Iterable[str] | None = None,
                            target: Mapping[str, str] | None = None) -> Optional[str]:
-    """Why the plugin's applicable requirement on ``hermes-agent`` rejects the running Hermes.
+    """Why the plugin's applicable requirement on ``hermes-agent`` rejects the running Kitsune.
 
     PM satisfies ``hermes-agent`` from the checkout itself: a runtime requirement naming it is
     dropped, and a selected extra naming it binds to the workspace root, where uv ignores the
@@ -591,7 +591,7 @@ def core_requirement_error(declaration, extras: Iterable[str] | None = None,
 
 
 def hermes_fit_error(declaration, extras: Iterable[str] | None = None) -> Optional[str]:
-    """Why this Hermes is not one the plugin accepts: its ``requires_hermes`` or an applicable
+    """Why this Kitsune is not one the plugin accepts: its ``requires_hermes`` or an applicable
     ``hermes-agent`` requirement rejects the running version. Either verdict is only as good as
     our version identity, so a selected misfit sits out of the build (config untouched) and
     rejoins once it flips; admission refuses it."""

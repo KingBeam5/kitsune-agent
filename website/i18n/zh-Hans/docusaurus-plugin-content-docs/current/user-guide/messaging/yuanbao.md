@@ -1,18 +1,18 @@
 ---
 sidebar_position: 16
 title: "Yuanbao"
-description: "元宝（Yuanbao）已移出 Hermes 核心，改为 yuanbao Hermes Labs 插件"
+description: "元宝（Yuanbao）已移出 Kitsune 核心，改为 yuanbao Kitsune Labs 插件"
 ---
 
 # Yuanbao
 
-:::warning Hermes Labs 插件
-Yuanbao is now a Hermes Labs plugin: built by Nous Research, not supported, and likely not maintained going forward. Fixes from the community are welcome.
+:::warning Kitsune Labs 插件
+Yuanbao is now a Kitsune Labs plugin: built by Nous Research, not supported, and likely not maintained going forward. Fixes from the community are welcome.
 
-元宝现在是 Hermes Labs 插件：由 Nous Research 构建，不提供支持，今后很可能不再维护。欢迎社区提交修复。
+元宝现在是 Kitsune Labs 插件：由 Nous Research 构建，不提供支持，今后很可能不再维护。欢迎社区提交修复。
 :::
 
-[元宝（Yuanbao）](https://yuanbao.tencent.com/) 网关平台及其 `yb_*` 工具（`yb_query_group_info`、`yb_query_group_members`、`yb_send_dm`、`yb_search_sticker`、`yb_send_sticker`）已不再属于 Hermes 核心，而是作为 [NousResearch/hermes-labs-plugins](https://github.com/NousResearch/hermes-labs-plugins/tree/main/yuanbao) 中的 `yuanbao` 插件发布，完整的配置指南见插件仓库。
+[元宝（Yuanbao）](https://yuanbao.tencent.com/) 网关平台及其 `yb_*` 工具（`yb_query_group_info`、`yb_query_group_members`、`yb_send_dm`、`yb_search_sticker`、`yb_send_sticker`）已不再属于 Kitsune 核心，而是作为 [NousResearch/hermes-labs-plugins](https://github.com/NousResearch/hermes-labs-plugins/tree/main/yuanbao) 中的 `yuanbao` 插件发布，完整的配置指南见插件仓库。
 
 ## 安装
 

@@ -1,14 +1,14 @@
 ---
 sidebar_position: 1
 title: "Messaging Gateway"
-description: "Chat with Hermes from Telegram, Discord, Slack, WhatsApp, Signal, SMS, Email, Home Assistant, Mattermost, Matrix, DingTalk, Yuanbao, Microsoft Teams, LINE, Raft, Webhooks, or any OpenAI-compatible frontend via the API server — architecture and setup overview"
+description: "Chat with Kitsune from Telegram, Discord, Slack, WhatsApp, Signal, SMS, Email, Home Assistant, Mattermost, Matrix, DingTalk, Yuanbao, Microsoft Teams, LINE, Raft, Webhooks, or any OpenAI-compatible frontend via the API server — architecture and setup overview"
 ---
 
 # Messaging Gateway
 
-Chat with Hermes from Telegram, Discord, Slack, WhatsApp, Signal, SMS, Email, Home Assistant, Mattermost, Matrix, DingTalk, Feishu/Lark, WeCom, Weixin, BlueBubbles (iMessage), QQ, Yuanbao, Microsoft Teams, LINE, ntfy, or your browser. The gateway is a single background process that connects to all your configured platforms, handles sessions, runs cron jobs, and delivers voice messages.
+Chat with Kitsune from Telegram, Discord, Slack, WhatsApp, Signal, SMS, Email, Home Assistant, Mattermost, Matrix, DingTalk, Feishu/Lark, WeCom, Weixin, BlueBubbles (iMessage), QQ, Yuanbao, Microsoft Teams, LINE, ntfy, or your browser. The gateway is a single background process that connects to all your configured platforms, handles sessions, runs cron jobs, and delivers voice messages.
 
-For the full voice feature set — including CLI microphone mode, spoken replies in messaging, and Discord voice-channel conversations — see [Voice Mode](../features/voice-mode.md) and [Use Voice Mode with Hermes](../../guides/use-voice-mode-with-hermes.md).
+For the full voice feature set — including CLI microphone mode, spoken replies in messaging, and Discord voice-channel conversations — see [Voice Mode](../features/voice-mode.md) and [Use Voice Mode with Kitsune](../../guides/use-voice-mode-with-hermes.md).
 
 :::tip
 Bots need both a model provider and tool providers (TTS, web). A [Nous Portal](../../integrations/nous-portal.md) subscription bundles all of them.
@@ -63,15 +63,15 @@ connected. An enabled platform can correctly show **Messaging gateway stopped**.
 
 **Voice** = TTS audio replies and/or voice message transcription. **Images** = send/receive images. **Files** = send/receive file attachments. **Threads** = threaded conversations. **Reactions** = emoji reactions on messages. **Typing** = typing indicator while processing. **Streaming** = progressive message updates via editing.
 
-:::note Hermes Relay
-[Hermes Relay](./relay.md) (experimental) is not a chat platform itself — it is a connector system that fronts platforms like Discord, Telegram, Slack, and WhatsApp through an external connector that owns the platform credentials. Capabilities (media, native approval/clarify prompts, reactions, threads, typing, streaming) are negotiated per connector at handshake rather than fixed in the table above.
+:::note Kitsune Relay
+[Kitsune Relay](./relay.md) (experimental) is not a chat platform itself — it is a connector system that fronts platforms like Discord, Telegram, Slack, and WhatsApp through an external connector that owns the platform credentials. Capabilities (media, native approval/clarify prompts, reactions, threads, typing, streaming) are negotiated per connector at handshake rather than fixed in the table above.
 :::
 
 ## Architecture
 
 ```mermaid
 flowchart TB
-    subgraph Gateway["Hermes Gateway"]
+    subgraph Gateway["Kitsune Gateway"]
         subgraph Adapters["Platform adapters"]
             tg[Telegram]
             dc[Discord]
@@ -132,7 +132,7 @@ Each platform adapter receives messages, routes them through a per-chat session 
 
 ## Intentional Silence Tokens
 
-For group chats, hooks, and automation flows, Hermes supports explicit silence tokens. If the agent's final response is exactly one supported token, the gateway suppresses outbound delivery and sends nothing to the chat.
+For group chats, hooks, and automation flows, Kitsune supports explicit silence tokens. If the agent's final response is exactly one supported token, the gateway suppresses outbound delivery and sends nothing to the chat.
 
 Supported tokens:
 
@@ -144,7 +144,7 @@ Supported tokens:
 
 Whitespace and case are normalized, but the whole final response must be the token. A sentence like "Use `[SILENT]` when nothing changed" is delivered normally.
 
-Silence is a delivery decision only. Hermes keeps the assistant silence turn in the session transcript, so the conversation still alternates normally:
+Silence is a delivery decision only. Kitsune keeps the assistant silence turn in the session transcript, so the conversation still alternates normally:
 
 ```text
 user: side-channel chatter
@@ -152,7 +152,7 @@ assistant: [SILENT]   # stored, not delivered
 user: next message
 ```
 
-Failed turns still surface as errors; Hermes does not hide failures just because the text resembles a silence token.
+Failed turns still surface as errors; Kitsune does not hide failures just because the text resembles a silence token.
 
 On a message from a person, a bare silence token is replaced by a short notice, because a message that needed a reply must not vanish. Internal wakes such as background-process notifications may stay silent, and so may a message the platform adapter reports as not addressed to the bot. Slack reports this for messages that open by @mentioning someone else and for unmentioned top-level messages that start a new thread in a free-response channel. Telegram reports it for [group messages not addressed to the bot](telegram.md#letting-the-bot-stay-silent-in-a-group). Other platforms always get the notice.
 
@@ -226,7 +226,7 @@ hermes gateway install --force
 ```
 
 A positive value makes the generated unit use `Type=notify`,
-`NotifyAccess=main`, and the matching `WatchdogSec`. Hermes sends heartbeats
+`NotifyAccess=main`, and the matching `WatchdogSec`. Kitsune sends heartbeats
 only while its event loop is making timely progress; systemd restarts the
 process when they stop. The default `0` keeps the existing `Type=simple`
 behavior. This setting is Linux/systemd-only and does not treat an ordinary
@@ -265,7 +265,7 @@ a margin. A large multi-profile boot can therefore run past systemd's default
 | `/bg <prompt>` | Run a prompt in a separate background session |
 | `/btw <question>` | Ask a side question about the current conversation without interrupting it |
 | `/reload-mcp` | Reload MCP servers from config |
-| `/update` | Update Hermes Agent to the latest version |
+| `/update` | Update Kitsune Agent to the latest version |
 | `/help` | Show available commands |
 | `/<skill-name>` | Invoke any installed skill |
 
@@ -356,7 +356,7 @@ Details:
 ## Per-Room Intentional Silence
 
 In multi-agent rooms, a model may choose to end its turn with an explicit silence marker such as
-`NO_REPLY` or `[SILENT]`. To let a successful marker-only turn stay silent even when Hermes was
+`NO_REPLY` or `[SILENT]`. To let a successful marker-only turn stay silent even when Kitsune was
 mentioned or directly addressed, enable `allow_silence` for that room in the serving profile's
 `config.yaml`:
 
@@ -431,14 +431,14 @@ Pairing codes expire after 1 hour, are rate-limited, and use cryptographic rando
 
 ### Other bots in a chat
 
-Hermes treats a sender as a bot when the platform says so (Discord, Slack, Telegram, Feishu, QQ guild, Mattermost bot accounts). On a platform whose events carry no bot flag (Matrix, Signal, IRC, Mattermost personal-access-token bots, …), list the peer's user ids under that platform's `bot_users` in `config.yaml`:
+Kitsune treats a sender as a bot when the platform says so (Discord, Slack, Telegram, Feishu, QQ guild, Mattermost bot accounts). On a platform whose events carry no bot flag (Matrix, Signal, IRC, Mattermost personal-access-token bots, …), list the peer's user ids under that platform's `bot_users` in `config.yaml`:
 
 ```yaml
 mattermost:
   bot_users: ["peer_bot_user_id"]
 ```
 
-A bot sender is admitted only through that platform's `*_ALLOW_BOTS` setting. Hermes never sends it runtime notices (busy and interrupt acknowledgements, progress, the "not processed" and retry hints, model-fallback and inactivity warnings, failed-delegation notices), only the model's reply, and a bot it is addressed by may still be answered with silence. `gateway.bot_loop_guard` ends the exchange: `max_hops` (default 4) bot messages after your last message, a repeated message counted once, and no answer to a bot answering a reply Hermes delivered to it unless `bot_replies_expect_reply: true`; `enabled: false` turns the rules off.
+A bot sender is admitted only through that platform's `*_ALLOW_BOTS` setting. Kitsune never sends it runtime notices (busy and interrupt acknowledgements, progress, the "not processed" and retry hints, model-fallback and inactivity warnings, failed-delegation notices), only the model's reply, and a bot it is addressed by may still be answered with silence. `gateway.bot_loop_guard` ends the exchange: `max_hops` (default 4) bot messages after your last message, a repeated message counted once, and no answer to a bot answering a reply Kitsune delivered to it unless `bot_replies_expect_reply: true`; `enabled: false` turns the rules off.
 
 ### Admins vs Regular Users
 
@@ -504,7 +504,7 @@ display:
 
 All four keys are read from each profile's own `config.yaml`, so multiplexed profiles keep independent busy policies; there is no process-environment override.
 
-The first time you message a busy agent on any platform, Hermes appends a one-line reminder to the busy-ack explaining the knob (`"💡 First-time tip — …"`). The reminder fires once per install — a flag under `onboarding.seen.busy_input_prompt` latches it. Delete that key to see the tip again.
+The first time you message a busy agent on any platform, Kitsune appends a one-line reminder to the busy-ack explaining the knob (`"💡 First-time tip — …"`). The reminder fires once per install — a flag under `onboarding.seen.busy_input_prompt` latches it. Delete that key to see the tip again.
 
 If you find the busy acknowledgment noisy, set `display.busy_ack_enabled: false`. Input handling is unchanged; only the confirmation message is hidden.
 
@@ -554,7 +554,7 @@ Phrase files map a surface (`status`, `generic`) to a list of strings (max 80 ph
 
 ### Message timestamps in model context
 
-Off by default. When enabled, Hermes prepends a human-readable timestamp
+Off by default. When enabled, Kitsune prepends a human-readable timestamp
 (e.g. `[Tue 2026-04-28 13:40:53 CEST]`) onto each **user** message *in the
 model's context* so the agent knows when messages were sent — useful for
 temporal reasoning ("you asked this morning…", noticing a long gap). It is
@@ -587,7 +587,7 @@ Run a prompt in a separate background session so the agent works on it independe
 /bg Check all servers in the cluster and report any that are down
 ```
 
-Hermes confirms immediately:
+Kitsune confirms immediately:
 
 ```
 🔄 Background task started: "Check all servers in the cluster..."
@@ -663,7 +663,7 @@ journalctl -u hermes-gateway -f
 Use the user service on laptops and dev boxes. Use the system service on VPS or headless hosts that should come back at boot without relying on systemd linger.
 
 :::danger Don't add a custom `ExecStopPost` kill drop-in
-The unit Hermes installs already shuts the gateway down cleanly with `KillMode=mixed` + `KillSignal=SIGTERM`, and uses `Restart=always` with `RestartForceExitStatus` so updates and `/restart` respawn correctly. Do **not** add a systemd drop-in such as `ExecStopPost=/bin/kill -9 $MAINPID` — `ExecStopPost` fires on *every* stop, including clean restarts, so it `SIGKILL`s the freshly spawned instance before it stabilizes and `Restart=always` immediately respawns it. The result is an infinite restart loop (and, on Telegram, a flood of restart messages). If you've added such a drop-in, remove it: `systemctl --user edit hermes-gateway` (or `sudo systemctl edit hermes-gateway` for a system service) and delete the `ExecStopPost` line, then `systemctl --user daemon-reload`.
+The unit Kitsune installs already shuts the gateway down cleanly with `KillMode=mixed` + `KillSignal=SIGTERM`, and uses `Restart=always` with `RestartForceExitStatus` so updates and `/restart` respawn correctly. Do **not** add a systemd drop-in such as `ExecStopPost=/bin/kill -9 $MAINPID` — `ExecStopPost` fires on *every* stop, including clean restarts, so it `SIGKILL`s the freshly spawned instance before it stabilizes and `Restart=always` immediately respawns it. The result is an infinite restart loop (and, on Telegram, a flood of restart messages). If you've added such a drop-in, remove it: `systemctl --user edit hermes-gateway` (or `sudo systemctl edit hermes-gateway` for a system service) and delete the `ExecStopPost` line, then `systemctl --user daemon-reload`.
 :::
 
 ### Direct `systemctl restart` / `stop` exits cleanly
@@ -674,9 +674,9 @@ The installed unit declares `ExecStop=` to record a planned-stop marker for `$MA
 systemctl --user restart hermes-gateway   # or: sudo systemctl restart hermes-gateway
 ```
 
-Prefer `hermes gateway restart` when in-flight agent turns matter: it asks the gateway to drain first (`SIGUSR1`, honoring the restart wait budget) and waits for the replacement, while a raw `systemctl restart` stops the current process on systemd's schedule. After updating Hermes, run `hermes gateway restart` once so the running service picks up the regenerated unit that contains the `ExecStop=` line (`hermes gateway status` warns while the installed unit is outdated).
+Prefer `hermes gateway restart` when in-flight agent turns matter: it asks the gateway to drain first (`SIGUSR1`, honoring the restart wait budget) and waits for the replacement, while a raw `systemctl restart` stops the current process on systemd's schedule. After updating Kitsune, run `hermes gateway restart` once so the running service picks up the regenerated unit that contains the `ExecStop=` line (`hermes gateway status` warns while the installed unit is outdated).
 
-The installed unit also maps `systemctl reload hermes-gateway` to `SIGUSR1`. For Hermes, `reload` therefore means a graceful drain, process exit, and supervisor relaunch; it is **not** an in-process configuration reload. Use `hermes gateway restart` when you want the CLI to wait for and verify the replacement process.
+The installed unit also maps `systemctl reload hermes-gateway` to `SIGUSR1`. For Kitsune, `reload` therefore means a graceful drain, process exit, and supervisor relaunch; it is **not** an in-process configuration reload. Use `hermes gateway restart` when you want the CLI to wait for and verify the replacement process.
 
 :::tip Headless VMs: user service + linger avoids root prompts
 A system service needs root for every restart — including the automatic gateway restart at the end of `hermes update`. When `hermes update` runs as a non-root user, it tries passwordless `sudo systemctl`; if that's unavailable, it skips the restart and prints the manual `sudo systemctl restart hermes-gateway` command (it never blocks on an interactive password prompt).
@@ -695,16 +695,16 @@ hermes ALL=(root) NOPASSWD: /usr/bin/systemctl --no-ask-password reset-failed he
 ```
 :::
 
-Avoid keeping both the user and system gateway units installed at once unless you really mean to. Hermes will warn if it detects both because start/stop/status behavior gets ambiguous.
+Avoid keeping both the user and system gateway units installed at once unless you really mean to. Kitsune will warn if it detects both because start/stop/status behavior gets ambiguous.
 
 An installed unit (or launchd plist) belongs to the `HERMES_HOME` it pins. A gateway started from a different home, such as a test or scratch home that happens to resolve to the same service name, never rewrites it: `gateway run`, `start`, `restart` and `install --force` refuse with a message naming both homes and leave the file alone. To deliberately point an existing service at the current home, run `hermes gateway install --force-unit-path`.
 
 :::note Inside a container, only the system scope is offered
-`hermes gateway install` (and the `hermes gateway setup` wizard) refuse to install a **user** service when Hermes detects it is running inside a container. A user unit lands in `~/.config/systemd/user`, and when that home is bind-mounted from the host (podman/distrobox), the host's own `systemd --user` enables and starts the same unit — a second gateway polling the same bot token. Run the gateway as the container's main process (`hermes gateway run`, with a container restart policy), or in a systemd container (systemd as PID 1) install the isolated system scope: `sudo hermes gateway install --system --run-as-user <user>`.
+`hermes gateway install` (and the `hermes gateway setup` wizard) refuse to install a **user** service when Kitsune detects it is running inside a container. A user unit lands in `~/.config/systemd/user`, and when that home is bind-mounted from the host (podman/distrobox), the host's own `systemd --user` enables and starts the same unit — a second gateway polling the same bot token. Run the gateway as the container's main process (`hermes gateway run`, with a container restart policy), or in a systemd container (systemd as PID 1) install the isolated system scope: `sudo hermes gateway install --system --run-as-user <user>`.
 :::
 
 :::info Multiple installations
-If you run multiple Hermes installations on the same machine (with different `HERMES_HOME` directories), each gets its own systemd service name. The default `~/.hermes` uses `hermes-gateway`; other installations use `hermes-gateway-<hash>`. The `hermes gateway` commands automatically target the correct service for your current `HERMES_HOME`.
+If you run multiple Kitsune installations on the same machine (with different `HERMES_HOME` directories), each gets its own systemd service name. The default `~/.hermes` uses `hermes-gateway`; other installations use `hermes-gateway-<hash>`. The `hermes gateway` commands automatically target the correct service for your current `HERMES_HOME`.
 :::
 
 ### macOS (launchd)
@@ -721,7 +721,7 @@ The generated plist lives at `~/Library/LaunchAgents/ai.hermes.gateway.plist`. I
 
 - **PATH** — your full shell PATH at install time, with the venv `bin/` and `node_modules/.bin` prepended. This ensures user-installed tools (Node.js, ffmpeg, etc.) are available to gateway subprocesses like the WhatsApp bridge.
 - **VIRTUAL_ENV** — points to the Python virtualenv so tools can resolve packages correctly.
-- **HERMES_HOME** — scopes the gateway to your Hermes installation.
+- **HERMES_HOME** — scopes the gateway to your Kitsune installation.
 
 :::tip PATH changes after install
 launchd plists are static — if you install new tools (e.g. a new Node.js version via nvm, or ffmpeg via Homebrew) after setting up the gateway, run `hermes gateway install` again to capture the updated PATH. The gateway will detect the stale plist and reload automatically.
@@ -732,9 +732,9 @@ The plist sets `RunAtLoad`, so loading it starts the gateway. `hermes gateway in
 :::
 
 :::info Local Network access (LAN devices fail with "No route to host")
-macOS Local Network Privacy attributes a socket to the executable launchd spawned for the job. A bare venv Python has no application identity, so a launchd-run gateway could not reach LAN hosts (Home Assistant, local model servers) — every connect failed with `errno 65 No route to host` while the same URL worked from Terminal, and no prompt was ever shown to grant it. The generated plist therefore runs the gateway through `/usr/bin/osascript`; a JXA `system()` call starts the gateway without an interactive event-polling loop, and macOS treats its children as osascript's own — an Apple platform binary, exempt from the check. `ps` shows `osascript → stderr_timestamp → gateway run`; stop/restart/KeepAlive behave exactly as before. A plist installed by an older Hermes is refreshed by `hermes gateway install` (or on the next `hermes gateway start`).
+macOS Local Network Privacy attributes a socket to the executable launchd spawned for the job. A bare venv Python has no application identity, so a launchd-run gateway could not reach LAN hosts (Home Assistant, local model servers) — every connect failed with `errno 65 No route to host` while the same URL worked from Terminal, and no prompt was ever shown to grant it. The generated plist therefore runs the gateway through `/usr/bin/osascript`; a JXA `system()` call starts the gateway without an interactive event-polling loop, and macOS treats its children as osascript's own — an Apple platform binary, exempt from the check. `ps` shows `osascript → stderr_timestamp → gateway run`; stop/restart/KeepAlive behave exactly as before. A plist installed by an older Kitsune is refreshed by `hermes gateway install` (or on the next `hermes gateway start`).
 
-Without an installed service, the gateway Hermes starts for you (Hermes Desktop, a chat or TUI client, or the restart after `hermes update`) runs the same way, as a one-off launchd job labelled `com.nousresearch.hermes.runtime.<id>`. A plain child process would lose LAN access as soon as the app that started it quits: macOS then holds the gateway itself responsible, and denies it. The one-off job is never installed in `~/Library/LaunchAgents`, never starts at login and is never restarted by launchd. Because osascript is the responsible app, macOS file-access prompts for that gateway (Documents, Downloads, …) name **osascript**, not Hermes.
+Without an installed service, the gateway Kitsune starts for you (Kitsune Desktop, a chat or TUI client, or the restart after `hermes update`) runs the same way, as a one-off launchd job labelled `com.nousresearch.hermes.runtime.<id>`. A plain child process would lose LAN access as soon as the app that started it quits: macOS then holds the gateway itself responsible, and denies it. The one-off job is never installed in `~/Library/LaunchAgents`, never starts at login and is never restarted by launchd. Because osascript is the responsible app, macOS file-access prompts for that gateway (Documents, Downloads, …) name **osascript**, not Kitsune.
 :::
 
 :::tip Picking up new credentials after `hermes auth add` / `hermes auth reset`
@@ -770,7 +770,7 @@ Because the launcher returns as soon as the gateway is spawned, Task Scheduler o
   Repair: hermes gateway start  (or: hermes gateway install)
 ```
 
-`hermes gateway start` and `hermes update` run the same comparison and re-register a drifted task from the current template automatically (like the systemd unit refresh on Linux); when `schtasks` refuses without elevation, re-run `hermes gateway install`, which can request administrator approval. The check is silent when the task cannot be queried, and it only inspects a few settings Hermes owns (task version, `RestartOnFailure`, the logon trigger delay and the launcher arguments), so deliberate local edits elsewhere in the task are not flagged.
+`hermes gateway start` and `hermes update` run the same comparison and re-register a drifted task from the current template automatically (like the systemd unit refresh on Linux); when `schtasks` refuses without elevation, re-run `hermes gateway install`, which can request administrator approval. The check is silent when the task cannot be queried, and it only inspects a few settings Kitsune owns (task version, `RestartOnFailure`, the logon trigger delay and the launcher arguments), so deliberate local edits elsewhere in the task are not flagged.
 
 ## Platform-Specific Toolsets
 
@@ -798,7 +798,7 @@ Each platform has its own toolset:
 | Weixin | `hermes-weixin` | Full tools including terminal |
 | BlueBubbles | `hermes-bluebubbles` | Full tools including terminal |
 | QQBot | `hermes-qqbot` | Full tools including terminal |
-| Yuanbao (Labs plugin) | `hermes-yuanbao` | Full tools + the `yb_*` group/DM/sticker tools from the `yuanbao` Hermes Labs plugin |
+| Yuanbao (Labs plugin) | `hermes-yuanbao` | Full tools + the `yb_*` group/DM/sticker tools from the `yuanbao` Kitsune Labs plugin |
 | Microsoft Teams | `hermes-teams` | Full tools including terminal |
 | API Server | `hermes-api-server` | Full tools (drops `clarify`, `text_to_speech` — programmatic access doesn't have an interactive user) |
 | Webhooks | `hermes-webhook` | Full tools including terminal |
@@ -1041,7 +1041,7 @@ Defaults to `false`. Only platforms whose adapter implements `delete_message` ho
 - [BlueBubbles Setup (iMessage)](bluebubbles.md)
 - [Photon Setup (iMessage)](photon.md)
 - [QQBot Setup](qqbot.md)
-- [Yuanbao](yuanbao.md) (Hermes Labs plugin)
+- [Yuanbao](yuanbao.md) (Kitsune Labs plugin)
 - [Microsoft Teams Setup](teams.md)
 - [Teams Meetings Pipeline](teams-meetings.md)
 - [Microsoft Graph Webhook Listener](msgraph-webhook.md)

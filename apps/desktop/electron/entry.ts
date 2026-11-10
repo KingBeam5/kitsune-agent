@@ -23,7 +23,7 @@ if (process.argv.includes('--hermes-sandbox-probe')) {
 }
 
 // Run before main creates windows/IME integrations or spawns resident helpers.
-// Closing Hermes cannot release a CWD inherited by an out-of-tree process.
+// Closing Kitsune cannot release a CWD inherited by an out-of-tree process.
 releasePackagedWorkingDirectory(app.isPackaged || Boolean(process.env.HERMES_DESKTOP_IS_PACKAGED))
 
 function configuredElectronFlags(env: NodeJS.ProcessEnv): string[] {

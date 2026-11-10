@@ -283,7 +283,7 @@ def test_sign_out_on_a_gateway_not_serving_the_webapp_says_no_browser_was_connec
 
 
 def test_sign_out_on_a_gateway_that_does_not_report_what_it_closed_asks_for_a_restart(world, capsys):
-    # A gateway started before this Hermes signs out loopback tabs only.
+    # A gateway started before this Kitsune signs out loopback tabs only.
     world["answers"]["webapp-sign-out"]["result"] = {"signed_out": True}
     assert launcher.cmd_webapp(_args(sign_out=True)) == 0
     out = capsys.readouterr().out

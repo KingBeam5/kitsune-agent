@@ -52,7 +52,7 @@ async def test_mp3_send_formats_caption_and_forwards_player_tags(tmp_path):
     kwargs = adapter._bot.send_audio.await_args.kwargs
     assert kwargs["parse_mode"] == "MarkdownV2"
     assert kwargs["caption"] == "Here is *your song* \\(v1\\.2\\)\\!"
-    assert (kwargs["performer"], kwargs["title"]) == ("Hermes Band", "Probe Song")
+    assert (kwargs["performer"], kwargs["title"]) == ("Kitsune Band", "Probe Song")
     assert covers == [b"\xff\xd8"]  # the embedded cover, as a JPEG
 
 
@@ -146,7 +146,7 @@ async def test_mp3_player_fields_reach_send_audio_and_the_cover_is_removed(tmp_p
     track.write_bytes(b"not really an mp3")
     cover.write_bytes(b"\xff\xd8 cover")
     monkeypatch.setattr(telegram_adapter, "audio_player_fields", lambda _path: {
-        "performer": "Hermes Band", "title": "Probe Song", "thumbnail_path": str(cover)})
+        "performer": "Kitsune Band", "title": "Probe Song", "thumbnail_path": str(cover)})
     adapter = TelegramAdapter(PlatformConfig(enabled=True, token="***"))
     adapter._bot = MagicMock()
     adapter._bot.send_audio = AsyncMock(return_value=MagicMock(message_id=12))
@@ -155,5 +155,5 @@ async def test_mp3_player_fields_reach_send_audio_and_the_cover_is_removed(tmp_p
 
     assert result.success is True
     kwargs = adapter._bot.send_audio.await_args.kwargs
-    assert (kwargs["performer"], kwargs["title"], kwargs["thumbnail"]) == ("Hermes Band", "Probe Song", str(cover))
+    assert (kwargs["performer"], kwargs["title"], kwargs["thumbnail"]) == ("Kitsune Band", "Probe Song", str(cover))
     assert not cover.exists()

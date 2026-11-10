@@ -138,7 +138,7 @@ function userBinLaunchers(isWindows: boolean, hermesHome: string, extraDirs: str
  * A source install outside the canonical root (install.sh --dir, a
  * setup-hermes.sh clone) is reachable only through the user-bin launcher it
  * published. Return the install directory that launcher reports, when it is a
- * Hermes source tree; the caller still resolves and probes it by root.
+ * Kitsune source tree; the caller still resolves and probes it by root.
  */
 export function userLauncherInstallRoot(
   isWindows: boolean = process.platform === 'win32',
@@ -585,7 +585,7 @@ export function resolveStagedUpdaterBinary(
  * predating #74782 have no self-PID exclusion in `UpdateMarkerGuard::acquire`,
  * so when the desktop pre-writes the marker naming that very updater, the
  * updater reads its own claim as a foreign live owner and aborts with
- * "Another Hermes update is already running (PID <itself>, started 1s ago)" —
+ * "Another Kitsune update is already running (PID <itself>, started 1s ago)" —
  * the observed infinite "Install didn't finish" loop. Skipping the pre-write
  * for those binaries lets them acquire cleanly and run `hermes update`, which
  * pulls the permanent fixes. See shouldPrewriteUpdateMarker.
@@ -750,13 +750,13 @@ export interface ObserveUpdaterHandoffDeps {
 
 /**
  * User-facing copy for a hand-off that did not take (spawn error or early exit).
- * The lead sentence is plain: nothing changed and Hermes keeps running. The raw
+ * The lead sentence is plain: nothing changed and Kitsune keeps running. The raw
  * outcome message (exit code / signal / spawn error) stays on a trailing
  * "Details:" line for logs and support.
  */
 export function describeUpdaterHandoffFailure(outcome: Pick<UpdaterHandoffOutcome, 'message'>): string {
   const lead =
-    "The updater couldn't start, so nothing was changed and Hermes keeps running as before. " +
+    "The updater couldn't start, so nothing was changed and Kitsune keeps running as before. " +
     'Try again; if it keeps failing, open the logs and send them to support.'
 
   return outcome.message ? `${lead}\n\nDetails: ${outcome.message}` : lead

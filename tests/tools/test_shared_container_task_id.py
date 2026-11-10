@@ -159,7 +159,7 @@ def test_contextvar_session_key_wins_over_environ(monkeypatch):
 # --- Persistent Docker is PROFILE-scoped, not session-scoped ------------------
 #
 # Product contract: TERMINAL_ENV=docker + container_persistent:true means ONE
-# long-lived container per Hermes profile, shared by every session of that
+# long-lived container per Kitsune profile, shared by every session of that
 # profile (CLI, gateway chats, WebUI). The a270c4ade session-key fallback must
 # NOT fragment persistent Docker into per-session containers; it exists for
 # backends where cross-session reuse is dangerous (SSH).
@@ -303,7 +303,7 @@ def test_shared_key_ignored_outside_persistent_docker(monkeypatch):
 
 
 def _use_home(monkeypatch, tmp_path, name):
-    """Run as a real home: ``"default"`` = the Hermes root, ``None`` = a home outside the root (which
+    """Run as a real home: ``"default"`` = the Kitsune root, ``None`` = a home outside the root (which
     is then its own root), anything else = ``<root>/profiles/<name>``."""
     import hermes_constants
 
@@ -371,7 +371,7 @@ def test_sessionless_named_profile_ignored_when_not_persistent_docker(monkeypatc
 
 
 def test_sessionless_home_outside_the_root_stays_default(monkeypatch, tmp_path):
-    """A home outside the Hermes root is its own root: it keys "default", never profile:custom."""
+    """A home outside the Kitsune root is its own root: it keys "default", never profile:custom."""
     from gateway.session_context import reset_session_vars
 
     _persistent_docker(monkeypatch)
@@ -465,7 +465,7 @@ def test_a_profile_literally_named_custom_keys_its_own_container(monkeypatch, tm
 
 @pytest.mark.parametrize("home_parts", [("profiles", "work", "nested"), ("profiles", ".hidden"), ("loose",)])
 def test_a_home_the_tui_stamps_custom_keys_one_container_for_every_path(monkeypatch, tmp_path, home_parts):
-    """Inside the Hermes root but not a ``profiles/<name>`` home, the TUI stamps Desktop sessions
+    """Inside the Kitsune root but not a ``profiles/<name>`` home, the TUI stamps Desktop sessions
     ``custom``; that home's chats and session-less work key the same container, and it is the file
     panel's first candidate (the one a Save may write to), plain and mounted."""
     from gateway.platforms.docker_media_paths import _docker_sandbox_dir_candidates

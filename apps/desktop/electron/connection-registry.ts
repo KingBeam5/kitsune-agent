@@ -4,7 +4,7 @@
  * Pure, electron-free helpers for the desktop's multi-connection registry —
  * the v2 successor to the single global `mode` + `remote` block in
  * connection.json. The registry is a named list of agent SOURCES (local
- * runtime, remote gateways, Hermes Cloud instances, SSH hosts) that are all
+ * runtime, remote gateways, Kitsune Cloud instances, SSH hosts) that are all
  * registered at once; routing/pooling changes that consume the registry land
  * separately, so this module is deliberately storage-shaped, not
  * transport-shaped.
@@ -901,7 +901,7 @@ export interface UpdateEligibility {
 }
 
 /**
- * Whether "Update all instances" may drive this connection. Hermes Cloud
+ * Whether "Update all instances" may drive this connection. Kitsune Cloud
  * instances are platform-managed — we never run `hermes update` against them,
  * including one saved as a plain URL remote. Local, remote, and ssh sources
  * are all eligible (reachability and busy checks happen at dispatch time).
@@ -988,7 +988,7 @@ export interface ConnectionInput {
  * edit and that entry is excluded from the label-collision check.
  */
 /**
- * Auth mode a stored remote-shaped entry actually uses. A Hermes Cloud gateway
+ * Auth mode a stored remote-shaped entry actually uses. A Kitsune Cloud gateway
  * signs in through its OAuth session and never keeps a pasted token (the save
  * path drops one), so a cloud entry on token auth with no token has no
  * credential at all and Test can only fail (#89529). Read it as oauth; a cloud
@@ -1453,7 +1453,7 @@ export function migrateV1ToRegistry(v1: unknown): ConnectionRegistry {
     }
 
     const label = uniqueLabel(
-      hostLabelFromBaseUrl(url) || (kind === 'cloud' ? 'Hermes Cloud' : 'Remote gateway'),
+      hostLabelFromBaseUrl(url) || (kind === 'cloud' ? 'Kitsune Cloud' : 'Remote gateway'),
       connections.map(c => c.label)
     )
 
@@ -1668,7 +1668,7 @@ export function reconcileAppliedGlobalConnection(
 
   const kind: ConnectionKind = mode === 'cloud' ? 'cloud' : 'remote'
 
-  const hostLabel = hostLabelFromBaseUrl(url) || (kind === 'cloud' ? 'Hermes Cloud' : 'Remote gateway')
+  const hostLabel = hostLabelFromBaseUrl(url) || (kind === 'cloud' ? 'Kitsune Cloud' : 'Remote gateway')
   const name = kind === 'cloud' ? String(block.name ?? existing?.name ?? '').trim() : ''
 
   const label =

@@ -188,7 +188,7 @@ def _display_name(name: str, profile_dir: Path, names: Collection[str]) -> str:
     return next((n for n in _friendly_names(profile_dir) if n), None) or _handle(name, names)
 
 
-# Tokens the Desktop mention parser reserves; a bot titled "Hermes" never hijacks @hermes.
+# Tokens the Desktop mention parser reserves; a bot titled "Kitsune" never hijacks @hermes.
 _RESERVED_ALIASES = frozenset({"all", "everyone", "user", "default", "hermes"})
 
 
@@ -298,7 +298,7 @@ def _build_section(home: Path) -> str:
 
     return (
         f"{_PROTOCOL_HEADING}\n"
-        "This install runs Bot Mode: each Hermes profile is an agent teammate with "
+        "This install runs Bot Mode: each Kitsune profile is an agent teammate with "
         'one canonical "Bot Chat" conversation, and you have the `message_agent` '
         "tool to DM any of them. It is FIRE-AND-FORGET: it delivers your message "
         "with your attribution prefixed automatically and returns an acknowledgement "

@@ -13,7 +13,7 @@ platforms:
   - macos
   - windows
 known_issues:
-  - The contributed CLI requires Hermes plugin isolation mode in_process; managed host isolation skips CLI contributions.
+  - The contributed CLI requires Kitsune plugin isolation mode in_process; managed host isolation skips CLI contributions.
 capabilities:
   provides_tools:
     - skill_layers_list

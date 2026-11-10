@@ -126,7 +126,7 @@ def test_apply_pricing_window_plan_drops_prices_and_stamps_plan_usage(monkeypatc
     assert "pricing" not in rows[0]
     assert rows[0]["plan_usage"]["kind"] == "usage_window"
     assert rows[0]["plan_usage"]["plan"] == "Window Plan"
-    # The gateway's word, passed through; no prices and no Hermes-side bands.
+    # The gateway's word, passed through; no prices and no Kitsune-side bands.
     assert rows[0]["usage_levels"] == {"a/m": "medium"}
     assert "cost_intensity" not in rows[0]
 

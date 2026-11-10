@@ -134,7 +134,7 @@ class TestParser:
         assert parse_credits_headers({**h, "x-nous-credits-window-gauges": json.dumps(top_only)}) is None
 
     def test_the_server_list_decides_which_allowances_exist(self):
-        """A new allowance (here a 5-hour window) parses and binds with no Hermes release; an entry with an
+        """A new allowance (here a 5-hour window) parses and binds with no Kitsune release; an entry with an
         unknown scope, a repeated id or a bad percent is dropped, never misread."""
         gauges = [{"id": "five_hour", "scope": "all", "label": "Next 5 hours", "used_bp": 10_000,
                    "resets_at_ms": NOW_MS + 3600_000},
@@ -655,7 +655,7 @@ _PLAN_STATES = {
     "healthy": lambda: _plan_state(1_200, 900, source="included"),  # 12% today → no notice
     "75pct": lambda: _plan_state(7_600, 4_000, source="included"),  # 75%: quiet (no band on a window plan)
     "week_90pct": lambda: _plan_state(3_000, 9_100, source="included"),  # the week's 90% heads-up
-    # window used up, $5.00 top-up but top-up for Hermes turned off → the stop names the setting
+    # window used up, $5.00 top-up but top-up for Kitsune turned off → the stop names the setting
     "keep_going_off": lambda: _plan_state(10_000, 6_000, purchased="5.00", keep_going=False),
     "keep_going_off_no_balance": lambda: _plan_state(10_000, 6_000, keep_going=False),
     # window used up, $5.00 top-up → PAYG one-shot
@@ -682,7 +682,7 @@ class TestPlanStates:
         ("top_tier_blocked", [CREDITS_WINDOW_LIMIT_KEY], "You've hit your monthly large-model limit · resets"),
         ("top_tier_blocked_autotopup", [CREDITS_WINDOW_LIMIT_KEY], "auto top-up is on"),
         ("exhausted", [CREDITS_WINDOW_LIMIT_KEY], "/topup to add credits"),
-        # A balance, but top-up for Hermes is off: the stop names the account setting, not /topup.
+        # A balance, but top-up for Kitsune is off: the stop names the account setting, not /topup.
         ("keep_going_off", [CREDITS_WINDOW_LIMIT_KEY], "turn on Keep going in /topup"),
         # No balance and the setting off (the default): the gateway refuses either way, so both steps.
         ("keep_going_off_no_balance", [CREDITS_WINDOW_LIMIT_KEY], "add credits and turn on Keep going in /topup"),
@@ -924,7 +924,7 @@ class TestClassifier:
     def test_window_402_is_billing_and_not_retryable(self):
         from agent.error_classifier import FailoverReason, classify_api_error
         c = classify_api_error(self._err(402, "usage_window_and_credits_exhausted",
-                                         "Your included Hermes usage for today is used up and you have no top-up credits. It resets at 18:00."),
+                                         "Your included Kitsune usage for today is used up and you have no top-up credits. It resets at 18:00."),
                                provider="nous", model="example/model-c")
         assert c.reason == FailoverReason.billing and not c.retryable
         assert c.error_context.get("usage_window") is True
@@ -941,7 +941,7 @@ class TestClassifier:
 
     def test_window_402_carries_the_server_wording_when_sent(self):
         from agent.error_classifier import classify_api_error
-        err = self._err(402, "usage_window_and_credits_exhausted", "Your included Hermes usage for today is used up.")
+        err = self._err(402, "usage_window_and_credits_exhausted", "Your included Kitsune usage for today is used up.")
         assert "display_message" not in classify_api_error(err, provider="nous", model="m").error_context
         err.body = {"status": 402, "code": "usage_window_and_credits_exhausted", "message": "m",
                     "display_message": "Daily limit hit. Back at 4pm."}
@@ -1167,7 +1167,7 @@ class TestPicker:
             "paid_service_access": {"allowed": True},
             "usage_window": {"gauges": _gauges(1200, 900), "auto_top_up_enabled": False,
                              "paused_reason": "payment_past_due",
-                             # The fixed per-window fields older clients read: Hermes ignores them.
+                             # The fixed per-window fields older clients read: Kitsune ignores them.
                              "day_used_bp": 9999, "week_used_bp": 9999},
         }
         info = na._info_from_account_payload(payload, state={}, portal_base_url=None)
@@ -1270,7 +1270,7 @@ class TestRefusalReadsAsTheStopLine:
 
     def test_the_server_wording_replaces_the_stop_line_when_sent(self):
         """``display_message`` on the 402: shown verbatim (a reword ships with the API); the retry clock
-        still comes from the gauges. Absent: Hermes's own stop line, as above."""
+        still comes from the gauges. Absent: Kitsune's own stop line, as above."""
         from agent.conversation_loop import _usage_window_refusal
         agent = self._agent()
         server = SimpleNamespace(error_context={"usage_window": True, "display_message": "  Daily limit hit. Back at 4pm.  "})
@@ -1288,8 +1288,8 @@ class TestRefusalReadsAsTheStopLine:
         quiet = SimpleNamespace(_credits_state=_state(), _credits_latch=new_credits_latch(), model="example/model-b",
                                 base_url="https://inference-api.nousresearch.com/v1")
         refused = SimpleNamespace(error_context={"usage_window": True},
-                                  message="Your included Hermes usage for this week is used up.")
-        assert _usage_window_refusal(quiet, refused)[0] == "Your included Hermes usage for this week is used up."
+                                  message="Your included Kitsune usage for this week is used up.")
+        assert _usage_window_refusal(quiet, refused)[0] == "Your included Kitsune usage for this week is used up."
         assert _usage_window_refusal(quiet, SimpleNamespace(error_context={"usage_window": True}))[0] == ""
 
     def test_the_refusal_names_the_plans_recommended_model(self, monkeypatch):

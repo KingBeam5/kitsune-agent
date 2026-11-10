@@ -5,7 +5,7 @@ subdir: ""
 version: "0.2.0"
 title: Learning Workbench
 description: >-
-  Study with Hermes in a Desktop pane: a short diagnosis, a route of 2–7 steps you can rename or
+  Study with Kitsune in a Desktop pane: a short diagnosis, a route of 2–7 steps you can rename or
   skip, then one lesson and exercise at a time, answered in your own words. The plugin keeps the
   record honest: answer keys, rubrics and hints are frozen before you answer, only you can submit
   an attempt (the agent's six tools propose and read), every check must quote your words and the

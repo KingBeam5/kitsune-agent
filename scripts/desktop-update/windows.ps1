@@ -22,7 +22,7 @@
 #     -InstallRoot <path>   repo checkout (HERMES_HOME\hermes-agent)
 #     [-Branch <ref> | -Channel stable|canary|main]  default: branch main
 #     -DesktopPid <pid>     the Electron main process to wait out
-#     [-RelaunchExe <path>] Hermes.exe to start when done (omit = no relaunch)
+#     [-RelaunchExe <path>] Kitsune.exe to start when done (omit = no relaunch)
 #     [-NoUi]               headless (tests); default shows a progress window
 #     [-NoMarkerCleanup]    leave .hermes-update-in-progress in place (tests)
 #     [-ProbeTimeoutSeconds <n>] launcher probe bound, default 60 (tests)
@@ -214,7 +214,7 @@ if (-not $SelfTestUi -and -not $SelfTestPipeDrain -and -not $SelfTestLogConcurre
 # unless we explicitly claim focus --
 # and after the update we must hand focus TO the relaunched Desktop (a
 # WMI-spawned process starts unfocused). AllowSetForegroundWindow lets us
-# pass our foreground right on to the new Hermes.exe pid.
+# pass our foreground right on to the new Kitsune.exe pid.
 try {
     Add-Type -Namespace HermesHandoff -Name Win32 -MemberDefinition @'
 [DllImport("user32.dll")] public static extern bool SetForegroundWindow(System.IntPtr hWnd);
@@ -268,7 +268,7 @@ try {
     $OutputEncoding = [System.Text.Encoding]::UTF8
 } catch {}
 $script:Ui = $null
-$script:UiStage = "Hermes will open once done."   # until the first gate; matches ui.html
+$script:UiStage = "Kitsune will open once done."   # until the first gate; matches ui.html
 $script:UiStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 # ── The shim: repo-owned HTML in a chromeless default-browser app window ───
@@ -602,7 +602,7 @@ function Show-ProgressWindow {
             $mute = [System.Drawing.ColorTranslator]::FromHtml("#A8A8A8")
         }
         $form = New-Object System.Windows.Forms.Form
-        $form.Text = "Hermes"
+        $form.Text = "Kitsune"
         $form.FormBorderStyle = "FixedSingle"
         $form.MaximizeBox = $false
         $form.MinimizeBox = $false
@@ -616,7 +616,7 @@ function Show-ProgressWindow {
         $bar.MarqueeAnimationSpeed = 30
         $bar.SetBounds(60, 128, 160, 8)
         $title = New-Object System.Windows.Forms.Label
-        $title.Text = "Updating Hermes"
+        $title.Text = "Updating Kitsune"
         $title.Font = New-Object System.Drawing.Font("Segoe UI Semibold", 12)
         $title.ForeColor = $fore
         $title.TextAlign = "MiddleCenter"
@@ -704,7 +704,7 @@ function Show-ManualFinale([string]$Message) {
     # shape as the error finale, success glyph semantics: the shim renders
     # `manual` itself; the WinForms card swaps its copy. Held so the user
     # actually sees the instruction — this window is the only surface until
-    # they reopen Hermes themselves.
+    # they reopen Kitsune themselves.
     if ($script:UiServer) {
         Publish-UiEvent "manual" $Message
         Stop-UiServer -LeaveWindow
@@ -856,7 +856,7 @@ function Start-DesktopRelaunch {
     # — the sibling truth contract to posix.sh's launch acceptance.
     if (-not $RelaunchExe) { return $false }
     # electron-builder replaces win-unpacked in place. After a successful
-    # update it can remove the old Hermes.exe before writing the replacement,
+    # update it can remove the old Kitsune.exe before writing the replacement,
     # so a one-shot existence check races the rebuild and strands the user.
     $relaunchDeadline = (Get-Date).AddSeconds(120)
     while (-not (Test-Path -LiteralPath $RelaunchExe)) {
@@ -868,7 +868,7 @@ function Start-DesktopRelaunch {
         if ($script:Ui) { [System.Windows.Forms.Application]::DoEvents() }
     }
     Write-HandoffLog "relaunching desktop: $RelaunchExe"
-    # DO NOT spawn Hermes.exe as our child: Electron/Chromium calls
+    # DO NOT spawn Kitsune.exe as our child: Electron/Chromium calls
     # AttachConsole(ATTACH_PARENT_PROCESS) at boot, so a Desktop launched
     # directly from this console PowerShell latches onto OUR console --
     # the console window then outlives the script (it can't close while
@@ -934,7 +934,7 @@ function Start-DesktopRelaunch {
         # window can't close while the app lives. Explorer re-parents the
         # target exactly like a normal shell launch, giving the same
         # no-console detachment WMI would have. Explorer returns no pid, so
-        # verify by watching for a fresh Hermes process.
+        # verify by watching for a fresh Kitsune process.
         try {
             $exeName = [System.IO.Path]::GetFileNameWithoutExtension($RelaunchExe)
             $before = @(Get-Process -Name $exeName -ErrorAction SilentlyContinue | ForEach-Object { $_.Id })
@@ -1136,7 +1136,7 @@ function Invoke-HermesStep([string]$Exe, [string[]]$HermesArgs, [string]$Tag) {
     # .hermes-update-result.json, clearing .hermes-update-in-progress,
     # relaunching the Desktop. One resident grandchild holding an inherited
     # handle used to strand all three and leave the Desktop on "Updating
-    # Hermes" until the user killed something by hand. Losing the tail of a
+    # Kitsune" until the user killed something by hand. Losing the tail of a
     # log is the strictly better failure.
     # System.Diagnostics.Process directly: Start-Process's .ExitCode is
     # unreliably $null under PS 5.1 even with the Handle-touch workaround.
@@ -1399,7 +1399,7 @@ if ($SelfTestUi) {
 }
 
 # -SelfTestPipeDrain: prove Invoke-HermesStep survives a leaked pipe ------
-# The #90455 deadlock needs no update, no checkout and no Hermes install to
+# The #90455 deadlock needs no update, no checkout and no Kitsune install to
 # reproduce -- only a step whose grandchild outlives it holding the inherited
 # write end of the redirected pipe. That is exactly what this builds, so the
 # fix has an executable proof on Windows instead of a source-grep. Exits
@@ -1697,7 +1697,7 @@ try {
         # (or the Desktop that gave up on this hand-off) reports its own.
         $finalCode = 2
         $blocker = if ($script:MarkerBlocker -gt 0) { " (process $($script:MarkerBlocker))" } else { "" }
-        $finalMsg = "Another Hermes update is already running$blocker, or the Desktop gave up on this hand-off. Nothing was changed."
+        $finalMsg = "Another Kitsune update is already running$blocker, or the Desktop gave up on this hand-off. Nothing was changed."
         Write-HandoffLog $finalMsg
         exit $finalCode
     }
@@ -1762,13 +1762,13 @@ try {
     }
 
     # -- 1. Wait for the Desktop to exit (FAIL CLOSED) ----------------------
-    Publish-UiProgress "Waiting for Hermes to close"
+    Publish-UiProgress "Waiting for Kitsune to close"
     if ($DesktopPid -gt 0) {
         # Identity, not pid: the Desktop's creation time was pinned at start.
         if (-not (Wait-DesktopExit $script:DesktopExitSeconds)) {
             # The running Desktop still owns application outputs being replaced.
             $finalCode = 4
-            $finalMsg = "Update aborted: the Hermes window (pid $DesktopPid) did not exit within $($script:DesktopExitSeconds)s. Nothing was changed. Close Hermes fully and try again."
+            $finalMsg = "Update aborted: the Kitsune window (pid $DesktopPid) did not exit within $($script:DesktopExitSeconds)s. Nothing was changed. Close Kitsune fully and try again."
             Write-HandoffLog $finalMsg
             exit $finalCode
         }
@@ -1797,7 +1797,7 @@ try {
     # --keep-stash: never re-apply local source edits after the update (they
     # stay parked in git stash). Probe --help first: the flag ships with newer
     # backends and an unknown flag would abort argparse with exit 2, which
-    # collides with the "close all Hermes windows" sentinel.
+    # collides with the "close all Kitsune windows" sentinel.
     try {
         $helpProbe = Invoke-HermesProbe $pythonExe (@($runtimeArgs) + @('update', '--help'))
         if ($helpProbe.TimedOut) {
@@ -1889,9 +1889,9 @@ try {
 
     # Contract C3: a Desktop build that failed after the code committed is an owed follow-up
     # (exit 0); the CLI prints one whole "Desktop app build owed:" line for it. The user is on
-    # the new Hermes but this app was not rebuilt: a manual outcome, never plain success.
+    # the new Kitsune but this app was not rebuilt: a manual outcome, never plain success.
     if (-not $desktopBuildFailed -and $res.Output -match '(?m)^\s*Desktop app build owed: ') {
-        # #101789: a program that is not part of Hermes (an IME cloud helper, an AV
+        # #101789: a program that is not part of Kitsune (an IME cloud helper, an AV
         # component) has its working folder inside release\ and Windows refuses the swap.
         # hermes_cli/desktop_release_holders.py names each one on its own line; the
         # relaunched Desktop offers to close exactly those and retry, never silently.
@@ -1906,7 +1906,7 @@ try {
             $holderNames = (@($script:ReleaseHolders) | ForEach-Object { "$($_.name) (pid $($_.pid))" }) -join ', '
             # A holder with no readable program path cannot be closed from the Desktop dialog.
             $closeOffer = if (@($script:ReleaseHolders | Where-Object { $_.exe }).Count -gt 0) { 'Close it and update again, or choose to close it below.' } else { 'Close it yourself (Task Manager) and update again.' }
-            Add-Followup "build: the Desktop app folder is in use by $holderNames" "the Desktop app could not be replaced because $holderNames is using its folder. It is not part of Hermes, so it was left running. $closeOffer" -Manual
+            Add-Followup "build: the Desktop app folder is in use by $holderNames" "the Desktop app could not be replaced because $holderNames is using its folder. It is not part of Kitsune, so it was left running. $closeOffer" -Manual
         } else {
             Add-Followup "build: the Desktop app build is owed by the committed update" "the Desktop app could not be rebuilt, so it still runs its old build. Run 'hermes desktop --force-build' in a terminal to rebuild it; the update log has the build error." -Manual
         }
@@ -1940,7 +1940,7 @@ try {
             $verifyFailure = $_.Exception.Message
         }
         if ($verifyFailure) {
-            Add-Followup "verify: $verifyFailure" "the new Desktop build could not be verified. Nothing was removed. If Hermes does not start normally, run 'hermes desktop --force-build' in a terminal to rebuild it." -Manual
+            Add-Followup "verify: $verifyFailure" "the new Desktop build could not be verified. Nothing was removed. If Kitsune does not start normally, run 'hermes desktop --force-build' in a terminal to rebuild it." -Manual
         }
     }
 
@@ -1992,7 +1992,7 @@ try {
     #   1. durable result + marker removal (the relaunched Desktop consumes
     #      the result on boot and must not park on our marker);
     #   2. attempt the relaunch and require ACCEPTANCE;
-    #   3. only then the terminal UI state — done means "Hermes is back",
+    #   3. only then the terminal UI state — done means "Kitsune is back",
     #      manual means "it is not, reopen it", error is error (and still
     #      tries to bring the app back after showing itself).
     if ($script:MarkerClaim -eq "refused") {
@@ -2007,14 +2007,14 @@ try {
         if ($script:Committed) {
             # C3: the update landed; only a follow-up step outlived its cancellation.
             $finalCode = 0
-            Add-Followup "follow-up processes could not be stopped" "a follow-up step's processes could not be stopped, so Hermes was not reopened. Reopen Hermes once they finish, or restart Windows first." -Manual
-            $finalMsg = "Hermes was updated, but " + ($script:FollowupText -join " Also, ")
+            Add-Followup "follow-up processes could not be stopped" "a follow-up step's processes could not be stopped, so Kitsune was not reopened. Reopen Kitsune once they finish, or restart Windows first." -Manual
+            $finalMsg = "Kitsune was updated, but " + ($script:FollowupText -join " Also, ")
             Write-Result $true $finalCode $finalMsg $true
             Write-HandoffLog $finalMsg
             Show-ManualFinale $finalMsg
         } else {
             $finalCode = 7
-            $finalMsg = "Update recovery could not stop every updater process. Hermes was not restarted to avoid overlapping the active install. Wait for it to finish or restart Windows, then reopen Hermes."
+            $finalMsg = "Update recovery could not stop every updater process. Kitsune was not restarted to avoid overlapping the active install. Wait for it to finish or restart Windows, then reopen Kitsune."
             Write-Result $false $finalCode $finalMsg
             Write-HandoffLog $finalMsg
             Show-ErrorFinale $finalMsg
@@ -2022,7 +2022,7 @@ try {
         Close-ProgressWindow
     } else {
         if ($finalCode -eq 0 -and $script:FollowupText.Count -gt 0) {
-            $finalMsg = "Hermes was updated, but " + ($script:FollowupText -join " Also, ")
+            $finalMsg = "Kitsune was updated, but " + ($script:FollowupText -join " Also, ")
         }
         $manualAction = $finalCode -eq 0 -and $script:ManualFollowup
         Write-Result ($finalCode -eq 0) $finalCode $finalMsg $manualAction
@@ -2044,12 +2044,12 @@ try {
                 [void](Start-DesktopRelaunch)
             }
         } else {
-            Publish-UiProgress "Opening Hermes"
+            Publish-UiProgress "Opening Kitsune"
             $cameBack = Start-DesktopRelaunch
             if (-not $cameBack -and $RelaunchExe) {
                 # Launch was due and did not verifiably land: truthful result
                 # for the next boot, manual state held on screen now.
-                $finalMsg = "Update complete. Reopen Hermes to finish (it could not restart itself)."
+                $finalMsg = "Update complete. Reopen Kitsune to finish (it could not restart itself)."
                 Write-Result $true 0 $finalMsg $true
                 Show-ManualFinale $finalMsg
             }

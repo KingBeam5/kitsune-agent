@@ -1,7 +1,7 @@
 """`hermes sessions adopt` brings a profile's pre-gateway chats under its gateway, as the host.
 
 The Webapp's browser reaches the gateway through its dashboard mount as the login it authenticated
-(on a loopback bind, the session-token owner). Hermes is single-user, so that login is the machine
+(on a loopback bind, the session-token owner). Kitsune is single-user, so that login is the machine
 owner: like native Desktop it may claim an old chat by opening it, and `adopt` brings the rest under
 the gateway in one pass, after which the browser login continues each.
 """

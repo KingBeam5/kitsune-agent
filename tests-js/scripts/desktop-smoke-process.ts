@@ -94,7 +94,7 @@ export function reusedDesktopBuildCommit(root: string, origin: 'source' | 'bundl
 const bundleEnvSchema = z.record(z.string(), z.string().nullable())
 
 /** The baked runtime defaults/clears of a bundled artifact, recorded in the
- * install stamp so the smoke driver can predict the app's resolved Hermes home
+ * install stamp so the smoke driver can predict the app's resolved Kitsune home
  * without reimplementing the banner. Absent for artifacts built before the
  * stamp carried it, and for source checkpoints. */
 export function readBundledBundleEnv(root: string): Record<string, string | null> | undefined {

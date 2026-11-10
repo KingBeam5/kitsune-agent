@@ -1,13 +1,13 @@
 """Process identity: spawn tags, the machine-wide spawn ledger, the Windows job-object self-attach,
 and the POSIX owner-death supervisor.
 
-Four layers make every long-lived Hermes process positively identifiable, so reapers (``hermes
+Four layers make every long-lived Kitsune process positively identifiable, so reapers (``hermes
 update``, Desktop startup sweeps) never guess lineage from PPID archaeology or cmdline matching,
-and make every long-lived CHILD die with the Hermes process that owns it:
+and make every long-lived CHILD die with the Kitsune process that owns it:
 1. spawn tags (``HERMES_SPAWN`` env stamped by the spawner); 2. a ``(pid, create_time)`` ledger;
 3. Windows job-object self-attach with ``KILL_ON_JOB_CLOSE`` so the whole child tree dies with the
 root — no launcher→worker chains left holding ``.pyd`` locks; 4. on POSIX, one supervisor per
-Hermes process that reaps the owned children's process groups the moment Hermes dies.
+Kitsune process that reaps the owned children's process groups the moment Kitsune dies.
 """
 
 from __future__ import annotations
@@ -212,8 +212,8 @@ def parse_spawn_tag(raw: object) -> Optional[SpawnTag]:
 def spawned_by_this_process(pid: int) -> bool:
     """True when ``pid`` carries a spawn tag naming THIS process (pid and create time).
 
-    A shared daemon (one session or pid file every Hermes of this user can reach) is owned only by
-    the Hermes whose command actually started it: the CLI it ran was given ``spawn_env`` and the
+    A shared daemon (one session or pid file every Kitsune of this user can reach) is owned only by
+    the Kitsune whose command actually started it: the CLI it ran was given ``spawn_env`` and the
     daemon inherited it. A pid file proves what a process is, not who started it. Fails closed:
     an unreadable environment (another user, a race) is not ours."""
     import psutil
@@ -467,7 +467,7 @@ def _append_entry(entry: LedgerEntry) -> bool:
     """Prune dead entries and append ``entry`` — the ONLY ledger write path.
 
     Serialized under ``_LEDGER_LOCK`` and, across processes, an exclusive lock on a sidecar file
-    (every ``spawn_owned`` writes here, so concurrent Hermes processes otherwise dropped each
+    (every ``spawn_owned`` writes here, so concurrent Kitsune processes otherwise dropped each
     other's rows), with an atomic tmp+replace; no writer touches the file outside this function.
 
     See #91660.
@@ -480,12 +480,12 @@ def _append_entry(entry: LedgerEntry) -> bool:
             held.enter_context(_FileLock(path.with_name(path.name + ".lock"), timeout=_LEDGER_LOCK_TIMEOUT_S))
         except (RuntimeError, OSError):
             # Best-effort like the write itself: the thread lock is then the only guard, so a row another
-            # Hermes process writes meanwhile can be lost. Say so once where it shows (agent.log).
+            # Kitsune process writes meanwhile can be lost. Say so once where it shows (agent.log).
             global _ledger_lock_warned
             if not _ledger_lock_warned:
                 _ledger_lock_warned = True
                 logger.warning("spawn ledger lock unavailable (a stalled holder, or no file locks here); writing "
-                               "without it, so concurrent Hermes processes may drop each other's rows")
+                               "without it, so concurrent Kitsune processes may drop each other's rows")
             logger.debug("spawn ledger lock unavailable", exc_info=True)
         entries = _read_ledger_or_quarantine(path) or []
         # Drop malformed entries, our own stale entry, and provably dead pids.
@@ -512,7 +512,7 @@ def register_child(pid: int, purpose: str, *, project_root: Optional[Path] = Non
     """Record a CHILD process this process just spawned. Best-effort.
 
     Mirror of :func:`register_self` for children that cannot register themselves (stdio MCP
-    helpers: arbitrary ``npx``/binary servers never import Hermes code). Records the child's
+    helpers: arbitrary ``npx``/binary servers never import Kitsune code). Records the child's
     ``(pid, create_time)`` with THIS process as spawner, so a helper whose spawner is provably gone
     is a reapable orphan and one whose spawner is alive is never reaped.
     """
@@ -819,7 +819,7 @@ def attach_self_to_kill_on_close_job() -> bool:
 # its long-lived children reparent to init or the nearest subreaper (systemd --user) and run
 # forever; macOS has no PR_SET_PDEATHSIG, and on Linux it fires when the spawning THREAD exits,
 # which kills children spawned from short-lived worker threads while the owner is alive. So ONE
-# supervisor per Hermes process (``process_supervisor.sh``) holds the read end of a pipe whose only
+# supervisor per Kitsune process (``process_supervisor.sh``) holds the read end of a pipe whose only
 # write end we hold: EOF means we died, by any cause, and it killpg()s every group still registered.
 # A registered group that was never unregistered IS the orphan set, so a clean exit that stopped its
 # children first ends with nothing to kill, and one that didn't takes them along.

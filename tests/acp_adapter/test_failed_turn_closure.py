@@ -157,7 +157,7 @@ def test_acp_refusal_never_poisons_the_next_prompt(acp):
     Invariant: a safety-filter refusal is deterministic for the unchanged conversation (the filter
     judges the whole thread), so the refused turn is dropped from the live history and never rides
     into the next prompt. Otherwise every later message re-refuses and the chat locks up (the
-    "Hermes Bot stuck sessions" report). The refusal still reaches the client live; transient
+    "Kitsune Bot stuck sessions" report). The refusal still reaches the client live; transient
     failures keep their close-and-replay path (the server_error / rate_limit / timeout tests below),
     which this does not touch.
     """

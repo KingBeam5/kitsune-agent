@@ -399,7 +399,7 @@ class TestS6ContainerGatewayRun:
 
 
 def test_module_entry_keeps_an_explicit_default_profile_over_the_sticky_one(tmp_path):
-    """`python -m hermes_cli.main --profile default` (how Hermes spawns its own CLI) stays on the root
+    """`python -m hermes_cli.main --profile default` (how Kitsune spawns its own CLI) stays on the root
     home while active_profile names another profile: a second import of the module must not re-read
     the stripped argv and fall to the sticky profile."""
     import subprocess

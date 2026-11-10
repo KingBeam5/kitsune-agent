@@ -3,7 +3,7 @@
 pnpm reads an npmrc only for its registry and auth; npm also exported every other key to
 install scripts as ``npm_config_<key>``, which is how node-pre-gyp finds a binary mirror.
 ``source_build_env`` keeps that bridge. It must read the npmrc npm would read (an explicit
-``NPM_CONFIG_USERCONFIG``, else Hermes's own, else ``~/.npmrc``), and decode quoted values as
+``NPM_CONFIG_USERCONFIG``, else Kitsune's own, else ``~/.npmrc``), and decode quoted values as
 npm does: a quoted ``registry=`` exported with its quotes is a malformed URL that breaks every
 install.
 """

@@ -1,6 +1,6 @@
 """Plugin survival + upgrade contracts (mnemosyne-oss/mnemosyne#859).
 
-Hermes-side contracts an external memory-provider wrapper can hold us to,
+Kitsune-side contracts an external memory-provider wrapper can hold us to,
 exercised through PUBLIC paths (no source inspection, no network — uv
 resolves offline local path-source fixtures):
 
@@ -608,7 +608,7 @@ def test_plugin_requiring_a_newer_hermes_sits_out_until_hermes_fits(admission_en
                                                                     dependencies, chosen, extras):
     """PM supplies hermes-agent itself, so a plugin's requirement on it is judged the way
     requires_hermes is: the misfit sits out of the build with config untouched (a plain sync
-    and an update both succeed), and it rejoins once the running Hermes fits, although no
+    and an update both succeed), and it rejoins once the running Kitsune fits, although no
     dependency input changed."""
     from pm.environments import runtime_facts_path
     from pm.install import sync_venv, venv_is_current
@@ -655,7 +655,7 @@ def test_plugin_requiring_a_newer_hermes_sits_out_until_hermes_fits(admission_en
 @pytest.mark.parametrize("enabled_before", [[], ["needs-newer"]], ids=["enabling-it", "enabled-before"])
 def test_only_enabling_a_plugin_that_requires_a_newer_hermes_is_refused(admission_env, monkeypatch,
                                                                          enabled_before):
-    """Admission refuses enabling a plugin whose sole declared dependency is a Hermes it is not,
+    """Admission refuses enabling a plugin whose sole declared dependency is a Kitsune it is not,
     as it refuses a failing requires_hermes, although it installs nothing and is no workspace
     member. One enabled before sits out as the build leaves it out, so enabling another plugin
     beside it is admitted."""

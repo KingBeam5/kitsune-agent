@@ -4,7 +4,7 @@ repo: https://github.com/justrunme/hermes-airlock-plugin
 sha: a35cf831045450e4f207a6843e2cbf912151236c
 subdir: ""
 description: >-
-  Terminal backend that routes Hermes command execution through an operator-chosen
+  Terminal backend that routes Kitsune command execution through an operator-chosen
   Airlock HTTPS API and disposable sandbox, then surfaces receipts (RFC 8785 JCS,
   SHA-256, Ed25519) as BLOCKED / ALLOWED / VERIFIED
   (`hermes config set terminal.backend airlock_sandbox`). Requires an explicit
@@ -15,8 +15,8 @@ description: >-
   not prove command text and does not verify full receipt-chain linkage (`prev_hash`
   is informational). Disclosure — HTTPS calls to the configured origin only
   (`/healthz`, `/api/arena`, `/api/receipt/{id}`); optional secret
-  `AIRLOCK_API_TOKEN` via Hermes secret scope; no host shell of its own (commands
-  run only inside Airlock when policy allows). Hermes dangerous-command approvals
+  `AIRLOCK_API_TOKEN` via Kitsune secret scope; no host shell of its own (commands
+  run only inside Airlock when policy allows). Kitsune dangerous-command approvals
   are not bypassed. File-tool stdin pipes and non-default cwd are refused (Airlock
   arena has neither process-stdin nor cwd).
 maintainer: justrunme

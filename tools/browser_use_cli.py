@@ -1,5 +1,5 @@
 """``browser_exec``: drive a real browser through the Browser Use CLI engine (browser-harness,
-https://browser-use.com), Hermes' only core browser tool.
+https://browser-use.com), Kitsune' only core browser tool.
 
 The harness speaks CDP to whatever ``tools.browser_session`` resolved for the call: an operator
 ``BU_CDP_*`` endpoint, a ``/browser connect`` override, a cloud provider's session, or a local browser
@@ -184,7 +184,7 @@ def _base_subprocess_env() -> dict:
     from tools.browser_session import build_browser_env
     env = build_browser_env()
     env.update(_harness_credentials())
-    # The harness runs on Hermes's own interpreter, but a bundled Desktop install boots that
+    # The harness runs on Kitsune's own interpreter, but a bundled Desktop install boots that
     # interpreter with its site dir on PYTHONPATH (no venv to activate), and the harness's daemon
     # re-runs sys.executable. Point PYTHONPATH at the harness's site dir, replacing whatever the
     # agent process inherited, so both the CLI and its daemon import the same packages.
@@ -250,14 +250,14 @@ def is_legacy_browser_use_cloud_config(browser_cfg: dict) -> bool:
 
 
 def _browser_use_api_key_set() -> bool:
-    """BROWSER_USE_API_KEY for the served profile: the only credential Hermes autospawns BU cloud with.
+    """BROWSER_USE_API_KEY for the served profile: the only credential Kitsune autospawns BU cloud with.
     Profile-scoped so a multiplexed secondary never inherits the default's cloud mode."""
     from agent.secret_scope import get_secret
     return bool(get_secret("BROWSER_USE_API_KEY", ""))
 
 
 def _harness_site_dir() -> Optional[str]:
-    """The site dir Hermes's interpreter imports ``browser_harness`` from, or None."""
+    """The site dir Kitsune's interpreter imports ``browser_harness`` from, or None."""
     spec = importlib.util.find_spec("browser_harness")
     if spec is None or not spec.origin:
         return None
@@ -265,7 +265,7 @@ def _harness_site_dir() -> Optional[str]:
 
 
 def _find_cli() -> Optional[list[str]]:
-    """The Browser Use CLI's engine (browser-harness) is a core dependency of Hermes's own venv,
+    """The Browser Use CLI's engine (browser-harness) is a core dependency of Kitsune's own venv,
     so every install, the Desktop bundle included, runs it on the current interpreter."""
     if _harness_site_dir() is None:
         return None
@@ -403,7 +403,7 @@ def _resolve_backend_cdp(env: dict, task_id: Optional[str], session_name: str = 
     Precedence: (1) ``BU_CDP_WS``/``BU_CDP_URL`` already in env (operator override); (2) ``BROWSER_CDP_URL``
     env / ``browser.cdp_url`` (``/browser connect``); (3) a cloud provider via ``browser_session.get_session_info``
     (per-key cache, expiry, reaper, atexit; a provider failure falls back to a local browser);
-    (4) the local engine — ``browser.engine: lightpanda`` or Hermes' packaged Chromium via the launcher
+    (4) the local engine — ``browser.engine: lightpanda`` or Kitsune' packaged Chromium via the launcher
     (never the harness's own discovery of the user's installed Chrome); (5) BU direct-API configs WITH
     ``BROWSER_USE_API_KEY`` → None (checked before (3)): the CLI reaches BU cloud natively (BU_AUTOSPAWN); a
     keyless ``browser-use`` provider (managed-gateway autodetect, or a selection missing its key) takes (3).
@@ -650,7 +650,7 @@ def _published_daemon_pid(env: dict) -> Optional[int]:
 def _own_harness_daemon_until_owned(env: dict) -> Optional[bool]:
     """Periodic check while browser_exec runs: own the daemon as soon as it publishes its pid, then
     stop (False). It also stops once the daemon can never be ours (Windows, a managed worker, a daemon
-    another Hermes started), instead of re-checking every tick for the whole call."""
+    another Kitsune started), instead of re-checking every tick for the whole call."""
     return None if _own_harness_daemon(env) is None else False
 
 
@@ -671,7 +671,7 @@ def _reload_daemons(daemons) -> None:  # each ``daemon_identity`` daemon, with i
 # Daemon identity (``daemon_identity``: its dirs + BU_NAME) -> process group of the harness daemon this
 # process owns. The harness starts its daemon with start_new_session so it outlives each CLI call (that
 # is how a session persists across browser_exec calls), which also means it outlives a SIGKILLed or
-# OOM-killed Hermes forever (#121095). Its group goes to this process's owner-death supervisor, so it
+# OOM-killed Kitsune forever (#121095). Its group goes to this process's owner-death supervisor, so it
 # dies with us however we die.
 _owned_daemon_groups: dict[tuple[str, ...], int] = {}
 _owned_daemon_groups_lock = threading.Lock()
@@ -683,12 +683,12 @@ def _own_harness_daemon(env: dict) -> Optional[bool]:
     The harness publishes its daemon pid in its runtime dir (``harness_pid_file``: JSON
     ``{"pid", "started"}`` or a bare pid). The daemon is accepted only while it is this user's live
     ``browser_harness.daemon`` leading its own session and its spawn tag names this process, so a
-    stale or planted pid file, or a daemon another Hermes started, never reaches the supervisor.
+    stale or planted pid file, or a daemon another Kitsune started, never reaches the supervisor.
     Runs after every browser_exec (and while a long one runs, until the daemon is owned): a pid
     already owned for this daemon costs one file read.
 
     Returns True once the daemon is owned, False when it can never be (Windows, a managed worker, a
-    daemon another Hermes started), None when there is nothing to own yet."""
+    daemon another Kitsune started), None when there is nothing to own yet."""
     if os.name != "posix":
         return False  # Windows: the harness daemon is outside this process's job; nothing to register.
     from agent.runtime_session_store import is_worker_process
@@ -713,7 +713,7 @@ def _own_harness_daemon(env: dict) -> Optional[bool]:
                 or argv[argv.index("-m") + 1] != "browser_harness.daemon"):
             return None
         if not spawned_by_this_process(pid):
-            return False  # another Hermes on the same BU_NAME started it: that Hermes owns it
+            return False  # another Kitsune on the same BU_NAME started it: that Kitsune owns it
     except (OSError, ValueError, IndexError, psutil.Error) as exc:
         logger.debug("browser_exec: no harness daemon to supervise for %s: %s", daemon[-1], exc)
         return None
@@ -791,7 +791,7 @@ def browser_exec(code: str, session: str = "", timeout_s: int = _DEFAULT_TIMEOUT
 
     cmd = _find_cli()
     if not cmd:
-        return tool_error("browser-harness is missing from Hermes's Python environment. "
+        return tool_error("browser-harness is missing from Kitsune's Python environment. "
                           "Run `hermes update` to re-sync it.")
 
     env = _base_subprocess_env()
@@ -840,7 +840,7 @@ def browser_exec(code: str, session: str = "", timeout_s: int = _DEFAULT_TIMEOUT
             daemon = daemon_identity(env)
             _driven_daemons[daemon] = hermes_home_key()
         # The first call starts the daemon and may run long (navigation, user code): own it as soon as
-        # it publishes its pid, so a Hermes killed mid-call takes it along (the call's end owns it too).
+        # it publishes its pid, so a Kitsune killed mid-call takes it along (the call's end owns it too).
         from agent.periodic_scheduler import schedule
         owning = schedule(lambda: _own_harness_daemon_until_owned(env), _OWN_DURING_CALL_S)
         try:
@@ -977,7 +977,7 @@ def _dynamic_schema_overrides() -> dict:
         props = dict(BROWSER_EXEC_SCHEMA["parameters"]["properties"])
         props["local"] = {
             "type": "boolean", "default": False,
-            "description": ("Drive the user's own local browser (a Hermes-managed copy of their real "
+            "description": ("Drive the user's own local browser (a Kitsune-managed copy of their real "
                             "default-Chromium profile, logins/cookies included) instead of the configured "
                             "cloud browser backend. Use when the user asks to act as themselves — their "
                             "accounts, their sessions. No-op when the backend is already local. Default false."),

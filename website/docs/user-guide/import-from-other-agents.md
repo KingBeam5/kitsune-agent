@@ -1,18 +1,18 @@
 ---
 sidebar_position: 9
 title: "Import from Other Agents"
-description: "One-command import of an OpenClaw (~/.openclaw), Claude Code (~/.claude), OpenAI Codex CLI (~/.codex), Cursor (~/.cursor), Grok Bot or OpenBot setup into Hermes — instructions, rules, allowlists, MCP servers, skills, memories and Grok Bot / OpenBot routines."
+description: "One-command import of an OpenClaw (~/.openclaw), Claude Code (~/.claude), OpenAI Codex CLI (~/.codex), Cursor (~/.cursor), Grok Bot or OpenBot setup into Kitsune — instructions, rules, allowlists, MCP servers, skills, memories and Grok Bot / OpenBot routines."
 ---
 
 # Import from Other Agents
 
-`hermes import-agent` imports your existing **OpenClaw**, **Claude Code**, **OpenAI Codex CLI**, **Cursor**, **Grok Bot** or **OpenBot** setup into Hermes with one command. You always see a per-item plan before anything is written, and `--dry-run` never touches disk.
+`hermes import-agent` imports your existing **OpenClaw**, **Claude Code**, **OpenAI Codex CLI**, **Cursor**, **Grok Bot** or **OpenBot** setup into Kitsune with one command. You always see a per-item plan before anything is written, and `--dry-run` never touches disk.
 
 The command comes from the official **`agent-importers` plugin** from the [plugin catalog](./features/plugins.md), maintained by Nous Research in [NousResearch/hermes-official-plugins](https://github.com/NousResearch/hermes-official-plugins/tree/main/agent-importers).
 
 ## The easy way: `hermes setup`
 
-On a fresh install, `hermes setup` checks for `~/.openclaw` (or legacy `~/.clawdbot` / `~/.moltbot`), `~/.claude`, `~/.codex`, `~/.cursor` and the Grok Bot desktop app (or a `grok-bot-export*` file in `~/Downloads`) and OpenBot before anything else. When it finds one it asks **"Import your setup from Claude Code?"** (naming what it found); with several found you then pick which from a checklist, all checked. Say yes and setup installs the `agent-importers` plugin from the catalog, unless you already have it, and runs the import below for each pick, preview and confirmation included. For OpenClaw it passes `--migrate-secrets`, as Hermes' old built-in OpenClaw step did, so your API keys and bot tokens come over and the provider and messaging sections that follow are already filled in. If you then pick Quick Setup and the import brought a model along with its key, setup asks whether to keep that model (the default) or switch to Nous Portal. Say no, or have none of these folders, and nothing is installed. Already set up? Run `hermes migrate` for the same offer, `hermes migrate <agent>` (`openclaw`, `claude-code`, `codex`, `cursor`, `grok-bot`, `openbot`) to import from one agent, installing the plugin when it is missing, or use the commands below.
+On a fresh install, `hermes setup` checks for `~/.openclaw` (or legacy `~/.clawdbot` / `~/.moltbot`), `~/.claude`, `~/.codex`, `~/.cursor` and the Grok Bot desktop app (or a `grok-bot-export*` file in `~/Downloads`) and OpenBot before anything else. When it finds one it asks **"Import your setup from Claude Code?"** (naming what it found); with several found you then pick which from a checklist, all checked. Say yes and setup installs the `agent-importers` plugin from the catalog, unless you already have it, and runs the import below for each pick, preview and confirmation included. For OpenClaw it passes `--migrate-secrets`, as Kitsune' old built-in OpenClaw step did, so your API keys and bot tokens come over and the provider and messaging sections that follow are already filled in. If you then pick Quick Setup and the import brought a model along with its key, setup asks whether to keep that model (the default) or switch to Nous Portal. Say no, or have none of these folders, and nothing is installed. Already set up? Run `hermes migrate` for the same offer, `hermes migrate <agent>` (`openclaw`, `claude-code`, `codex`, `cursor`, `grok-bot`, `openbot`) to import from one agent, installing the plugin when it is missing, or use the commands below.
 
 ## By hand
 
@@ -41,7 +41,7 @@ OpenClaw has its own guide, **[Migrate from OpenClaw](../guides/migrate-from-ope
 
 ### Claude Code (`~/.claude`)
 
-| Claude Code | Hermes |
+| Claude Code | Kitsune |
 |---|---|
 | `CLAUDE.md` (global instructions) | Memory entries in `~/.hermes/memories/MEMORY.md` |
 | `settings.json` → `permissions.allow` (`Bash(...)` rules) | `command_allowlist` in `config.yaml` |
@@ -54,7 +54,7 @@ Claude's `Bash(npm run test:*)` prefix rules become `npm run test*` globs. Non-`
 
 ### Codex CLI (`~/.codex`)
 
-| Codex CLI | Hermes |
+| Codex CLI | Kitsune |
 |---|---|
 | `AGENTS.md` (global instructions) | Memory entries in `~/.hermes/memories/MEMORY.md` |
 | `config.toml` → `[mcp_servers.*]` | `mcp_servers` in `config.yaml` |
@@ -63,7 +63,7 @@ Claude's `Bash(npm run test:*)` prefix rules become `npm run test*` globs. Non-`
 
 ### Cursor (`~/.cursor`)
 
-| Cursor | Hermes |
+| Cursor | Kitsune |
 |---|---|
 | `AGENTS.md` (global instructions) | Memory entries in `~/.hermes/memories/MEMORY.md` |
 | `rules/*.md`, `rules/*.mdc` (User Rules) | Memory entries in `~/.hermes/memories/MEMORY.md` |
@@ -76,13 +76,13 @@ Claude's `Bash(npm run test:*)` prefix rules become `npm run test*` globs. Non-`
 
 Grok Bot keeps your Bots, routines and skills in its cloud account and has no export button, so each Bot exports itself. Run `hermes migrate grok-bot` (or `hermes import-agent grok-bot`): with no export yet it prints a message to paste into a Bot's chat. The Bot writes `grok-bot-export.json` (or replies with one JSON block) without changing anything; download it and run `hermes import-agent grok-bot --source <file>`. Files saved as `~/Downloads/grok-bot-export*` are found without `--source`. Repeat per Bot, into the profile that should own its work (`hermes -p <profile> ...`).
 
-| Grok Bot | Hermes |
+| Grok Bot | Kitsune |
 |---|---|
 | Routine on a schedule | [Cron job](./features/cron.md) `<Bot>: <routine>` with the same schedule, time zone and skills, created **paused** |
 | Routine on an event (Slack, GitHub, email, webhook, ...) | Its instruction and trigger saved to `grok-bot-import/<bot>-event-routines.md` to rebuild |
 | Skills | `skills/grok-bot-imports/<name>/` |
 | What the Bot remembers / facts about you | `memories/MEMORY.md` / `memories/USER.md` |
-| The Bot's role | `SOUL.md` while it still holds Hermes' default, else memory entries |
+| The Bot's role | `SOUL.md` while it still holds Kitsune' default, else memory entries |
 | Apps with a remote MCP URL | `mcp_servers` in `config.yaml` |
 
 Routines arrive paused so they don't run twice while the Grok copy is still on: turn it off in Grok Bot, then `hermes cron resume <id>` (the import prints each id), or pass `--activate-routines`. Point a job's output somewhere with `hermes cron edit <id> --deliver telegram`. An export carrying credential-looking keys is refused, and token-shaped text is redacted.
@@ -99,7 +99,7 @@ Routines arrive paused so they don't run twice while the Grok copy is still on: 
 
 - **Preview first, always.** The command prints the full plan before applying; in non-interactive sessions it stops at the preview unless you pass `--yes`.
 - **Merges, not replaces.** Memory entries are deduplicated against your existing `MEMORY.md`; allowlist/denylist patterns merge with what's already in `config.yaml`.
-- **Conflicts are skipped by default.** An MCP server or skill that already exists in Hermes is reported as a conflict; pass `--overwrite` to replace it.
+- **Conflicts are skipped by default.** An MCP server or skill that already exists in Kitsune is reported as a conflict; pass `--overwrite` to replace it.
 - **Malformed files don't abort the run.** A broken `settings.json` or `config.toml` becomes a per-item error in the report while everything else still imports.
 
 ## Keeping imports in sync
@@ -124,7 +124,7 @@ The manifest is per profile. A profile created with `hermes profile create <name
 
 ## Upgrading from a version with `import-agent` built in
 
-`hermes import-agent` and `hermes claw` used to ship inside Hermes core. The commands, their flags and the `import-sync.json` manifest are unchanged in the plugin:
+`hermes import-agent` and `hermes claw` used to ship inside Kitsune core. The commands, their flags and the `import-sync.json` manifest are unchanged in the plugin:
 
 - **Profiles with a registered sync source** (an `import-sync.json`, which scheduled `--sync` runs read) get the plugin installed automatically by `hermes update`, or on the first start after updating (this honours `security.allow_lazy_installs`). If you later remove it (`hermes plugins remove agent-importers`), it stays removed.
 - **Everyone else** installs it when they next need it: a fresh `hermes setup` that finds one of these agents offers it, and running `hermes import-agent` or `hermes claw` without the plugin prints the install command.

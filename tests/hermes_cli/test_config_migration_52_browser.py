@@ -1,4 +1,4 @@
-"""Config v52: agent-browser and the built-in browser tools left Hermes.
+"""Config v52: agent-browser and the built-in browser tools left Kitsune.
 
 browser.backend is dropped (``off`` gets a one-time notice); AGENT_BROWSER_* from a profile's own
 .env (plus the process env for the launch home only) moves to browser.* keys that are unset or hold the
@@ -96,10 +96,10 @@ def test_boot_migration_shows_the_off_notice_at_the_first_agent_start_once(tmp_p
 
 @pytest.mark.parametrize(("value", "reason"), [
     ("camofox", "Camofox is now the camofox plugin (`hermes plugins install camofox`)"),
-    ("local", "browser_exec launches Hermes's packaged Chromium itself"),
+    ("local", "browser_exec launches Kitsune's packaged Chromium itself"),
     ("browserbase", "a cloud browser is chosen with browser.cloud_provider"),
     ("Browser-Use", "browser_exec (Browser Use mode) is the only browser now"),
-    ("agent-browser", "agent-browser left Hermes"),
+    ("agent-browser", "agent-browser left Kitsune"),
     ("lynx", "browser_exec is the only browser now"),
 ])
 def test_a_removed_backend_value_is_named_with_its_reason(tmp_path, monkeypatch, value, reason):
@@ -177,7 +177,7 @@ def test_unquoted_backend_off_gets_the_notice(tmp_path, monkeypatch, capsys):
 
 
 def test_relative_profile_keeps_the_directory_core_used(tmp_path, monkeypatch):
-    """agent-browser resolved a relative AGENT_BROWSER_PROFILE against Hermes's cwd; browser.user_data_dir
+    """agent-browser resolved a relative AGENT_BROWSER_PROFILE against Kitsune's cwd; browser.user_data_dir
     anchors relative paths at HERMES_HOME, so the migration pins the absolute directory."""
     monkeypatch.setenv("HERMES_HOME", str(tmp_path / "launch"))
     cwd = tmp_path / "work"

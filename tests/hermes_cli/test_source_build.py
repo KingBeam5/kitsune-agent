@@ -255,7 +255,7 @@ def test_preparation_reuses_only_the_exact_completed_workspace_union(source_chec
     assert first[0]["leaked"] is False
     # Updates and builds keep pnpm's default download retries; only a launch lowers them.
     assert "retries" not in first[0]
-    # pnpm's store lives under the Hermes root, never the user's XDG data dir.
+    # pnpm's store lives under the Kitsune root, never the user's XDG data dir.
     assert first[0]["store"] == str(Path(os.environ["HERMES_HOME"]) / "cache/pnpm/store")
     assert (Path(os.environ["HERMES_HOME"]) / "cache/pnpm/store").is_dir()
     assert (root / "ui-tui/node_modules/fixture-dep").exists()

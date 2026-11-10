@@ -1,4 +1,4 @@
-"""Tests for the browser orphan reaper: Chromium launched by a Hermes process that exited without
+"""Tests for the browser orphan reaper: Chromium launched by a Kitsune process that exited without
 cleaning up is found through the launcher's per-profile records and stopped, but only after its
 identity is proven (``tools.browser_launcher.reap_orphaned_browsers``, driven by
 ``browser_session_lifecycle.reap_orphaned_browser_sessions``)."""
@@ -104,7 +104,7 @@ class TestReapOrphanedBrowserSessions:
 
 
 class TestOwnerPidCrossProcess:
-    """Owner-based cross-process safe reaping: concurrent Hermes processes never reap each other's
+    """Owner-based cross-process safe reaping: concurrent Kitsune processes never reap each other's
     browsers, so orphans from crashed processes are reaped without touching live ones."""
 
     def test_alive_owner_is_not_reaped_even_when_untracked(self, records, tmp_path, monkeypatch):

@@ -306,7 +306,7 @@ class SessionTelegramTopicsMixin:
         session_id: str, managed_mode: str = "auto", profile_name: str = "default",
         expected_session_id: Optional[str] = None,
     ) -> bool:
-        """Bind one Telegram DM topic thread to one Hermes session. A session may be linked to
+        """Bind one Telegram DM topic thread to one Kitsune session. A session may be linked to
         only one topic: rebinding the same pair is idempotent; linking the session to a
         different topic raises ValueError. ``expected_session_id`` makes the rebind a
         compare-and-swap: it only replaces a row still naming that id (a concurrent /new or

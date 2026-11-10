@@ -275,7 +275,7 @@ def test_home_from_after_the_split_keeps_browser_exec(tmp_path, monkeypatch, sta
 @pytest.mark.parametrize("config", [None, {"platform_toolsets": _SPLIT_TOOLSETS}], ids=["no-config", "unstamped"])
 def test_an_unversioned_camofox_home_is_converted(tmp_path, monkeypatch, config):
     """Main ran Camofox for a home with no config.yaml (CAMOFOX_URL in .env alone) or an unstamped one, and
-    Hermes always stamps a config.yaml it creates: such a home ran the core feature and is converted."""
+    Kitsune always stamps a config.yaml it creates: such a home ran the core feature and is converted."""
     monkeypatch.setenv("HERMES_HOME", str(tmp_path / "launch"))
     home = _home(tmp_path, env=_SPLIT_ENV, config=config)
     calls = []

@@ -1,4 +1,4 @@
-"""Rewrite the launch files Hermes owns before ``hermes update`` starts any gateway.
+"""Rewrite the launch files Kitsune owns before ``hermes update`` starts any gateway.
 
 A service manager starts a gateway from the definition it holds, so a unit, plist or task script
 left from the previous release starts the new code under the old command line and environment.

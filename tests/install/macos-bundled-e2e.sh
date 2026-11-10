@@ -153,7 +153,7 @@ stage_bundle_inputs() {
 }
 
 # Derive the executable from the bundle's own Info.plist — the product
-# name is NOT assumed to be "Hermes" (packaged name: "Hermes Bundled") and
+# name is NOT assumed to be "Kitsune" (packaged name: "Kitsune Bundled") and
 # nothing is renamed. Returns the absolute binary path.
 derive_app_bin() { # $1: .app path
   local exec_name

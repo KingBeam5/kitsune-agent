@@ -1,4 +1,4 @@
-"""Pyright uses the project environment before the Hermes runtime fallback."""
+"""Pyright uses the project environment before the Kitsune runtime fallback."""
 
 import os
 import subprocess

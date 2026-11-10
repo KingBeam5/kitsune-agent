@@ -378,7 +378,7 @@ describe('installDesktopPluginFromGit', () => {
     'refuses a package named %s on a forced install and deletes nothing',
     async name => {
       // The folder name comes from the package's manifest: `..` would make a forced install replace
-      // the Hermes home that holds desktop-plugins/.
+      // the Kitsune home that holds desktop-plugins/.
       const repo = pluginRepo(name)
       const home = mkdtemp('hermes-home-')
       roots.push(home)

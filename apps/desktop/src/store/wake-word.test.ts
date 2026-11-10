@@ -123,13 +123,13 @@ describe('toggleWakeWord', () => {
 
     await toggleWakeWord(
       requester(() => {
-        throw new Error('Hermes gateway unavailable')
+        throw new Error('Kitsune gateway unavailable')
       })
     )
 
     expect($wakeWord.get()).toMatchObject({
       listening: false,
-      notice: 'Hermes gateway unavailable',
+      notice: 'Kitsune gateway unavailable',
       pending: false
     })
   })

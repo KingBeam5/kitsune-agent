@@ -7,7 +7,7 @@ title: tirith
 description: >-
   Check every terminal command with your installed tirith before it runs: lookalike and homograph
   URLs, pipe-to-shell, obfuscated execution, credential and .env exfiltration, malicious packages and
-  terminal injection. tirith blocks and required policy approvals go to Hermes's approval prompt,
+  terminal injection. tirith blocks and required policy approvals go to Kitsune's approval prompt,
   critical findings are refused, warnings run with the warning added to the result; unattended runs
   follow approvals.*_mode.
   Disclosure — runs the user-installed tirith binary (0.5.0 or later; never downloaded, installed or

@@ -235,7 +235,7 @@ class TestGraceMinutesOverride:
     def test_zero_grace_skips_outright_when_catch_up_is_disabled(
         self, la_profile, cron_store, tmp_path,
     ):
-        """``0`` = never catch up. Hermes still runs a beyond-window miss once by default
+        """``0`` = never catch up. Kitsune still runs a beyond-window miss once by default
         (``cron.catch_up_missed``); with catch-up disabled the zero window is what makes the
         skip, while a job with a wide override still fires."""
         (tmp_path / "config.yaml").write_text(

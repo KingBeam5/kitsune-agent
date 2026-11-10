@@ -1,4 +1,4 @@
-# Self-contained Hermes TUI, compiled by the same recipe as pnpm.
+# Self-contained Kitsune TUI, compiled by the same recipe as pnpm.
 { hermesNpmLib, ... }:
 hermesNpmLib.buildPnpmPackage {
   dirs = [

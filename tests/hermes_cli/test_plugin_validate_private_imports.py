@@ -1,4 +1,4 @@
-"""``hermes plugins validate`` warns (never fails) on imports of private Hermes core modules."""
+"""``hermes plugins validate`` warns (never fails) on imports of private Kitsune core modules."""
 
 from __future__ import annotations
 

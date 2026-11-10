@@ -133,7 +133,7 @@ def test_an_unterminated_line_at_eof_is_never_acted_on():
 
 def test_unsafe_targets_are_rejected_at_registration_time():
     # killpg(0) is our own group and pgid 1 is init; the parent's group is the
-    # Hermes process tree itself. A caller bug must cost one unreaped child, never those.
+    # Kitsune process tree itself. A caller bug must cost one unreaped child, never those.
     assert _terminated_groups("register 0\nregister 1\nregister 777\nregister 999\n", parent_pgid=777) == {999}
 
 
@@ -228,7 +228,7 @@ def test_the_term_grace_holds_even_with_a_broken_path():
 
 
 def test_leaves_an_unregistered_group_alone_at_eof():
-    # The other failure direction, and the more damaging one: a clean Hermes
+    # The other failure direction, and the more damaging one: a clean Kitsune
     # shutdown unregisters as it tears each child down, so EOF must not become
     # a kill-everything event for children that were handed back.
     survivor = subprocess.Popen(_VICTIM, start_new_session=True)
@@ -253,7 +253,7 @@ def test_leaves_an_unregistered_group_alone_at_eof():
         supervisor.wait(timeout=10)
 
 
-# A stand-in for Hermes: registers a real child, then blocks forever holding the
+# A stand-in for Kitsune: registers a real child, then blocks forever holding the
 # only write end of the control pipe. SIGKILLing it is the scenario the whole
 # supervisor exists for -- no cleanup code of ours gets to run.
 _FAKE_PARENT = """
@@ -299,7 +299,7 @@ def test_reaps_the_child_when_the_registering_parent_is_sigkilled(tmp_path):
         parent.wait(timeout=10)
 
         assert _wait_gone(victim_pid), (
-            "owned child survived kill -9 of its Hermes parent"
+            "owned child survived kill -9 of its Kitsune parent"
         )
     finally:
         for pid in (victim_pid, supervisor_pid):
@@ -853,7 +853,7 @@ def test_the_supervisor_refuses_a_malformed_parent_pgid(parent):
 
 def test_a_released_supervisor_leaves_no_zombie_child():
     """A foreground command registers and releases its group on every run; the exited supervisor
-    must not linger as a zombie child (psutil walkers of Hermes's children raise ZombieProcess)."""
+    must not linger as a zombie child (psutil walkers of Kitsune's children raise ZombieProcess)."""
     import psutil
 
     child = subprocess.Popen(_VICTIM, start_new_session=True)

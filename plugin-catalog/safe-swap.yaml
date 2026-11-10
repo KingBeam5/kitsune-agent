@@ -19,7 +19,7 @@ description: >-
   quarantine directories and deletes its own private refs through the terminal tool and is subject to normal
   approval; no network calls, no telemetry, no background processes, no self-update; reads no credential files
   or .env, only the receipts it wrote and the sizes of the files an rm swap moves; approvals are respected:
-  the rewritten command goes through Hermes' normal approval gate, and because a swapped rm -r is a move it
+  the rewritten command goes through Kitsune' normal approval gate, and because a swapped rm -r is a move it
   no longer matches the recursive-delete pattern and does not prompt (the git rewrites keep prompting as
   before). Targets such as /, ~, $HOME, system directories and anything in the system temp directory, privilege-elevated
   commands, and commands with heredocs, subshells, command substitution or eval/xargs/find -exec are

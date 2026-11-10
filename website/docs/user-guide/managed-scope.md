@@ -47,7 +47,7 @@ the feature.
 The location can be relocated with the `HERMES_MANAGED_DIR` environment variable
 (for containers or non-`/etc` deployments). This is a deployment/bootstrap path
 knob — like `HERMES_HOME` — set by the same administrator who owns the managed
-files. It is **never persisted** to any `.env` by Hermes.
+files. It is **never persisted** to any `.env` by Kitsune.
 
 ```bash
 # Point managed scope at a custom directory (set by IT / the deployment, not the user)
@@ -93,7 +93,7 @@ to the specific keys the managed layer specifies.
 When the managed `config.yaml` pins a non-empty `terminal.backend`, a profile
 `.env` that exists but cannot be read (a sandbox launcher withholds it and
 passes the keys as environment) loads as absent with a warning; without that
-pin the read error still stops Hermes.
+pin the read error still stops Kitsune.
 
 ## Seeing what's managed
 
@@ -102,7 +102,7 @@ hermes config        # shows a header naming the managed source + the pinned key
 hermes doctor        # reports the resolved managed dir + pinned key counts
 ```
 
-If you try to change a managed value, Hermes refuses and names the source:
+If you try to change a managed value, Kitsune refuses and names the source:
 
 ```bash
 $ hermes config set model.default my/model
@@ -135,14 +135,14 @@ sudo chmod 0755 /etc/hermes
 sudo chmod 0644 /etc/hermes/config.yaml /etc/hermes/.env
 ```
 
-Changes take effect on the next Hermes start (a malformed managed file is logged
+Changes take effect on the next Kitsune start (a malformed managed file is logged
 loudly and ignored — it never blocks startup, but the admin should check
 `hermes doctor` to confirm the policy is being applied).
 
 ## Security model and limitations (v1)
 
 - **Enforcement is filesystem permissions only.** If a user has write access to
-  the managed directory (or runs Hermes as `root`), managed scope is advisory.
+  the managed directory (or runs Kitsune as `root`), managed scope is advisory.
 - **The managed `.env` is world-readable** (`0644`), so any local user can read
   secrets pushed through it. Use it for shared, non-sensitive values (an org API
   base URL, feature defaults) rather than high-sensitivity secrets.

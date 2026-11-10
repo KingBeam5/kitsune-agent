@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
 title: "架构"
-description: "Hermes Agent 内部结构——主要子系统、执行路径、数据流及延伸阅读指引"
+description: "Kitsune Agent 内部结构——主要子系统、执行路径、数据流及延伸阅读指引"
 ---
 
 # 架构
 
-本页是 Hermes Agent 内部结构的顶层导图。用它在代码库中定位自己，然后深入各子系统专项文档了解实现细节。
+本页是 Kitsune Agent 内部结构的顶层导图。用它在代码库中定位自己，然后深入各子系统专项文档了解实现细节。
 
 ## 系统概览
 
@@ -121,7 +121,7 @@ hermes-agent/
 │
 ├── plugins/platforms/        # 随包平台插件：telegram、discord、slack、whatsapp、
 │                             #   whatsapp_cloud、signal、weixin、bluebubbles、qqbot、
-│                             #   matrix、feishu 等（元宝：`yuanbao` Hermes Labs 插件）
+│                             #   matrix、feishu 等（元宝：`yuanbao` Kitsune Labs 插件）
 ├── acp_adapter/              # ACP 服务器（VS Code / Zed / JetBrains）
 ├── cron/                     # 调度器（jobs.py、scheduler.py）
 ├── plugins/memory/           # 记忆提供者插件
@@ -240,7 +240,7 @@ CLI、gateway、cron、ACP 及辅助调用共用的运行时解析器。将 `(pr
 
 ### ACP 集成
 
-通过 stdio/JSON-RPC 将 Hermes 作为编辑器原生 agent 暴露给 VS Code、Zed 和 JetBrains。
+通过 stdio/JSON-RPC 将 Kitsune 作为编辑器原生 agent 暴露给 VS Code、Zed 和 JetBrains。
 
 → [ACP 内部机制](./acp-internals.md)
 

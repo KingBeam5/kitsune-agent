@@ -1,4 +1,4 @@
-"""POSIX: terminal commands and background jobs die with the Hermes process that started them.
+"""POSIX: terminal commands and background jobs die with the Kitsune process that started them.
 
 The owners are real host processes using the real ``ProcessRegistry.spawn_local`` and
 ``LocalEnvironment.execute``. One owner is SIGKILLed, so no Python cleanup of ours runs; the other is the

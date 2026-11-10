@@ -6,7 +6,7 @@
  *
  * The one fake per external edge: the git server (a local bare repo behind a
  * url.insteadOf rewrite) and the LLM provider (e2e/core/provider.ts). Nothing
- * inside Hermes is mocked.
+ * inside Kitsune is mocked.
  *
  * Synchronisation rule (same as e2e/core): wait on an observable fact — a log
  * line, a pid, a file, a DOM state — with a deadline, never a fixed sleep.
@@ -151,7 +151,7 @@ export function packagedExe(facts: InstallFacts): string {
   const name = fs.readdirSync(dir).find(entry => /^hermes$/i.test(entry))
 
   if (!name) {
-    throw new Error(`no packaged Hermes executable in ${dir}: ${fs.readdirSync(dir).join(', ')}`)
+    throw new Error(`no packaged Kitsune executable in ${dir}: ${fs.readdirSync(dir).join(', ')}`)
   }
 
   return path.join(dir, name)
@@ -420,11 +420,11 @@ export async function waitFor<T>(
 
 /** Copy of the first-run chooser / bootstrap installer overlay (the screens a healthy install must never show). */
 export const FIRST_RUN_SCREENS = [
-  'Set up Hermes Desktop',
-  'Hermes needs a one-time install',
-  'Setting up Hermes Agent',
-  'Install Hermes locally',
-  'Use Hermes on this computer'
+  'Set up Kitsune Desktop',
+  'Kitsune needs a one-time install',
+  'Setting up Kitsune Agent',
+  'Install Kitsune locally',
+  'Use Kitsune on this computer'
 ]
 
 /**
