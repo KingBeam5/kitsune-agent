@@ -257,3 +257,24 @@ class TestCliBrandingHelpers:
         overrides = get_prompt_toolkit_style_overrides()
         assert overrides["status-bar"] == f"bg:{skin.get_color('status_bar_bg')} {skin.get_color('banner_text')}"
         assert overrides["voice-status"] == f"bg:{skin.get_color('voice_status_bg')} {skin.get_color('ui_label')}"
+
+
+class TestKitsuneDefaultSkin:
+    def test_ryu_is_bundled_and_loads(self):
+        from hermes_cli.skin_engine import load_skin, list_skins
+        skin = load_skin("ryu")
+        assert skin.name == "ryu"
+        assert skin.get_branding("agent_name") == "Ryu"
+        assert any(s["name"] == "ryu" and s["source"] == "bundled" for s in list_skins())
+
+    def test_unset_display_skin_defaults_to_ryu(self):
+        from hermes_cli.skin_engine import init_skin_from_config, get_active_skin_name
+        init_skin_from_config({})
+        assert get_active_skin_name() == "ryu"
+        init_skin_from_config({"display": {"skin": "  "}})
+        assert get_active_skin_name() == "ryu"
+
+    def test_explicit_skin_still_wins(self):
+        from hermes_cli.skin_engine import init_skin_from_config, get_active_skin_name
+        init_skin_from_config({"display": {"skin": "ares"}})
+        assert get_active_skin_name() == "ares"

@@ -343,7 +343,8 @@ _BUILTIN_SKINS: dict[str, dict[str, Any]] = {
     }}
 
 _active_skin: Optional[SkinConfig] = None
-_active_skin_name: str = "default"
+DEFAULT_SKIN = "ryu"  # Kitsune Agent: bundled skin used when display.skin is unset
+_active_skin_name: str = DEFAULT_SKIN
 # Routed multiplex profiles: (name, skin) per home key. ``display.skin`` and ``<home>/skins/*.yaml``
 # are per profile, and the relay display name / TUI skin payload are read under each profile's
 # override — one module slot would be last-writer-wins across profiles. Unscoped keeps the module slot.
@@ -365,6 +366,11 @@ def _profile_config() -> dict:
 
 def _skins_dir() -> Path:
     return get_hermes_home() / "skins"
+
+
+def _bundled_skins_dir() -> Path:
+    """Skins shipped inside the package (Kitsune Agent: ryu)."""
+    return Path(__file__).parent / "data" / "skins"
 
 
 def _load_skin_from_yaml(path: Path) -> Optional[dict[str, Any]]:
@@ -414,12 +420,12 @@ def list_skins() -> list[dict[str, str]]:
     """List all available skins (built-in + user-installed); user skins never shadow built-ins."""
     result = [{"name": name, "description": data.get("description", ""), "source": "builtin"}
               for name, data in _BUILTIN_SKINS.items()]
-    skins_path = _skins_dir()
-    for f in sorted(skins_path.glob("*.yaml")) if skins_path.is_dir() else ():
-        data = _load_skin_from_yaml(f)
-        if data and not any(s["name"] == data.get("name", f.stem) for s in result):
-            result.append({"name": data.get("name", f.stem), "description": data.get("description", ""),
-                           "source": "user"})
+    for source, skins_path in (("bundled", _bundled_skins_dir()), ("user", _skins_dir())):
+        for f in sorted(skins_path.glob("*.yaml")) if skins_path.is_dir() else ():
+            data = _load_skin_from_yaml(f)
+            if data and not any(s["name"] == data.get("name", f.stem) for s in result):
+                result.append({"name": data.get("name", f.stem), "description": data.get("description", ""),
+                               "source": source})
     return result
 
 
@@ -427,6 +433,9 @@ def load_skin(name: str) -> SkinConfig:
     """Load a skin by name: user skins first, then built-in, then default."""
     user_file = _skins_dir() / f"{name}.yaml"
     data = _load_skin_from_yaml(user_file) if user_file.is_file() else None
+    if not data and name not in _BUILTIN_SKINS:
+        bundled = _bundled_skins_dir() / f"{name}.yaml"
+        data = _load_skin_from_yaml(bundled) if bundled.is_file() else None
     if not data and name not in _BUILTIN_SKINS:
         logger.warning("Skin '%s' not found, using default", name)
     return _build_skin_config(data or _BUILTIN_SKINS.get(name) or _BUILTIN_SKINS["default"])
@@ -465,15 +474,15 @@ def get_active_skin_name() -> str:
     home_key = _routed_home_key()
     if home_key is not None:
         entry = _active_skin_by_home.get(home_key)
-        return entry[0] if entry else "default"
+        return entry[0] if entry else DEFAULT_SKIN
     return _active_skin_name
 
 
 def init_skin_from_config(config: dict) -> None:
     """Initialize the active skin from CLI config at startup."""
     display = config.get("display") or {}
-    skin_name = display.get("skin", "default") if isinstance(display, dict) else "default"
-    set_active_skin(skin_name.strip() if isinstance(skin_name, str) and skin_name.strip() else "default")
+    skin_name = display.get("skin", DEFAULT_SKIN) if isinstance(display, dict) else DEFAULT_SKIN
+    set_active_skin(skin_name.strip() if isinstance(skin_name, str) and skin_name.strip() else DEFAULT_SKIN)
 
 
 def _active_branding(key: str, fallback: str) -> str:
